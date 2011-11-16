@@ -19,7 +19,7 @@ typedef union
   {
     BYTE Hi; // 8 Hight bits
     BYTE Lo; // 8 Low bits
-  }
+  };
 } uRegister;	// Register seems to be big endian
 		// instead of other 16 bit value (?)
 
@@ -39,8 +39,8 @@ private:
   BYTE	mSP; // Stack pointer
 
   // Memory
-  BYTE	mCartridgeMem[0xFFFFFF];
-  BYTE	mIntermalMem[];
+  //  BYTE	mCartridgeMem[0xFFFFFF];
+  //BYTE	mIntermalMem[];
 };
 
 #endif // !EMULATOR_HPP_
