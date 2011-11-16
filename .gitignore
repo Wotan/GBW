@@ -1,0 +1,12 @@
+*~
+*.o
+*#
+*.swp
+*.swo
+42sh
+*.bak
+test
+*.log
+GBW
+Makefile
+moc_*
