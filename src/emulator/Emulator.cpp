@@ -1,22 +1,58 @@
+#include <iostream>
+#include <fstream>
+#include "App.hpp"
 #include "Emulator.hpp"
 
-int	Emulator::Init(char *fileName)
+Emulator::Emulator(App *app) :
+  mCartridgeMem(0),
+  mApp(app)
+{
+  std::cout << "Emulator created" << std::endl;
+}
+
+Emulator::~Emulator()
+{
+  if (mCartridgeMem)
+    delete[] mCartridgeMem;
+  std::cout << "Emulator deleted" << std::endl;
+}
+
+bool	Emulator::Init(const char *fileName)
 {
   InitMem();
   InitReg();
-
-  return 1;
+  if (!LoadFile(fileName))
+    {
+      std::cerr << "Fail to open file " << fileName << std::endl;
+      return false;
+    }
+  return true;
 }
 
-void	Emulator::LoadFile(char *fileName)
+bool	Emulator::LoadFile(const char *fileName)
 {
+  std::ifstream file;
 
+  // Load file in cartdrige mem
+  file.open(fileName, std::ifstream::in | std::ifstream::binary);
+  if (!file.is_open())
+    return false;
+  file.read((char *)mCartridgeMem, MAX_SIZE_CARTRIDGE);
+  file.close();
 
+  strcpy(mInfos.Title, (const char *)&mCartridgeMem[0x134]);
+  std::cout << "Title : " << mInfos.Title << std::endl;
+  return true;
 }
 
 void	Emulator::InitMem()
 {
-  // All ram to 0 for avoid random effects
+  // All mem to 0 for avoid random effects
+
+  mCartridgeMem = new BYTE[MAX_SIZE_CARTRIDGE];
+  for (int i = 0; i < MAX_SIZE_CARTRIDGE; i++)
+    mCartridgeMem[i] = 0;
+
   for (int i = 0; i < 0x2000 * 4; i++)
     mExtRAM[i] = 0;
 

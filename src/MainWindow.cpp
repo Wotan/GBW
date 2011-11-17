@@ -39,4 +39,11 @@ void	MainWindow::Init()
   mGraphicsEngine = new GraphicsEngine(this, QPoint(0, menuBarHeight),
 				       QSize(160, 144), mApp);
   mGraphicsEngine->show();
+
+  if (mApp->arguments().size() > 1)
+    {
+      QString romFile = mApp->arguments().at(1);
+      mGraphicsEngine->NewEmulator(romFile.toStdString().c_str());
+    }
+  //mGraphicsEngine->NewEmulator();
 }

@@ -10,7 +10,11 @@
 # define SBYTE int8_t
 # define SWORD int16_t
 
-# define MAX_SIZE_CARTRIDGE 0xFF
+# define SIZE_BANK 0x2000 // 16KB
+# define MAX_BANK 128 // Maybe 256
+# define MAX_SIZE_CARTRIDGE SIZE_BANK * MAX_BANK
+
+class App;
 
 typedef union
 {
@@ -37,16 +41,20 @@ class Emulator
 {
 public:
   Emulator(App *app);
-  int	Init(char *fileName);
+  ~Emulator();
+  bool	Init(const char *fileName);
   void	InitMem();
   void	InitReg();
-  void	LoadFile(char *fileName);
+  bool	LoadFile(const char *fileName);
   void	DoCycle();
   void	DoFrame();
   void	Play();
   void	Pause();
 
 private:
+  // Infos //
+  CartridgeInfos mInfos;
+
   // Registers //
   UWORD	mAF; // A = Low F = Hight
   UWORD	mBC;
@@ -80,6 +88,8 @@ private:
 
   // (12) FFFF
   BYTE		mInterrupEnable;
+
+  App		*mApp;
 };
 
 

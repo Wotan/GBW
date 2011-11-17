@@ -6,13 +6,16 @@
 GraphicsEngine::GraphicsEngine(QWidget *parent, const QPoint& position,
 			       const QSize& size, App *app) :
   QSFMLCanvas(parent, position,  size, 16),
-  mApp(app)
+  mApp(app),
+  mEmu(NULL)
 {
 
 }
 
 GraphicsEngine::~GraphicsEngine()
 {
+  if (mEmu)
+    delete mEmu;
   std::cout << "GraphicsEngine deleted" << std::endl;
 }
 
@@ -44,4 +47,23 @@ void	GraphicsEngine::ClearScreen()
     mCurrentScanLine[i] = 0x00;
   for (int i = 0; i < GB_SCREEN_Y; i++)
     DrawScanLine(i);
+}
+
+bool	GraphicsEngine::NewEmulator(const char *fileName)
+{
+  if (mEmu)
+    delete mEmu;
+  mEmu = new Emulator(mApp);
+  if (!mEmu->Init(fileName))
+    {
+      CloseEmulator();
+      return false;
+    }
+  return true;
+}
+
+void	GraphicsEngine::CloseEmulator()
+{
+  delete mEmu;
+  mEmu = 0;
 }
