@@ -30,7 +30,9 @@ HEADERS +=      include/MainWindow.hpp \
                 include/graphics/QSFMLCanvas.hpp \
                 include/graphics/GraphicsEngine.hpp \
                 include/emulator/Emulator.hpp \
-                include/debugger/Debugger.hpp
+                include/debugger/Debugger.hpp \
+                include/debugger/MemWatcher.hpp \
+                include/debugger/RegWatcher.hpp
 
 SOURCES +=      src/main.cpp \
                 src/MainWindow.cpp \
@@ -38,5 +40,7 @@ SOURCES +=      src/main.cpp \
                 src/graphics/QSFMLCanvas.cpp \
                 src/graphics/GraphicsEngine.cpp \
                 src/emulator/Emulator.cpp \
-                src/debugger/Debugger.cpp
+                src/debugger/Debugger.cpp \
+                src/debugger/MemWatcher.cpp \
+                src/debugger/RegWatcher.cpp
 

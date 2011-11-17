@@ -5,6 +5,8 @@
 # include <QDialog>
 # include "App.hpp"
 # include "Emulator.hpp"
+# include "RegWatcher.hpp"
+# include "MemWatcher.hpp"
 
 class Debugger : public QDialog
 {
@@ -21,6 +23,9 @@ public slots:
 private:
   App		*mApp;
   Emulator	*mEmu;
+  RegWatcher	*mRegWatcher;
+  MemWatcher	*mMemWatcher;
+  QPushButton	*button;
 };
 
 #endif // DEBUGGER_HPP_

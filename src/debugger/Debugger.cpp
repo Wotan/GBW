@@ -1,4 +1,5 @@
 #include <iostream>
+#include <QPushButton>
 #include "Debugger.hpp"
 #include "Emulator.hpp"
 
@@ -18,6 +19,18 @@ Debugger::~Debugger()
 bool Debugger::Init()
 {
   setWindowFlags(Qt::Window);
+
+  mRegWatcher = new RegWatcher(this);
+  mRegWatcher->setGeometry(5, 5, 200, 200);
+
+
+
+  mRegWatcher->show();
+
+
+  // mMemWatcher = new MemWatcher(this);
+  // mMemWatcher->setGeometry(210, 5, 200, 200);
+  // mMemWatcher->show();
   return true;
 }
 
