@@ -8,14 +8,17 @@ DEPENDPATH +=   . \
                 include \
                 include/graphics \
                 include/emulator \
+                include/debugger \
                 src \
                 src/graphics \
-                src/emulator
+                src/emulator \
+                src/debugger
 
 INCLUDEPATH +=  . \
                 include \
                 include/graphics \
-                include/emulator
+                include/emulator \
+                include/debugger
 
 LIBS += -lsfml-system -lsfml-graphics
 OBJECTS_DIR = ./obj
@@ -26,12 +29,14 @@ HEADERS +=      include/MainWindow.hpp \
                 include/App.hpp \
                 include/graphics/QSFMLCanvas.hpp \
                 include/graphics/GraphicsEngine.hpp \
-                include/emulator/Emulator.hpp
+                include/emulator/Emulator.hpp \
+                include/debugger/Debugger.hpp
 
 SOURCES +=      src/main.cpp \
                 src/MainWindow.cpp \
                 src/App.cpp \
                 src/graphics/QSFMLCanvas.cpp \
                 src/graphics/GraphicsEngine.cpp \
-                src/emulator/Emulator.cpp
+                src/emulator/Emulator.cpp \
+                src/debugger/Debugger.cpp
 

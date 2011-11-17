@@ -5,9 +5,11 @@
 #include <QMainWindow>
 #include "App.hpp"
 #include "GraphicsEngine.hpp"
+#include "Debugger.hpp"
 
 class App;
 class GraphicsEngine;
+class Debugger;
 
 class MainWindow : public QMainWindow
 {
@@ -25,6 +27,7 @@ private:
 
   GraphicsEngine *mGraphicsEngine;
   App		*mApp;
+  Debugger	*mDebug;
 };
 
 #endif // MAINWINDOW_HPP_

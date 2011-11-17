@@ -27,14 +27,16 @@ void	MainWindow::Init()
 
   QAction *actionOpen = menuFile->addAction(tr("&Open"));
   QAction *actionExit = menuFile->addAction(tr("&Exit"));
+  QAction *actionShowDebug = menuDebugger->addAction(tr("&Show debug panel"));
 
   /////////////////////////////////////////////
   actionExit->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Q));
   actionOpen->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_O));
+  actionShowDebug->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_D));
 
   /////////////////////////////////////////////
-  connect(actionExit, SIGNAL(triggered()), mApp, SLOT(quit()));
-  connect(actionOpen, SIGNAL(triggered()), this, SLOT(OpenRom()));
+  mDebug = new Debugger(this, mApp);
+  mDebug->Init();
 
   ////////////////////////////////////////////
   int menuBarHeight = menuBar()->sizeHint().height();
@@ -47,6 +49,14 @@ void	MainWindow::Init()
       QString romFile = mApp->arguments().at(1);
       mGraphicsEngine->NewEmulator(romFile.toStdString().c_str());
     }
+
+  //////////// Signals //////////////////////
+  connect(actionExit, SIGNAL(triggered()), mApp, SLOT(quit()));
+  connect(actionOpen, SIGNAL(triggered()), this, SLOT(OpenRom()));
+  connect(actionShowDebug, SIGNAL(triggered()), mDebug, SLOT(show()));
+
+  connect(mGraphicsEngine, SIGNAL(ChangeEmuInstance(Emulator *)),
+	  mDebug, SLOT(EmuInstanceChange(Emulator *)));
 }
 
 void	MainWindow::OpenRom()
@@ -58,3 +68,4 @@ void	MainWindow::OpenRom()
   if (fileName != 0)
     mGraphicsEngine->NewEmulator(fileName.toStdString().c_str());
 }
+

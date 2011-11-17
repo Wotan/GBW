@@ -13,6 +13,8 @@ class Emulator;
 
 class GraphicsEngine : public QSFMLCanvas
 {
+Q_OBJECT
+
 public:
   GraphicsEngine(QWidget *parent, const QPoint& position,
 		 const QSize& size, App *app);
@@ -24,6 +26,9 @@ public:
   char	*GetScanLinePtr() {return mCurrentScanLine;};
   bool	NewEmulator(const char *fileName);
   void	CloseEmulator();
+
+signals:
+  void	ChangeEmuInstance(Emulator *emu);
 
 private:
   sf::Texture	mScreen;

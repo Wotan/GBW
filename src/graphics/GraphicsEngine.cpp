@@ -28,6 +28,7 @@ void	GraphicsEngine::OnInit()
   // 			 size().height() / mSpriteScreen.GetSize().y);
 
 }
+
 // Call every 16ms
 void	GraphicsEngine::OnUpdate()
 {
@@ -59,6 +60,7 @@ bool	GraphicsEngine::NewEmulator(const char *fileName)
       CloseEmulator();
       return false;
     }
+  emit ChangeEmuInstance(mEmu);
   return true;
 }
 
@@ -66,4 +68,5 @@ void	GraphicsEngine::CloseEmulator()
 {
   delete mEmu;
   mEmu = 0;
+  emit ChangeEmuInstance(mEmu);
 }
