@@ -20,7 +20,7 @@ typedef union
     BYTE hi;
   };
   WORD	a; // All
-} uRegister;
+} UWORD;
 
 typedef struct
 {
@@ -37,7 +37,10 @@ class Emulator
 {
 public:
   Emulator(App *app);
-  void	Init(char *fileName);
+  int	Init(char *fileName);
+  void	InitMem();
+  void	InitReg();
+  void	LoadFile(char *fileName);
   void	DoCycle();
   void	DoFrame();
   void	Play();
@@ -45,12 +48,12 @@ public:
 
 private:
   // Registers //
-  uRegister	mAF; // A = Low F = Hight
-  uRegister	mBC;
-  uRegister	mDE;
-  uRegister	mHL;
-  WORD		mPC;
-  WORD		mSP; // Stack pointer
+  UWORD	mAF; // A = Low F = Hight
+  UWORD	mBC;
+  UWORD	mDE;
+  UWORD	mHL;
+  WORD	mPC;
+  WORD	mSP; // Stack pointer
 
   // Memory //
 
@@ -60,11 +63,11 @@ private:
   // (04) A000 - BFFF (In cartdrige, may use for saving)
   BYTE		mExtRAM[0x2000 * 4]; // 4 bank * 8kB max (2kB or 8kB or 32kB)
 
-  // C000 - CFFF
-  BYTE		mRAM1[0x1000];
+  // (5) C000 - CFFF
+  BYTE		mWRAM1[0x1000];
 
-  // D000 - DFFF
-  BYTE		mRAM2[0x1000];
+  // (6) D000 - DFFF
+  BYTE		mWRAM2[0x1000];
 
   // (08) FE00 - FEFF
   BYTE		mOAM[0x100];
