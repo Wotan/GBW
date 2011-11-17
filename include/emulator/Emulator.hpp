@@ -14,6 +14,14 @@
 # define MAX_BANK 128 // Maybe 256
 # define MAX_SIZE_CARTRIDGE SIZE_BANK * MAX_BANK
 
+# define IS_BIT_SET(x, n) ((x & (1 << n)))
+# define SET_BIT(x, n) (x |= (1 << n))
+
+# define ONLY_ROM 1
+# define MCB1 2
+# define MCB2 3
+# define MCB3 4
+
 class App;
 
 typedef union
@@ -46,6 +54,7 @@ public:
   void	InitMem();
   void	InitReg();
   bool	LoadFile(const char *fileName);
+  void	ReadCartridgeInfos();
   void	DoCycle();
   void	DoFrame();
   void	Play();

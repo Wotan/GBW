@@ -39,10 +39,44 @@ bool	Emulator::LoadFile(const char *fileName)
     return false;
   file.read((char *)mCartridgeMem, MAX_SIZE_CARTRIDGE);
   file.close();
+  ReadCartridgeInfos();
 
+  std::cout << "File " << fileName <<
+    " readed, it seems to be valid" << std::endl;
+  return true;
+}
+
+void	Emulator::ReadCartridgeInfos()
+{
   strcpy(mInfos.Title, (const char *)&mCartridgeMem[0x134]);
   std::cout << "Title : " << mInfos.Title << std::endl;
-  return true;
+
+  mInfos.CartridgeType = 0;
+  BYTE ct = mCartridgeMem[0x147];
+  if (ct == 0)
+    {
+      mInfos.CartridgeType = ONLY_ROM;
+      std::cout << "ROM ONLY" << std::endl;
+    }
+  else if (ct >= 0x01 && ct <= 0x3)
+    {
+      mInfos.CartridgeType = MCB1;
+      std::cout << "MCB1" << std::endl;
+    }
+  else if (ct == 0x08 || ct == 0x09)
+    {
+      mInfos.CartridgeType = MCB2;
+      std::cout << "MCB2" << std::endl;
+    }
+  else if (ct >= 0x0F && ct <= 0x013)
+    {
+      mInfos.CartridgeType = MCB3;
+      std::cout << "MCB3" << std::endl;
+    }
+  BYTE ramType = mCartridgeMem[0x149];
+  mInfos.ExtRamSize = ramType;
+
+
 }
 
 void	Emulator::InitMem()
