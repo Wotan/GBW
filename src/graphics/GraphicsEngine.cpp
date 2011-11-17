@@ -9,7 +9,7 @@ GraphicsEngine::GraphicsEngine(QWidget *parent, const QPoint& position,
   mApp(app),
   mEmu(NULL)
 {
-
+  std::cout << "GraphicsEngine created" << std::endl;
 }
 
 GraphicsEngine::~GraphicsEngine()

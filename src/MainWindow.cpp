@@ -1,11 +1,12 @@
 #include <iostream>
+#include <QFileDialog>
 #include "GraphicsEngine.hpp"
 #include "MainWindow.hpp"
 
 MainWindow::MainWindow(App *app):
   mApp(app)
 {
-
+  std::cout << "MainWindow created" << std::endl;
 }
 
 MainWindow::~MainWindow()
@@ -29,10 +30,11 @@ void	MainWindow::Init()
 
   /////////////////////////////////////////////
   actionExit->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Q));
+  actionOpen->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_O));
 
   /////////////////////////////////////////////
   connect(actionExit, SIGNAL(triggered()), mApp, SLOT(quit()));
-
+  connect(actionOpen, SIGNAL(triggered()), this, SLOT(OpenRom()));
 
   ////////////////////////////////////////////
   int menuBarHeight = menuBar()->sizeHint().height();
@@ -45,5 +47,14 @@ void	MainWindow::Init()
       QString romFile = mApp->arguments().at(1);
       mGraphicsEngine->NewEmulator(romFile.toStdString().c_str());
     }
-  //mGraphicsEngine->NewEmulator();
+}
+
+void	MainWindow::OpenRom()
+{
+  QString fileName;
+
+  fileName = QFileDialog::getOpenFileName(0, "Select a Game Boy ROM",
+					  getcwd(NULL, 64));
+  if (fileName != 0)
+    mGraphicsEngine->NewEmulator(fileName.toStdString().c_str());
 }

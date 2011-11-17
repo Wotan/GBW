@@ -11,10 +11,15 @@ class GraphicsEngine;
 
 class MainWindow : public QMainWindow
 {
+  Q_OBJECT
+
 public:
   MainWindow(App *app);
   ~MainWindow();
   void	Init();
+
+public slots:
+  void	OpenRom();
 
 private:
 
