@@ -17,12 +17,16 @@
 # define IS_BIT_SET(x, n) ((x & (1 << n)))
 # define SET_BIT(x, n) (x |= (1 << n))
 
-# define ONLY_ROM 1
-# define MCB1 2
-# define MCB2 3
-# define MCB3 4
 
 class App;
+
+enum romType
+  {
+    ONLY_ROM,
+    MCB1,
+    MCB2,
+    MCB3
+  };
 
 typedef union
 {
@@ -40,8 +44,8 @@ typedef struct
   BYTE	CGBFlag;
   BYTE	CartridgeType;
   BYTE	ROMSize;
-  BYTE	NbBanks;
-  BYTE	ExtRamSize;
+  BYTE	ROMBanks;
+  BYTE  ExtRAMSize;
   BYTE	Jap; // 0 = Jap, 1 = Other
 } CartridgeInfos;
 

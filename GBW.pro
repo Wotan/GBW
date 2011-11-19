@@ -12,7 +12,7 @@ DEPENDPATH +=   . \
                 src \
                 src/graphics \
                 src/emulator \
-                src/debugger
+                src/debugger \
 
 INCLUDEPATH +=  . \
                 include \
@@ -40,6 +40,7 @@ SOURCES +=      src/main.cpp \
                 src/graphics/QSFMLCanvas.cpp \
                 src/graphics/GraphicsEngine.cpp \
                 src/emulator/Emulator.cpp \
+                src/emulator/Init.cpp \
                 src/debugger/Debugger.cpp \
                 src/debugger/MemWatcher.cpp \
                 src/debugger/RegWatcher.cpp
