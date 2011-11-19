@@ -17,6 +17,8 @@
 # define IS_BIT_SET(x, n) ((x & (1 << n)))
 # define SET_BIT(x, n) (x |= (1 << n))
 
+# define RAM 1
+# define ROM 0
 
 class App;
 
@@ -59,6 +61,8 @@ public:
   void	InitReg();
   bool	LoadFile(const char *fileName);
   void	ReadCartridgeInfos();
+  BYTE	ReadMem(WORD addr);
+  void  WriteMem(WORD addr, BYTE value);
   void	DoCycle();
   void	DoFrame();
   void	Play();
@@ -77,18 +81,23 @@ private:
   WORD	mSP; // Stack pointer
 
   // Memory //
+  BYTE		mCurROMBank;
+  BYTE		mMode;
+  int		mCurRAMBank;
+  bool		mRAMEnable;
 
   // All ROM (Cartridge)
   BYTE		*mCartridgeMem;
+
+  // (03) 8000 - 9FFF
+  BYTE		mVRAM[0x2000];
 
   // (04) A000 - BFFF (In cartdrige, may use for saving)
   BYTE		mExtRAM[0x2000 * 4]; // 4 bank * 8kB max (2kB or 8kB or 32kB)
 
   // (5) C000 - CFFF
-  BYTE		mWRAM1[0x1000];
-
   // (6) D000 - DFFF
-  BYTE		mWRAM2[0x1000];
+  BYTE		mWRAM[0x1000 * 2];
 
   // (08) FE00 - FEFF
   BYTE		mOAM[0x100];

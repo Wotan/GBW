@@ -97,11 +97,11 @@ void	Emulator::InitMem()
   for (int i = 0; i < 0x2000 * 4; i++)
     mExtRAM[i] = 0;
 
-  for (int i = 0; i < 0x1000; i++)
-    mWRAM1[i] = 0;
+  for (int i = 0; i < 0x2000; i++)
+    mVRAM[i] = 0;
 
   for (int i = 0; i < 0x1000; i++)
-    mWRAM2[i] = 0;
+    mWRAM[i] = 0;
 
   for (int i = 0; i < 0x100; i++)
     mOAM[i] = 0;
