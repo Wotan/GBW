@@ -19,9 +19,14 @@ Emulator::~Emulator()
 
 void	Emulator::DoFrame()
 {
+  int	nbCycles = 0;
+  int	curCycles;
 
-
-
+  while (nbCycles < CYCLE_BY_FRAME)
+    {
+      curCycles = DoOpcode();
+      nbCycles += curCycles;
+    }
 }
 
 BYTE	Emulator::ReadMem(WORD addr)
@@ -101,7 +106,7 @@ void	Emulator::WriteMem(WORD addr, BYTE value)
   else if (addr <= 0xDFFF) // RAM BANK 0 and 1
     mWRAM[addr - 0xD000] = value;
   else if (addr <= 0xFDFF) // ECHO
-     mWRAM[addr - 0xE000] = value;
+    mWRAM[addr - 0xE000] = value;
   else if (addr <= 0xFEFF); // Not used
   else if (addr <= 0xFF7F) // I/O ports
     mIOPorts[addr - 0xFF00] = value;

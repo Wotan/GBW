@@ -13,6 +13,10 @@ bool	Emulator::Init(const char *fileName)
       std::cerr << "Fail to open file " << fileName << std::endl;
       return false;
     }
+  mCurROMBank = 1;
+  mCurRAMBank = 0;
+  mRAMEnable = false;
+  mMode = 0;
   return true;
 }
 

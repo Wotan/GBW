@@ -14,11 +14,22 @@
 # define MAX_BANK 128 // Maybe 256
 # define MAX_SIZE_CARTRIDGE SIZE_BANK * MAX_BANK
 
+# define CYCLE_BY_FRAME 69905 // (4194304 / 60)
+
 # define IS_BIT_SET(x, n) ((x & (1 << n)))
 # define SET_BIT(x, n) (x |= (1 << n))
 
 # define RAM 1
 # define ROM 0
+
+# define REG_A mAF.lo
+# define REG_F mAF.hi
+# define REG_B mBC.lo
+# define REG_C mBC.hi
+# define REG_D mDE.lo
+# define REG_E mDE.hi
+# define REG_H mHL.lo
+# define REG_L mHL.hi
 
 class App;
 
@@ -63,17 +74,19 @@ public:
   void	ReadCartridgeInfos();
   BYTE	ReadMem(WORD addr);
   void  WriteMem(WORD addr, BYTE value);
-  void	DoCycle();
+  int	DoOpcode();
   void	DoFrame();
   void	Play();
   void	Pause();
+
+
 
 private:
   // Infos //
   CartridgeInfos mInfos;
 
   // Registers //
-  UWORD	mAF; // A = Low F = Hight
+  UWORD	mAF; // A = lo F = hi
   UWORD	mBC;
   UWORD	mDE;
   UWORD	mHL;
@@ -87,7 +100,7 @@ private:
   bool		mRAMEnable;
 
   // All ROM (Cartridge)
-  BYTE		*mCartridgeMem;
+ BYTE		*mCartridgeMem;
 
   // (03) 8000 - 9FFF
   BYTE		mVRAM[0x2000];
