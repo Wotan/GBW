@@ -311,3 +311,11 @@ void	Emulator::ShiftRight_8bit(BYTE &data, bool MSB)
   if (data == 0)
     SET_BIT(REG_F, F_Z);
 }
+
+void	Emulator::TestBit(BYTE totest, BYTE n)
+{
+  if (IS_BIT_SET(totest, n))
+    SET_BIT(REG_F, F_Z);
+  RESET_BIT(REG_F, F_N);
+  SET_BIT(REG_F, F_H);
+}

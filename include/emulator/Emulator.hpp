@@ -107,6 +107,7 @@ public:
   void	RotateRight_8bit(BYTE &data, bool throughtCarry);
   void	ShiftRight_8bit(BYTE &data, bool MSB);
   void	ShiftLeft_8bit(BYTE &data);
+  void	TestBit(BYTE totest, BYTE n);
   void	Push(WORD value);
   WORD	Pop();
 
