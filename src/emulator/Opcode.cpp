@@ -6,6 +6,7 @@
 int	Emulator::DoOpcode()
 {
   UWORD tmp;
+  BYTE	tmpB;
   int	opcode = ReadMem(mPC);
   mPC++;
   switch (opcode)
@@ -336,6 +337,283 @@ int	Emulator::DoOpcode()
       mHL.a = Pop();
       return 12;
 
+    case 0x87:
+      ADD_8Bit(REG_A, REG_A, false);
+      return 4;
+    case 0x80:
+      ADD_8Bit(REG_A, REG_B, false);
+      return 4;
+    case 0x81:
+      ADD_8Bit(REG_A, REG_C, false);
+      return 4;
+    case 0x82:
+      ADD_8Bit(REG_A, REG_D, false);
+      return 4;
+    case 0x83:
+      ADD_8Bit(REG_A, REG_E, false);
+      return 4;
+    case 0x84:
+      ADD_8Bit(REG_A, REG_H, false);
+      return 4;
+    case 0x85:
+      ADD_8Bit(REG_A, REG_L, false);
+      return 4;
+    case 0x86:
+      ADD_8Bit(REG_A, ReadMem(mHL.a), false);
+      return 8;
+    case 0xC6:
+      ADD_8Bit(REG_A, ReadMem(mPC++), false);
+      return 8;
+
+    case 0x8F:
+      ADD_8Bit(REG_A, REG_A, true);
+      return 4;
+    case 0x88:
+      ADD_8Bit(REG_A, REG_B, true);
+      return 4;
+    case 0x89:
+      ADD_8Bit(REG_A, REG_C, true);
+      return 4;
+    case 0x8A:
+      ADD_8Bit(REG_A, REG_D, true);
+      return 4;
+    case 0x8B:
+      ADD_8Bit(REG_A, REG_E, true);
+      return 4;
+    case 0x8C:
+      ADD_8Bit(REG_A, REG_H, true);
+      return 4;
+    case 0x8D:
+      ADD_8Bit(REG_A, REG_L, true);
+      return 4;
+    case 0x8E:
+      ADD_8Bit(REG_A, ReadMem(mHL.a), true);
+      return 8;
+    case 0xCE:
+      ADD_8Bit(REG_A, ReadMem(mPC++), true);
+      return 8;
+
+    case 0x97:
+      SUB_8Bit(REG_A, REG_A, false);
+      return 4;
+    case 0x90:
+      SUB_8Bit(REG_A, REG_B, false);
+      return 4;
+    case 0x91:
+      SUB_8Bit(REG_A, REG_C, false);
+      return 4;
+    case 0x92:
+      SUB_8Bit(REG_A, REG_D, false);
+      return 4;
+    case 0x93:
+      SUB_8Bit(REG_A, REG_E, false);
+      return 4;
+    case 0x94:
+      SUB_8Bit(REG_A, REG_H, false);
+      return 4;
+    case 0x95:
+      SUB_8Bit(REG_A, REG_L, false);
+      return 4;
+    case 0x96:
+      SUB_8Bit(REG_A, ReadMem(mHL.a), false);
+      return 8;
+    case 0xD6:
+      SUB_8Bit(REG_A, ReadMem(mPC++), false);
+      return 8;
+
+    case 0x9F:
+      SUB_8Bit(REG_A, REG_A, true);
+      return 4;
+    case 0x98:
+      SUB_8Bit(REG_A, REG_B, true);
+      return 4;
+    case 0x99:
+      SUB_8Bit(REG_A, REG_C, true);
+      return 4;
+    case 0x9A:
+      SUB_8Bit(REG_A, REG_D, true);
+      return 4;
+    case 0x9B:
+      SUB_8Bit(REG_A, REG_E, true);
+      return 4;
+    case 0x9C:
+      SUB_8Bit(REG_A, REG_H, true);
+      return 4;
+    case 0x9D:
+      SUB_8Bit(REG_A, REG_L, true);
+      return 4;
+    case 0x9E:
+      SUB_8Bit(REG_A, ReadMem(mHL.a), true);
+      return 8;
+    case 0xDE:
+      SUB_8Bit(REG_A, ReadMem(mPC++), true);
+      return 8;
+
+    case 0xA7:
+      AND_8Bit(REG_A, REG_A);
+      return 4;
+    case 0xA0:
+      AND_8Bit(REG_A, REG_B);
+      return 4;
+    case 0xA1:
+      AND_8Bit(REG_A, REG_C);
+      return 4;
+    case 0xA2:
+      AND_8Bit(REG_A, REG_D);
+      return 4;
+    case 0xA3:
+      AND_8Bit(REG_A, REG_E);
+      return 4;
+    case 0xA4:
+      AND_8Bit(REG_A, REG_H);
+      return 4;
+    case 0xA5:
+      AND_8Bit(REG_A, REG_L);
+      return 4;
+    case 0xA6:
+      AND_8Bit(REG_A, ReadMem(mHL.a));
+      return 8;
+    case 0xE6:
+      AND_8Bit(REG_A, ReadMem(mPC++));
+      return 8;
+
+    case 0xB7:
+      OR_8Bit(REG_A, REG_A);
+      return 4;
+    case 0xB0:
+      OR_8Bit(REG_A, REG_B);
+      return 4;
+    case 0xB1:
+      OR_8Bit(REG_A, REG_C);
+      return 4;
+    case 0xB2:
+      OR_8Bit(REG_A, REG_D);
+      return 4;
+    case 0xB3:
+      OR_8Bit(REG_A, REG_E);
+      return 4;
+    case 0xB4:
+      OR_8Bit(REG_A, REG_H);
+      return 4;
+    case 0xB5:
+      OR_8Bit(REG_A, REG_L);
+      return 4;
+    case 0xB6:
+      OR_8Bit(REG_A, ReadMem(mHL.a));
+      return 8;
+    case 0xF6:
+      OR_8Bit(REG_A, ReadMem(mPC++));
+      return 8;
+
+    case 0xAF:
+      XOR_8Bit(REG_A, REG_A);
+      return 4;
+    case 0xA8:
+      XOR_8Bit(REG_A, REG_B);
+      return 4;
+    case 0xA9:
+      XOR_8Bit(REG_A, REG_C);
+      return 4;
+    case 0xAA:
+      XOR_8Bit(REG_A, REG_D);
+      return 4;
+    case 0xAB:
+      XOR_8Bit(REG_A, REG_E);
+      return 4;
+    case 0xAC:
+      XOR_8Bit(REG_A, REG_H);
+      return 4;
+    case 0xAD:
+      XOR_8Bit(REG_A, REG_L);
+      return 4;
+    case 0xAE:
+      XOR_8Bit(REG_A, ReadMem(mHL.a));
+      return 8;
+    case 0xEE:
+      XOR_8Bit(REG_A, ReadMem(mPC++));
+      return 8;
+
+    case 0xBF:
+      CP_8Bit(REG_A, REG_A);
+      return 4;
+    case 0xB8:
+      CP_8Bit(REG_A, REG_B);
+      return 4;
+    case 0xB9:
+      CP_8Bit(REG_A, REG_C);
+      return 4;
+    case 0xBA:
+      CP_8Bit(REG_A, REG_D);
+      return 4;
+    case 0xBB:
+      CP_8Bit(REG_A, REG_E);
+      return 4;
+    case 0xBC:
+      CP_8Bit(REG_A, REG_H);
+      return 4;
+    case 0xBD:
+      CP_8Bit(REG_A, REG_L);
+      return 4;
+    case 0xBE:
+      CP_8Bit(REG_A, ReadMem(mHL.a));
+      return 8;
+    case 0xFE:
+      CP_8Bit(REG_A, ReadMem(mPC++));
+      return 8;
+
+    case 0x3C:
+      INC_8Bit(REG_A);
+      return 4;
+    case 0x04:
+      INC_8Bit(REG_B);
+      return 4;
+    case 0x0C:
+      INC_8Bit(REG_C);
+      return 4;
+    case 0x14:
+      INC_8Bit(REG_D);
+      return 4;
+    case 0x1C:
+      INC_8Bit(REG_E);
+      return 4;
+    case 0x24:
+      INC_8Bit(REG_H);
+      return 4;
+    case 0x2C:
+      INC_8Bit(REG_L);
+      return 4;
+    case 0x34:
+      tmpB = ReadMem(mHL.a);
+      INC_8Bit(tmpB);
+      WriteMem(mHL.a, tmpB);
+      return 12;
+
+    case 0x3D:
+      DEC_8Bit(REG_A);
+      return 4;
+    case 0x05:
+      DEC_8Bit(REG_B);
+      return 4;
+    case 0x0D:
+      DEC_8Bit(REG_C);
+      return 4;
+    case 0x15:
+      DEC_8Bit(REG_D);
+      return 4;
+    case 0x1D:
+      DEC_8Bit(REG_E);
+      return 4;
+    case 0x25:
+      DEC_8Bit(REG_H);
+      return 4;
+    case 0x2D:
+      DEC_8Bit(REG_L);
+      return 4;
+    case 0x35:
+      tmpB = ReadMem(mHL.a);
+      DEC_8Bit(tmpB);
+      WriteMem(mHL.a, tmpB);
+      return 12;
 
     default:
       std::cout << "Unknown opcode :" << opcode << std::endl;

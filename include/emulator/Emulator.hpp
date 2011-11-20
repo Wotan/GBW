@@ -88,6 +88,13 @@ public:
 
   void	Load16bitHL();
   void	ADD_8Bit(BYTE &toAdd, BYTE add, bool addCarry);
+  void	SUB_8Bit(BYTE &toSub, BYTE sub, bool addCarry);
+  void	OR_8Bit(BYTE &toXor, BYTE src);
+  void	XOR_8Bit(BYTE &toXor, BYTE src);
+  void	AND_8Bit(BYTE &toXor, BYTE src);
+  void	DEC_8Bit(BYTE &toDec);
+  void	INC_8Bit(BYTE &toDec);
+  void	CP_8Bit(BYTE cp1, BYTE cp2);
   void	Push(WORD value);
   WORD	Pop();
 

@@ -12,6 +12,7 @@ MainWindow::MainWindow(App *app):
 MainWindow::~MainWindow()
 {
   delete mGraphicsEngine;
+  delete mDebug;
   std::cout << "MainWindow deleted" << std::endl;
 }
 
