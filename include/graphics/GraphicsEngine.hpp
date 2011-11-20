@@ -27,6 +27,10 @@ public:
   bool	NewEmulator(const char *fileName);
   void	CloseEmulator();
 
+public slots:
+  void	PlayEmu() {if (mEmu) mEmu->Play();}
+  void	PauseEmu() {if(mEmu) mEmu->Pause();}
+
 signals:
   void	ChangeEmuInstance(Emulator *emu);
 

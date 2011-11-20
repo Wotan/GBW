@@ -156,6 +156,7 @@ private:
   BYTE		mInterrupEnable;
 
   App		*mApp;
+  bool		mPause;
 };
 
 

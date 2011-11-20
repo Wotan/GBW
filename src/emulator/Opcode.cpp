@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <iostream>
 #include <fstream>
 #include "App.hpp"
@@ -9,7 +10,10 @@ int	Emulator::DoOpcode()
   BYTE	tmpB;
   BYTE	extOpcode;
   int	opcode = ReadMem(mPC);
+
   mPC++;
+
+  printf("Opcode : %X\n", opcode);
   switch (opcode)
     {
     case 0x06: REG_B = ReadMem(mPC++); return 8;
@@ -77,7 +81,6 @@ int	Emulator::DoOpcode()
     case 0x74: WriteMem(mHL.a, REG_H); return 8;
     case 0x75: WriteMem(mHL.a, REG_L); return 8;
     case 0x36: WriteMem(mHL.a, ReadMem(mPC++)); return 12;
-
 
     case 0x0A: REG_A = ReadMem(mBC.a); return 8;
     case 0x1A: REG_A = ReadMem(mDE.a); return 8;

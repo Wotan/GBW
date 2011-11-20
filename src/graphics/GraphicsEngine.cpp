@@ -34,6 +34,8 @@ void	GraphicsEngine::OnUpdate()
 {
   Clear();
   Draw(mSpriteScreen);
+  if (mEmu)
+    mEmu->DoFrame();
 }
 
 void	GraphicsEngine::DrawScanLine(int numScanLine)

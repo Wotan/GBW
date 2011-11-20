@@ -5,7 +5,8 @@
 
 Emulator::Emulator(App *app) :
   mCartridgeMem(0),
-  mApp(app)
+  mApp(app),
+  mPause(true)
 {
   std::cout << "Emulator created" << std::endl;
 }
@@ -22,6 +23,8 @@ void	Emulator::DoFrame()
   int	nbCycles = 0;
   int	curCycles;
 
+  if (mPause)
+    return ;
   while (nbCycles < CYCLE_BY_FRAME)
     {
       curCycles = DoOpcode();
@@ -29,12 +32,22 @@ void	Emulator::DoFrame()
     }
 }
 
+void	Emulator::Play()
+{
+  mPause = false;
+}
+
+void	Emulator::Pause()
+{
+  mPause = true;
+}
+
 BYTE	Emulator::ReadMem(WORD addr)
 {
   if (addr <= 0x3FFF) // ROM Bank 00
     return mCartridgeMem[addr];
   else if (addr <= 0x7FFF) // ROM bank 01..NN
-    return mCartridgeMem[SIZE_BANK * mCurROMBank + (addr - 0xA000)];
+    return mCartridgeMem[SIZE_BANK * mCurROMBank + (addr - 0x4000)];
   else if (addr <= 0x9FFF) // VRAM
     return mVRAM[addr - 0x8000];
   else if (addr <= 0xBFFF) // ExtRAM

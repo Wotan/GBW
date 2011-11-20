@@ -23,12 +23,14 @@ void	MainWindow::Init()
 
   /////////////////////////////////////////////
   QMenu *menuFile = menuBar()->addMenu(tr("&File"));
-  QMenu *menuPlay = menuBar()->addMenu(tr("&Play"));
+  QMenu *menuRun = menuBar()->addMenu(tr("&Run"));
   QMenu *menuDebugger = menuBar()->addMenu(tr("&Debugger"));
 
   QAction *actionOpen = menuFile->addAction(tr("&Open"));
   QAction *actionExit = menuFile->addAction(tr("&Exit"));
   QAction *actionShowDebug = menuDebugger->addAction(tr("&Show debug panel"));
+  QAction *actionPlay = menuRun->addAction(tr("&Play"));
+  QAction *actionPause = menuRun->addAction(tr("&Pause"));
 
   /////////////////////////////////////////////
   actionExit->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Q));
@@ -58,6 +60,8 @@ void	MainWindow::Init()
 
   connect(mGraphicsEngine, SIGNAL(ChangeEmuInstance(Emulator *)),
 	  mDebug, SLOT(EmuInstanceChange(Emulator *)));
+  connect(actionPlay, SIGNAL(triggered()), mGraphicsEngine, SLOT(PlayEmu()));
+  connect(actionPause, SIGNAL(triggered()), mGraphicsEngine, SLOT(PauseEmu()));
 }
 
 void	MainWindow::OpenRom()
