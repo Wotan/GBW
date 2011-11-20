@@ -17,7 +17,13 @@
 # define CYCLE_BY_FRAME 69905 // (4194304 / 60)
 
 # define IS_BIT_SET(x, n) ((x & (1 << n)))
-# define SET_BIT(x, n) (x |= (1 << n))
+# define SET_BIT(x, n) (x |= (x & (1 << n) ? (1 << n) : 0))
+# define RESET_BIT(x, n) (x |= (x & (1 << n) ? 0 : (1 << n)))
+
+# define F_Z 7
+# define F_N 6
+# define F_H 5
+# define F_C 4
 
 # define RAM 1
 # define ROM 0
@@ -74,12 +80,16 @@ public:
   void	ReadCartridgeInfos();
   BYTE	ReadMem(WORD addr);
   void  WriteMem(WORD addr, BYTE value);
+
   int	DoOpcode();
   void	DoFrame();
   void	Play();
   void	Pause();
 
-
+  void	Load16bitHL();
+  void	ADD_8Bit(BYTE &toAdd, BYTE add, bool addCarry);
+  void	Push(WORD value);
+  WORD	Pop();
 
 private:
   // Infos //

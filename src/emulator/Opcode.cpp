@@ -182,7 +182,6 @@ int	Emulator::DoOpcode()
     case 0x6E:
       REG_L = ReadMem(mHL.a);
       return 8;
-
     case 0x70:
       WriteMem(mHL.a, REG_B);
       return 8;
@@ -280,11 +279,62 @@ int	Emulator::DoOpcode()
     case 0xF0:
       REG_A = ReadMem(0xFF00 + ReadMem(mPC++));
       return 8;
+    case 0x01:
+      tmp.lo = ReadMem(mPC++);
+      tmp.hi = ReadMem(mPC++);
+      mBC.a = tmp.a;
+      return 12;
+    case 0x11:
+      tmp.lo = ReadMem(mPC++);
+      tmp.hi = ReadMem(mPC++);
+      mDE.a = tmp.a;
+      return 12;
+    case 0x21:
+      tmp.lo = ReadMem(mPC++);
+      tmp.hi = ReadMem(mPC++);
+      mHL.a = tmp.a;
+      return 12;
+    case 0x31:
+      tmp.lo = ReadMem(mPC++);
+      tmp.hi = ReadMem(mPC++);
+      mSP = tmp.a;
+      return 12;
+    case 0xF9:
+      mSP = mHL.a;
+      return 8;
+    case 0xF8:
+      Load16bitHL();
+      return 12;
+    case 0x08:
+      tmp.lo = ReadMem(mPC++);
+      tmp.hi = ReadMem(mPC++);
+      WriteMem(tmp.a, mSP);
+      return 20;
 
-
-
-
-
+    case 0xF5:
+      Push(mAF.a);
+      return 16;
+    case 0xC5:
+      Push(mBC.a);
+      return 16;
+    case 0xD5:
+      Push(mDE.a);
+      return 16;
+    case 0xE5:
+      Push(mHL.a);
+      return 16;
+    case 0xF1:
+      mAF.a = Pop();
+      return 12;
+    case 0xC1:
+      mBC.a = Pop();
+      return 12;
+    case 0xD1:
+      mDE.a = Pop();
+      return 12;
+    case 0xE1:
+      mHL.a = Pop();
+      return 12;
 
 
     default:
