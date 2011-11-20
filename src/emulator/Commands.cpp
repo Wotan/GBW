@@ -4,6 +4,24 @@
 #include "App.hpp"
 #include "Emulator.hpp"
 
+
+void	Emulator::Halt()
+{
+
+
+}
+
+void	Emulator::Stop()
+{
+
+
+}
+
+void	Emulator::ToggleIntAfter(bool on)
+{
+  on = on;
+}
+
 void	Emulator::Load16bitHL()
 {
   BYTE tmp = ReadMem(mPC++);
@@ -167,4 +185,129 @@ void	Emulator::ADD_16bitSigned(WORD &toAdd, SBYTE add)
   toAdd += add;
 }
 
+void	Emulator::SWAP_8bit(BYTE &toSwap)
+{
+  BYTE	save;
 
+  save = toSwap;
+  save = save >> 4;
+  save |= toSwap << 4;
+  toSwap = save;
+  if (toSwap == 0)
+    SET_BIT(REG_F, F_Z);
+  RESET_BIT(REG_F, F_N);
+  RESET_BIT(REG_F, F_H);
+  RESET_BIT(REG_F, F_C);
+}
+
+void	Emulator::DDA_8Bit(BYTE &nbr)
+{
+  int	first = nbr / 10;
+  int	second = nbr % 10;
+
+  if (first >= 10)
+    {
+      SET_BIT(REG_F, F_C);
+      first /= 10;
+    }
+  else
+    RESET_BIT(REG_F, F_C);
+  nbr = 0;
+  nbr = second;
+  nbr |= first << 4;
+  RESET_BIT(REG_F, F_H);
+  if (nbr == 0)
+    SET_BIT(REG_F, F_Z);
+
+}
+
+void	Emulator::RotateRight_8bit(BYTE &data, bool throughtCarry)
+{
+  bool	oldBit;
+  bool	oldCarry;
+
+  oldBit = IS_BIT_SET(data, 0);
+  oldCarry = IS_BIT_SET(REG_F, F_C);
+
+  if (oldBit)
+    SET_BIT(REG_F, F_C);
+  else
+    RESET_BIT(REG_F, F_C);
+  data >>= 1;
+  if (throughtCarry) // bit7 == Oldcarry
+    {
+      if (oldCarry)
+	SET_BIT(data, 7);
+    }
+  else // bit7 == oldBit
+    {
+      if (oldBit)
+	SET_BIT(data, 7);
+    }
+  RESET_BIT(REG_F, F_N);
+  RESET_BIT(REG_F, F_H);
+  if (data == 0)
+    SET_BIT(REG_F, F_Z);
+}
+
+void	Emulator::RotateLeft_8bit(BYTE &data, bool throughtCarry)
+{
+  bool	oldBit;
+  bool	oldCarry;
+
+  oldBit = IS_BIT_SET(data, 7);
+  oldCarry = IS_BIT_SET(REG_F, F_C);
+
+  if (oldBit)
+    SET_BIT(REG_F, F_C);
+  else
+    RESET_BIT(REG_F, F_C);
+  data <<= 1;
+  if (throughtCarry) // bit0 == Oldcarry
+    {
+      if (oldCarry)
+	SET_BIT(data, 0);
+    }
+  else // bit0 == oldBit
+    {
+      if (oldBit)
+	SET_BIT(data, 0);
+    }
+  RESET_BIT(REG_F, F_N);
+  RESET_BIT(REG_F, F_H);
+  if (data == 0)
+    SET_BIT(REG_F, F_Z);
+}
+
+void	Emulator::ShiftLeft_8bit(BYTE &data)
+{
+  RESET_BIT(REG_F, F_N);
+  RESET_BIT(REG_F, F_H);
+
+  if (IS_BIT_SET(data, 7))
+    SET_BIT(REG_F, F_C);
+  else
+    RESET_BIT(REG_F, F_C);
+
+  data <<= 1;
+  if (data == 0)
+    SET_BIT(REG_F, F_Z);
+}
+
+void	Emulator::ShiftRight_8bit(BYTE &data, bool MSB)
+{
+  bool	save;
+  save = IS_BIT_SET(data, 7);
+  RESET_BIT(REG_F, F_N);
+  RESET_BIT(REG_F, F_H);
+
+  if (IS_BIT_SET(data, 0))
+    SET_BIT(REG_F, F_C);
+  else
+    RESET_BIT(REG_F, F_C);
+  if (MSB && save)
+    SET_BIT(data, 7);
+  data >>= 1;
+  if (data == 0)
+    SET_BIT(REG_F, F_Z);
+}

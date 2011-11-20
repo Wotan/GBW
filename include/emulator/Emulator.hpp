@@ -17,8 +17,8 @@
 # define CYCLE_BY_FRAME 69905 // (4194304 / 60)
 
 # define IS_BIT_SET(x, n) ((x & (1 << n)))
-# define SET_BIT(x, n) (x |= (x & (1 << n) ? (1 << n) : 0))
-# define RESET_BIT(x, n) (x |= (x & (1 << n) ? 0 : (1 << n)))
+# define SET_BIT(x, n) (x |= (1 << n))
+# define RESET_BIT(x, n) (x &= ~(1 << n))
 
 # define F_Z 7
 # define F_N 6
@@ -86,6 +86,10 @@ public:
   void	Play();
   void	Pause();
 
+  void	Halt();
+  void	Stop();
+  void	ToggleIntAfter(bool on);
+
   void	Load16bitHL();
   void	ADD_8Bit(BYTE &toAdd, BYTE add, bool addCarry);
   void	SUB_8Bit(BYTE &toSub, BYTE sub, bool addCarry);
@@ -97,6 +101,12 @@ public:
   void	CP_8Bit(BYTE cp1, BYTE cp2);
   void	ADD_16bit(WORD &toAdd, WORD add);
   void	ADD_16bitSigned(WORD &toAdd, SBYTE add);
+  void	SWAP_8bit(BYTE &toSwap);
+  void	DDA_8Bit(BYTE &nbr);
+  void	RotateLeft_8bit(BYTE &data, bool throughtCarry);
+  void	RotateRight_8bit(BYTE &data, bool throughtCarry);
+  void	ShiftRight_8bit(BYTE &data, bool MSB);
+  void	ShiftLeft_8bit(BYTE &data);
   void	Push(WORD value);
   WORD	Pop();
 

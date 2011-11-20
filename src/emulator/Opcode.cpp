@@ -7,6 +7,7 @@ int	Emulator::DoOpcode()
 {
   UWORD tmp;
   BYTE	tmpB;
+  BYTE	extOpcode;
   int	opcode = ReadMem(mPC);
   mPC++;
   switch (opcode)
@@ -655,9 +656,295 @@ int	Emulator::DoOpcode()
     case 0x3B:
       mSP--;
       return 8;
+    case 0x27:
+      DDA_8Bit(REG_A);
+      return 4;
+    case 0x2F:
+      SET_BIT(REG_F, F_N);
+      SET_BIT(REG_F, F_H);
+      REG_A |= 0xFF;
+      return 4;
+    case 0x3F:
+      RESET_BIT(REG_F, F_N);
+      RESET_BIT(REG_F, F_H);
+      if (IS_BIT_SET(REG_F, F_C))
+	RESET_BIT(REG_F, F_C);
+      else
+	SET_BIT(REG_F, F_C);
+      return 4;
+    case 0x37:
+      RESET_BIT(REG_F, F_N);
+      RESET_BIT(REG_F, F_H);
+      RESET_BIT(REG_F, F_C);
+      return 4;
+    case 0x00:
+      return 4;
+    case 0x76:
+      Halt();
+      return 4;
+    case 0xF3:
+      ToggleIntAfter(false);
+      return 4;
+    case 0xFB:
+      ToggleIntAfter(true);
+      return 4;
+
+    case 0x07:
+      RotateLeft_8bit(REG_A, false);
+      return 4;
+    case 0x17:
+      RotateLeft_8bit(REG_A, true);
+      return 4;
+
+    case 0x0F:
+      RotateRight_8bit(REG_A, false);
+      return 4;
+    case 0x1F:
+      RotateRight_8bit(REG_A, true);
+      return 4;
 
 
+      // Extended opcodes
+    case 0x10:
+      {
+	extOpcode = ReadMem(mPC++);
+	if (extOpcode == 0x0)
+	  {
+	    Stop();
+	    return 4;
+	  }
+	std::cout << "Unknown opcode :" << opcode << "." << extOpcode<< std::endl;
+	return 1;
+      }
 
+    case 0xCB:
+      {
+	extOpcode = ReadMem(mPC++);
+	switch (extOpcode)
+	  {
+	  case 0x37:
+	    SWAP_8bit(REG_A);
+	    return 8;
+	  case 0x30:
+	    SWAP_8bit(REG_B);
+	    return 8;
+	  case 0x31:
+	    SWAP_8bit(REG_C);
+	    return 8;
+	  case 0x32:
+	    SWAP_8bit(REG_D);
+	    return 8;
+	  case 0x33:
+	    SWAP_8bit(REG_E);
+	    return 8;
+	  case 0x34:
+	    SWAP_8bit(REG_H);
+	    return 8;
+	  case 0x35:
+	    SWAP_8bit(REG_L);
+	    return 8;
+
+	  case 0x36:
+	    tmpB = ReadMem(mHL.a);
+	    SWAP_8bit(tmpB);
+	    WriteMem(mHL.a, tmpB);
+	    return 16;
+
+	  case 0x07:
+	    RotateLeft_8bit(REG_A, false);
+	    return 8;
+	  case 0x00:
+	    RotateLeft_8bit(REG_B, false);
+	    return 8;
+	  case 0x01:
+	    RotateLeft_8bit(REG_C, false);
+	    return 8;
+	  case 0x02:
+	    RotateLeft_8bit(REG_D, false);
+	    return 8;
+	  case 0x03:
+	    RotateLeft_8bit(REG_E, false);
+	    return 8;
+	  case 0x04:
+	    RotateLeft_8bit(REG_H, false);
+	    return 8;
+	  case 0x05:
+	    RotateLeft_8bit(REG_L, false);
+	    return 8;
+	  case 0x06:
+	    tmpB = ReadMem(mHL.a);
+	    RotateLeft_8bit(tmpB, false);
+	    WriteMem(mHL.a, tmpB);
+	    return 16;
+
+	  case 0x17:
+	    RotateLeft_8bit(REG_A, true);
+	    return 8;
+	  case 0x10:
+	    RotateLeft_8bit(REG_B, true);
+	    return 8;
+	  case 0x11:
+	    RotateLeft_8bit(REG_C, true);
+	    return 8;
+	  case 0x12:
+	    RotateLeft_8bit(REG_D, true);
+	    return 8;
+	  case 0x13:
+	    RotateLeft_8bit(REG_E, true);
+	    return 8;
+	  case 0x14:
+	    RotateLeft_8bit(REG_H, true);
+	    return 8;
+	  case 0x15:
+	    RotateLeft_8bit(REG_L, true);
+	    return 8;
+	  case 0x16:
+	    tmpB = ReadMem(mHL.a);
+	    RotateLeft_8bit(tmpB, true);
+	    WriteMem(mHL.a, tmpB);
+	    return 16;
+
+	  case 0x0F:
+	    RotateRight_8bit(REG_A, false);
+	    return 8;
+	  case 0x08:
+	    RotateRight_8bit(REG_B, false);
+	    return 8;
+	  case 0x09:
+	    RotateRight_8bit(REG_C, false);
+	    return 8;
+	  case 0x0A:
+	    RotateRight_8bit(REG_D, false);
+	    return 8;
+	  case 0x0B:
+	    RotateRight_8bit(REG_E, false);
+	    return 8;
+	  case 0x0C:
+	    RotateRight_8bit(REG_H, false);
+	    return 8;
+	  case 0x0D:
+	    RotateRight_8bit(REG_L, false);
+	    return 8;
+	  case 0x0E:
+	    tmpB = ReadMem(mHL.a);
+	    RotateRight_8bit(tmpB, false);
+	    WriteMem(mHL.a, tmpB);
+	    return 16;
+
+	  case 0x1F:
+	    RotateRight_8bit(REG_A, true);
+	    return 8;
+	  case 0x18:
+	    RotateRight_8bit(REG_B, true);
+	    return 8;
+	  case 0x19:
+	    RotateRight_8bit(REG_C, true);
+	    return 8;
+	  case 0x1A:
+	    RotateRight_8bit(REG_D, true);
+	    return 8;
+	  case 0x1B:
+	    RotateRight_8bit(REG_E, true);
+	    return 8;
+	  case 0x1C:
+	    RotateRight_8bit(REG_H, true);
+	    return 8;
+	  case 0x1D:
+	    RotateRight_8bit(REG_L, true);
+	    return 8;
+	  case 0x1E:
+	    tmpB = ReadMem(mHL.a);
+	    RotateRight_8bit(tmpB, true);
+	    WriteMem(mHL.a, tmpB);
+	    return 16;
+
+	  case 0x27:
+	    ShiftLeft_8bit(REG_A);
+	    return 8;
+	  case 0x20:
+	    ShiftLeft_8bit(REG_B);
+	    return 8;
+	  case 0x21:
+	    ShiftLeft_8bit(REG_C);
+	    return 8;
+	  case 0x22:
+	    ShiftLeft_8bit(REG_D);
+	    return 8;
+	  case 0x23:
+	    ShiftLeft_8bit(REG_E);
+	    return 8;
+	  case 0x24:
+	    ShiftLeft_8bit(REG_H);
+	    return 8;
+	  case 0x25:
+	    ShiftLeft_8bit(REG_L);
+	    return 8;
+	  case 0x26:
+	    tmpB = ReadMem(mHL.a);
+	    ShiftLeft_8bit(tmpB);
+	    WriteMem(mHL.a, tmpB);
+	    return 16;
+
+	  case 0x2F:
+	    ShiftRight_8bit(REG_A, false);
+	    return 8;
+	  case 0x28:
+	    ShiftRight_8bit(REG_B, false);
+	    return 8;
+	  case 0x29:
+	    ShiftRight_8bit(REG_C, false);
+	    return 8;
+	  case 0x2A:
+	    ShiftRight_8bit(REG_D, false);
+	    return 8;
+	  case 0x2B:
+	    ShiftRight_8bit(REG_E, false);
+	    return 8;
+	  case 0x2C:
+	    ShiftRight_8bit(REG_H, false);
+	    return 8;
+	  case 0x2D:
+	    ShiftRight_8bit(REG_L, false);
+	    return 8;
+	  case 0x2E:
+	    tmpB = ReadMem(mHL.a);
+	    ShiftRight_8bit(tmpB, false);
+	    WriteMem(mHL.a, tmpB);
+	    return 16;
+
+	  case 0x3F:
+	    ShiftRight_8bit(REG_A, true);
+	    return 8;
+	  case 0x38:
+	    ShiftRight_8bit(REG_B, true);
+	    return 8;
+	  case 0x39:
+	    ShiftRight_8bit(REG_C, true);
+	    return 8;
+	  case 0x3A:
+	    ShiftRight_8bit(REG_D, true);
+	    return 8;
+	  case 0x3B:
+	    ShiftRight_8bit(REG_E, true);
+	    return 8;
+	  case 0x3C:
+	    ShiftRight_8bit(REG_H, true);
+	    return 8;
+	  case 0x3D:
+	    ShiftRight_8bit(REG_L, true);
+	    return 8;
+	  case 0x3E:
+	    tmpB = ReadMem(mHL.a);
+	    ShiftRight_8bit(tmpB, true);
+	    WriteMem(mHL.a, tmpB);
+	    return 16;
+
+
+	  default:
+	    std::cout << "Unknown opcode :" << opcode << "." << extOpcode<< std::endl;
+	    return 1;
+	  }
+      }
 
     default:
       std::cout << "Unknown opcode :" << opcode << std::endl;
