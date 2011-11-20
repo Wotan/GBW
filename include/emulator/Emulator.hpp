@@ -88,6 +88,7 @@ public:
 
   void	Halt();
   void	Stop();
+  void	ToggleInt(bool on);
   void	ToggleIntAfter(bool on);
 
   void	Load16bitHL();

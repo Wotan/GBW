@@ -320,6 +320,110 @@ int	Emulator::DoOpcode()
     case 0x0F: RotateRight_8bit(REG_A, false); return 4;
     case 0x1F: RotateRight_8bit(REG_A, true); return 4;
 
+      // JUMP
+    case 0xC3:
+      tmp.lo = ReadMem(mPC++); tmp.hi = ReadMem(mPC++);
+      mPC = tmp.a;
+      return 12;
+    case 0xC2:
+      tmp.lo = ReadMem(mPC++); tmp.hi = ReadMem(mPC++);
+      if (!IS_BIT_SET(REG_F, F_Z))
+	mPC = tmp.a;
+      return 12;
+    case 0xCA:
+      tmp.lo = ReadMem(mPC++); tmp.hi = ReadMem(mPC++);
+      if (IS_BIT_SET(REG_F, F_Z))
+	mPC = tmp.a;
+      return 12;
+    case 0xD2:
+      tmp.lo = ReadMem(mPC++); tmp.hi = ReadMem(mPC++);
+      if (!IS_BIT_SET(REG_F, F_C))
+	mPC = tmp.a;
+      return 12;
+    case 0xDA:
+      tmp.lo = ReadMem(mPC++); tmp.hi = ReadMem(mPC++);
+      if (IS_BIT_SET(REG_F, F_C))
+	mPC = tmp.a;
+      return 12;
+    case 0xE9: mPC = mHL.a; return 4;
+    case 0x18: tmpB = ReadMem(mPC++); mPC += tmpB - 1;
+      return 8;
+    case 0x20:
+      mPC++;
+      if (!IS_BIT_SET(REG_F, F_Z))
+	mPC = ReadMem(mPC) - 1;
+      return 8;
+    case 0x28:
+      mPC++;
+      if (IS_BIT_SET(REG_F, F_Z))
+	mPC = ReadMem(mPC) - 1;
+      return 8;
+    case 0x30:
+      mPC++;
+      if (!IS_BIT_SET(REG_F, F_C))
+	mPC = ReadMem(mPC) - 1;
+      return 8;
+    case 0x38:
+      mPC++;
+      if (IS_BIT_SET(REG_F, F_C))
+	mPC += ReadMem(mPC) - 1;
+      return 8;
+
+      // CALL
+    case 0xCD:
+      tmp.lo = ReadMem(mPC++); tmp.hi = ReadMem(mPC++);
+      Push(mPC);
+      mPC = tmp.a;
+      return 12;
+
+    case 0xC4:
+      tmp.lo = ReadMem(mPC++); tmp.hi = ReadMem(mPC++);
+      if (IS_BIT_SET(REG_F, F_Z))
+	return 12;
+      Push(mPC);
+      mPC = tmp.a;
+      return 12;
+    case 0xCC:
+      tmp.lo = ReadMem(mPC++); tmp.hi = ReadMem(mPC++);
+      if (!IS_BIT_SET(REG_F, F_Z))
+	return 12;
+      Push(mPC);
+      mPC = tmp.a;
+      return 12;
+    case 0xD4:
+      if (IS_BIT_SET(REG_F, F_C))
+	return 12;
+      tmp.lo = ReadMem(mPC++); tmp.hi = ReadMem(mPC++);
+      Push(mPC);
+      mPC = tmp.a;
+      return 12;
+    case 0xDC:
+      tmp.lo = ReadMem(mPC++); tmp.hi = ReadMem(mPC++);
+      if (!IS_BIT_SET(REG_F, F_C))
+	return 12;
+      Push(mPC);
+      mPC = tmp.a;
+      return 12;
+
+      // RST
+    case 0xC7: Push(mPC - 1); mPC = 0x00; return 32;
+    case 0xCF: Push(mPC - 1); mPC = 0x08; return 32;
+    case 0xD7: Push(mPC - 1); mPC = 0x10; return 32;
+    case 0xDF: Push(mPC - 1); mPC = 0x18; return 32;
+    case 0xE7: Push(mPC - 1); mPC = 0x20; return 32;
+    case 0xEF: Push(mPC - 1); mPC = 0x28; return 32;
+    case 0xF7: Push(mPC - 1); mPC = 0x30; return 32;
+    case 0xFF: Push(mPC - 1); mPC = 0x38; return 32;
+
+      // RET
+    case 0xC9: mPC = Pop(); return 8;
+    case 0xC0: if (!IS_BIT_SET(REG_F, F_Z)) mPC = Pop(); return 8;
+    case 0xC8: if (IS_BIT_SET(REG_F, F_Z)) mPC = Pop(); return 8;
+    case 0xD0: if (!IS_BIT_SET(REG_F, F_C)) mPC = Pop(); return 8;
+    case 0xD8: if (IS_BIT_SET(REG_F, F_C)) mPC = Pop(); return 8;
+
+      // RETI
+    case 0xD9: mPC = Pop(); ToggleInt(true); return 8;
 
       // Extended opcodes
     case 0x10:
@@ -607,7 +711,6 @@ int	Emulator::DoOpcode()
 	    WriteMem(mHL.a, tmpB);
 	    return 16;
 
-
 	  case 0x87: SET_BIT(REG_A, 0); return 8;
 	  case 0x80: SET_BIT(REG_B, 0); return 8;
 	  case 0x81: SET_BIT(REG_C, 0); return 8;
@@ -619,7 +722,7 @@ int	Emulator::DoOpcode()
 	    tmpB = ReadMem(mHL.a);
 	    SET_BIT(tmpB, 0);
 	    WriteMem(mHL.a, tmpB);
-	    return 8;
+	    return 16;
 	  case 0x8F: SET_BIT(REG_A, 1); return 8;
 	  case 0x88: SET_BIT(REG_B, 1); return 8;
 	  case 0x89: SET_BIT(REG_C, 1); return 8;
@@ -631,7 +734,7 @@ int	Emulator::DoOpcode()
 	    tmpB = ReadMem(mHL.a);
 	    SET_BIT(tmpB, 1);
 	    WriteMem(mHL.a, tmpB);
-	    return 8;
+	    return 16;
 	  case 0x97: SET_BIT(REG_A, 2); return 8;
 	  case 0x90: SET_BIT(REG_B, 2); return 8;
 	  case 0x91: SET_BIT(REG_C, 2); return 8;
@@ -643,7 +746,7 @@ int	Emulator::DoOpcode()
 	    tmpB = ReadMem(mHL.a);
 	    SET_BIT(tmpB, 2);
 	    WriteMem(mHL.a, tmpB);
-	    return 8;
+	    return 16;
 	  case 0x9F: SET_BIT(REG_A, 3); return 8;
 	  case 0x98: SET_BIT(REG_B, 3); return 8;
 	  case 0x99: SET_BIT(REG_C, 3); return 8;
@@ -655,7 +758,7 @@ int	Emulator::DoOpcode()
 	    tmpB = ReadMem(mHL.a);
 	    SET_BIT(tmpB, 3);
 	    WriteMem(mHL.a, tmpB);
-	    return 8;
+	    return 16;
 	  case 0xA7: SET_BIT(REG_A, 4); return 8;
 	  case 0xA0: SET_BIT(REG_B, 4); return 8;
 	  case 0xA1: SET_BIT(REG_C, 4); return 8;
@@ -667,7 +770,7 @@ int	Emulator::DoOpcode()
 	    tmpB = ReadMem(mHL.a);
 	    SET_BIT(tmpB, 4);
 	    WriteMem(mHL.a, tmpB);
-	    return 8;
+	    return 16;
 	  case 0xAF: SET_BIT(REG_A, 5); return 8;
 	  case 0xA8: SET_BIT(REG_B, 5); return 8;
 	  case 0xA9: SET_BIT(REG_C, 5); return 8;
@@ -679,7 +782,7 @@ int	Emulator::DoOpcode()
 	    tmpB = ReadMem(mHL.a);
 	    SET_BIT(tmpB, 5);
 	    WriteMem(mHL.a, tmpB);
-	    return 8;
+	    return 16;
 	  case 0xB7: SET_BIT(REG_A, 6); return 8;
 	  case 0xB0: SET_BIT(REG_B, 6); return 8;
 	  case 0xB1: SET_BIT(REG_C, 6); return 8;
@@ -691,7 +794,7 @@ int	Emulator::DoOpcode()
 	    tmpB = ReadMem(mHL.a);
 	    SET_BIT(tmpB, 6);
 	    WriteMem(mHL.a, tmpB);
-	    return 8;
+	    return 16;
 	  case 0xBF: SET_BIT(REG_A, 7); return 8;
 	  case 0xB8: SET_BIT(REG_B, 7); return 8;
 	  case 0xB9: SET_BIT(REG_C, 7); return 8;
@@ -703,9 +806,7 @@ int	Emulator::DoOpcode()
 	    tmpB = ReadMem(mHL.a);
 	    SET_BIT(tmpB, 7);
 	    WriteMem(mHL.a, tmpB);
-	    return 8;
-
-
+	    return 16;
 
 	  default:
 	    std::cout << "Unknown opcode :" << opcode << "." << extOpcode << std::endl;
