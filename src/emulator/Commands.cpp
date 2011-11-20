@@ -15,7 +15,7 @@ void	Emulator::Load16bitHL()
   if (((tmp & 0xFF) + (mSP & 0xFF)) > 0xFF)
     SET_BIT(mAF.hi, F_H);
 
-  if (tmp + mSP > 0xFFF)
+  if (tmp + mSP > 0xFFF) // TO SEE
     SET_BIT(mAF.hi, F_C);
   res = tmp + mSP;
   mHL.a = res;
@@ -139,3 +139,32 @@ void	Emulator::DEC_8Bit(BYTE &toDec)
   if (toDec == 0)
     SET_BIT(REG_F, F_Z);
 }
+
+void	Emulator::ADD_16bit(WORD &toAdd, WORD add)
+{
+  RESET_BIT(REG_F, F_N);
+
+  if (toAdd + add > 0xFFFF)
+    SET_BIT(REG_F, F_C);
+  if ((((toAdd & 0xF000) >> 12) + ((add & 0xF000) >> 12)) > 0xF)
+    SET_BIT(REG_F, F_H);
+  toAdd += add;
+}
+
+void	Emulator::ADD_16bitSigned(WORD &toAdd, SBYTE add)
+{
+  RESET_BIT(REG_F, F_N);
+  RESET_BIT(REG_F, F_Z);
+
+  if (toAdd + add > 0xFFFF)
+    SET_BIT(REG_F, F_C);
+  else
+    RESET_BIT(REG_F, F_H);
+  if ((((toAdd & 0xF000) >> 12) + ((add & 0xF000) >> 12)) > 0xF)
+    SET_BIT(REG_F, F_H);
+  else
+    RESET_BIT(REG_F, F_H);
+  toAdd += add;
+}
+
+

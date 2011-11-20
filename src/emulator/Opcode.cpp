@@ -615,6 +615,50 @@ int	Emulator::DoOpcode()
       WriteMem(mHL.a, tmpB);
       return 12;
 
+    case 0x09:
+      ADD_16bit(mHL.a, mBC.a);
+      return 8;
+    case 0x19:
+      ADD_16bit(mHL.a, mDE.a);
+      return 8;
+    case 0x29:
+      ADD_16bit(mHL.a, mHL.a);
+      return 8;
+    case 0x39:
+      ADD_16bit(mHL.a, mSP);
+      return 8;
+    case 0xE8:
+      ADD_16bitSigned(mSP, ReadMem(mPC++));
+      return 16;
+
+    case 0x03:
+      mBC.a++;
+      return 8;
+    case 0x13:
+      mDE.a++;
+      return 8;
+    case 0x23:
+      mHL.a++;
+      return 8;
+    case 0x33:
+      mSP++;
+      return 8;
+    case 0x0B:
+      mBC.a--;
+      return 8;
+    case 0x1B:
+      mDE.a--;
+      return 8;
+    case 0x2B:
+      mHL.a--;
+      return 8;
+    case 0x3B:
+      mSP--;
+      return 8;
+
+
+
+
     default:
       std::cout << "Unknown opcode :" << opcode << std::endl;
       return 1;

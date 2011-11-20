@@ -95,6 +95,8 @@ public:
   void	DEC_8Bit(BYTE &toDec);
   void	INC_8Bit(BYTE &toDec);
   void	CP_8Bit(BYTE cp1, BYTE cp2);
+  void	ADD_16bit(WORD &toAdd, WORD add);
+  void	ADD_16bitSigned(WORD &toAdd, SBYTE add);
   void	Push(WORD value);
   WORD	Pop();
 
