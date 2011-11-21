@@ -29,14 +29,14 @@
 # define RAM 1
 # define ROM 0
 
-# define REG_A mAF.lo
-# define REG_F mAF.hi
-# define REG_B mBC.lo
-# define REG_C mBC.hi
-# define REG_D mDE.lo
-# define REG_E mDE.hi
-# define REG_H mHL.lo
-# define REG_L mHL.hi
+# define REG_A mAF.hi
+# define REG_F mAF.lo
+# define REG_B mBC.hi
+# define REG_C mBC.lo
+# define REG_D mDE.hi
+# define REG_E mDE.lo
+# define REG_H mHL.hi
+# define REG_L mHL.lo
 
 class App;
 
