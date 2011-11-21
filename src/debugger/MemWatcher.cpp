@@ -5,7 +5,8 @@
 
 
 MemWatcher::MemWatcher(QWidget *parent) :
-  QFrame(parent)
+  QFrame(parent),
+  mEmu(0)
 {
   setFrameStyle(QFrame::Panel | QFrame::Sunken);
   setLineWidth(1);
