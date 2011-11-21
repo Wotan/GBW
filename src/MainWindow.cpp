@@ -36,6 +36,8 @@ void	MainWindow::Init()
   actionExit->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Q));
   actionOpen->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_O));
   actionShowDebug->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_D));
+  actionPlay->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_R));
+  actionPause->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_P));
 
   /////////////////////////////////////////////
   mDebug = new Debugger(this, mApp);
@@ -47,11 +49,6 @@ void	MainWindow::Init()
 				       QSize(160, 144), mApp);
   mGraphicsEngine->show();
 
-  if (mApp->arguments().size() > 1)
-    {
-      QString romFile = mApp->arguments().at(1);
-      mGraphicsEngine->NewEmulator(romFile.toStdString().c_str());
-    }
 
   //////////// Signals //////////////////////
   connect(actionExit, SIGNAL(triggered()), mApp, SLOT(quit()));
@@ -62,6 +59,13 @@ void	MainWindow::Init()
 	  mDebug, SLOT(EmuInstanceChange(Emulator *)));
   connect(actionPlay, SIGNAL(triggered()), mGraphicsEngine, SLOT(PlayEmu()));
   connect(actionPause, SIGNAL(triggered()), mGraphicsEngine, SLOT(PauseEmu()));
+
+  if (mApp->arguments().size() > 1)
+    {
+      QString romFile = mApp->arguments().at(1);
+      mGraphicsEngine->NewEmulator(romFile.toStdString().c_str());
+    }
+
 }
 
 void	MainWindow::OpenRom()

@@ -3,6 +3,7 @@
 
 # include <inttypes.h>
 # include "App.hpp"
+# include "Debugger.hpp"
 
 # define BYTE uint8_t
 # define WORD uint16_t
@@ -68,8 +69,11 @@ typedef struct
   BYTE	Jap; // 0 = Jap, 1 = Other
 } CartridgeInfos;
 
+
 class Emulator
 {
+  friend class RegWatcher;
+  friend class MemWatcher;
 public:
   Emulator(App *app);
   ~Emulator();
@@ -131,7 +135,7 @@ private:
   bool		mRAMEnable;
 
   // All ROM (Cartridge)
- BYTE		*mCartridgeMem;
+  BYTE		*mCartridgeMem;
 
   // (03) 8000 - 9FFF
   BYTE		mVRAM[0x2000];

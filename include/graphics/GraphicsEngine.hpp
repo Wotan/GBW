@@ -28,8 +28,8 @@ public:
   void	CloseEmulator();
 
 public slots:
-  void	PlayEmu() {if (mEmu) mEmu->Play();}
-  void	PauseEmu() {if(mEmu) mEmu->Pause();}
+  void	PlayEmu();
+  void	PauseEmu();
 
 signals:
   void	ChangeEmuInstance(Emulator *emu);

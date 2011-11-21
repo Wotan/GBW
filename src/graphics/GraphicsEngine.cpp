@@ -56,6 +56,7 @@ bool	GraphicsEngine::NewEmulator(const char *fileName)
 {
   if (mEmu)
     delete mEmu;
+
   mEmu = new Emulator(mApp);
   if (!mEmu->Init(fileName))
     {
@@ -71,4 +72,16 @@ void	GraphicsEngine::CloseEmulator()
   delete mEmu;
   mEmu = 0;
   emit ChangeEmuInstance(mEmu);
+}
+
+void	GraphicsEngine::PlayEmu()
+{
+  if (mEmu)
+    mEmu->Play();
+}
+
+void	GraphicsEngine::PauseEmu()
+{
+  if(mEmu)
+    mEmu->Pause();
 }
