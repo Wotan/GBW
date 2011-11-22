@@ -2,6 +2,7 @@
 # define DEBUGGER_HPP_
 
 # include <QPushButton>
+# include <QShortcut>
 # include <QWidget>
 # include <QDialog>
 # include "App.hpp"
@@ -23,6 +24,9 @@ public:
   ~Debugger();
   bool	Init();
 
+  char *GetOpMnemonic(int addr);
+  char *GetOpDesc(int addr);
+
 public slots:
   void		EmuInstanceChange(Emulator *emu);
   void		NextOpcode();
@@ -33,6 +37,8 @@ private:
   RegWatcher	*mRegWatcher;
   MemWatcher	*mMemWatcher;
   QPushButton	*mNextOp;
+  QShortcut	*mExitShortcut;
+  QShortcut	*mNextOpShortcut;
 };
 
 #endif // DEBUGGER_HPP_

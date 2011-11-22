@@ -1,4 +1,5 @@
 #include <iostream>
+#include <QMessageBox>
 #include <QPushButton>
 #include "Debugger.hpp"
 #include "Emulator.hpp"
@@ -36,12 +37,24 @@ bool Debugger::Init()
   mNextOp->setGeometry(335, 250, 100, 25);
 
   connect(mNextOp, SIGNAL(clicked()), this, SLOT(NextOpcode()));
+
+  mExitShortcut = new QShortcut(QKeySequence("Ctrl+D"), this);
+  mNextOpShortcut = new QShortcut(QKeySequence("Ctrl+Space"), this);
+
+  connect(mExitShortcut, SIGNAL(activated()), this, SLOT(close()));
+  connect(mNextOpShortcut, SIGNAL(activated()), this, SLOT(NextOpcode()));
+
   return true;
 }
 
 void	Debugger::NextOpcode()
 {
-  std::cout << "Exec opcode ..." << std::endl;
+  if (!mEmu)
+    {
+      QMessageBox::critical(this, "Error",
+			    "No rom loaded");
+      return ;
+    }
   mEmu->DoOpcode();
   mMemWatcher->repaint();
   mRegWatcher->repaint();
@@ -53,4 +66,9 @@ void	Debugger::EmuInstanceChange(Emulator *emu)
   mMemWatcher->SetEmu(emu);
   mRegWatcher->SetEmu(emu);
   std::cout << "Change emulator instance (" << emu << ")" << std::endl;
+  if (emu)
+    {
+      mMemWatcher->repaint();
+      mRegWatcher->repaint();
+    }
 }

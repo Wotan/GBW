@@ -22,7 +22,7 @@ INCLUDEPATH +=  . \
                 include/emulator \
                 include/debugger
 
-LIBS += -lsfml-system -lsfml-graphics
+LIBS += -lsfml-system -lsfml-graphics -lsfml-window
 OBJECTS_DIR = ./obj
 MOC_DIR = ./obj
 
@@ -47,5 +47,6 @@ SOURCES +=      src/main.cpp \
                 src/emulator/Commands.cpp \
                 src/debugger/Debugger.cpp \
                 src/debugger/MemWatcher.cpp \
-                src/debugger/RegWatcher.cpp
+                src/debugger/RegWatcher.cpp \
+                src/debugger/Mnemonic.cpp
 
