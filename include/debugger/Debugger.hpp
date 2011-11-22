@@ -24,8 +24,8 @@ public:
   ~Debugger();
   bool	Init();
 
-  char *GetOpMnemonic(int addr);
-  char *GetOpDesc(int addr);
+  static const char *GetOpMnemonic(Emulator *emu, int addr);
+  static const char *GetOpDesc(Emulator *emu, int addr);
 
 public slots:
   void		EmuInstanceChange(Emulator *emu);
