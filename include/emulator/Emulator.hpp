@@ -85,7 +85,7 @@ typedef struct
 
 class Emulator
 {
-  friend class RegWatcher;
+  friend class InfosWatcher;
   friend class MemWatcher;
 public:
   Emulator(App *app);

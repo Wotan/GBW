@@ -6,10 +6,10 @@
 
 class Emulator;
 
-class RegWatcher : public QFrame
+class InfosWatcher : public QFrame
 {
 public:
-  RegWatcher(QWidget *parent);
+  InfosWatcher(QWidget *parent);
   virtual void paintEvent(QPaintEvent *);
   void	SetEmu(Emulator *emu) {mEmu = emu;}
 

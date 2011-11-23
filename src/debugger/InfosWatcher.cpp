@@ -3,11 +3,11 @@
 #include <iostream>
 #include <QPainter>
 #include <QFrame>
-#include "RegWatcher.hpp"
+#include "InfosWatcher.hpp"
 #include "Emulator.hpp"
 
 
-RegWatcher::RegWatcher(QWidget *parent) :
+InfosWatcher::InfosWatcher(QWidget *parent) :
   QFrame(parent),
   mEmu(0)
 {
@@ -15,7 +15,7 @@ RegWatcher::RegWatcher(QWidget *parent) :
   setLineWidth(1);
 }
 
-void	RegWatcher::paintEvent(QPaintEvent *event)
+void	InfosWatcher::paintEvent(QPaintEvent *event)
 {
   QFrame::paintEvent(event);
 

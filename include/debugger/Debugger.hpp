@@ -7,12 +7,12 @@
 # include <QDialog>
 # include "App.hpp"
 # include "Emulator.hpp"
-# include "RegWatcher.hpp"
+# include "InfosWatcher.hpp"
 # include "MemWatcher.hpp"
 
 class App;
 class Emulator;
-class RegWatcher;
+class InfosWatcher;
 class MemWatcher;
 
 class Debugger : public QDialog
@@ -34,7 +34,7 @@ public slots:
 private:
   App		*mApp;
   Emulator	*mEmu;
-  RegWatcher	*mRegWatcher;
+  InfosWatcher	*mInfosWatcher;
   MemWatcher	*mMemWatcher;
   QPushButton	*mNextOp;
   QShortcut	*mExitShortcut;

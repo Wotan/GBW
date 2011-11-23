@@ -15,7 +15,7 @@ Debugger::Debugger(QWidget *parent, App *app) :
 Debugger::~Debugger()
 {
   std::cout << "Debugger deleted" << std::endl;
-  delete mRegWatcher;
+  delete mInfosWatcher;
   delete mMemWatcher;
   delete mNextOp;
 }
@@ -24,9 +24,9 @@ bool Debugger::Init()
 {
   setWindowFlags(Qt::Window);
 
-  mRegWatcher = new RegWatcher(this);
-  mRegWatcher->setGeometry(310, 5, 150, 200);
-  mRegWatcher->show();
+  mInfosWatcher = new InfosWatcher(this);
+  mInfosWatcher->setGeometry(310, 5, 150, 200);
+  mInfosWatcher->show();
 
 
   mMemWatcher = new MemWatcher(this);
@@ -59,18 +59,18 @@ void	Debugger::NextOpcode()
   mEmu->UpdateTimer(nbCycles);
   mEmu->UpdateLCD(nbCycles);
   mMemWatcher->repaint();
-  mRegWatcher->repaint();
+  mInfosWatcher->repaint();
 }
 
 void	Debugger::EmuInstanceChange(Emulator *emu)
 {
   mEmu = emu;
   mMemWatcher->SetEmu(emu);
-  mRegWatcher->SetEmu(emu);
+  mInfosWatcher->SetEmu(emu);
   std::cout << "Change emulator instance (" << emu << ")" << std::endl;
   if (emu)
     {
       mMemWatcher->repaint();
-      mRegWatcher->repaint();
+      mInfosWatcher->repaint();
     }
 }
