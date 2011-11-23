@@ -55,7 +55,9 @@ void	Debugger::NextOpcode()
 			    "No rom loaded");
       return ;
     }
-  mEmu->DoOpcode();
+  int nbCycles = mEmu->DoOpcode();
+  mEmu->UpdateTimer(nbCycles);
+  mEmu->UpdateLCD(nbCycles);
   mMemWatcher->repaint();
   mRegWatcher->repaint();
 }

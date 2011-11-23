@@ -11,6 +11,7 @@ Emulator::Emulator(App *app) :
   std::cout << "Emulator created" << std::endl;
   mDIVCounter = DIV_NBCYCLE_TO_UPDATE;
   mTIMACounter = 1024;
+  mLYCounter = 456;
 }
 
 Emulator::~Emulator()
@@ -30,13 +31,34 @@ void	Emulator::DoFrame()
   while (nbCycles < CYCLE_BY_FRAME)
     {
       curCycles = DoOpcode();
-      // UpdateScreen()
+      UpdateLCD(nbCycles);
       UpdateTimer(nbCycles);
       // HandleInterupt()
       nbCycles += curCycles;
     }
 }
 
+void	Emulator::UpdateLCD(int nbCycles)
+{
+
+  if (!IS_BIT_SET(mIOPorts[0xFF40], 7)) // return if LCD not enabled
+    return ;
+  mLYCounter -= nbCycles;
+  if (mLYCounter <= 0)
+    {
+      BYTE curLine = mIOPorts[0x44];
+
+      if (curLine < 144)
+	; //Draw line
+      else if (curLine == 144)
+	; // Interupt
+      else if (curLine > 153) // Reset
+	mIOPorts[0x44] = 0;
+
+      mIOPorts[0x44]++;
+      mLYCounter = 456;
+    }
+}
 
 void	Emulator::UpdateTimer(int nbCycles)
 {

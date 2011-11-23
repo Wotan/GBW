@@ -99,6 +99,7 @@ public:
   void  WriteMem(WORD addr, BYTE value);
 
   void	UpdateTimer(int nbCycles);
+  void	UpdateLCD(int nbCycles);
 
   int	DoOpcode();
   void	DoFrame();
@@ -146,6 +147,9 @@ private:
   UWORD	mHL;
   WORD	mPC;
   WORD	mSP; // Stack pointer
+
+  // Graphics //
+  int	mLYCounter; // Start at 456
 
   // Memory //
   BYTE		mCurROMBank;
