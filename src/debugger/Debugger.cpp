@@ -30,7 +30,7 @@ bool Debugger::Init()
 
 
   mMemWatcher = new MemWatcher(this);
-  mMemWatcher->setGeometry(5, 5, 300, 400);
+  mMemWatcher->setGeometry(5, 5, 300, 450);
   mMemWatcher->show();
 
   mNextOp = new QPushButton("Next Opcode", this);

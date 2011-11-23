@@ -90,7 +90,7 @@ int	Emulator::DoOpcode()
       tmp.hi = ReadMem(mPC++);
       WriteMem(REG_A, ReadMem(tmp.a));
       return 16;
-    case 0x3E: REG_A = ReadMem(mPC++); // Warn return 8;
+    case 0x3E: REG_A = ReadMem(mPC++); return 8;
     case 0x47: REG_B = REG_A; return 4;
     case 0x4F: REG_C = REG_A; return 4;
     case 0x57: REG_D = REG_A; return 4;
@@ -349,27 +349,20 @@ int	Emulator::DoOpcode()
 	mPC = tmp.a;
       return 12;
     case 0xE9: mPC = mHL.a; return 4;
-    case 0x18: tmpB = ReadMem(mPC++); mPC += tmpB - 1;
+    case 0x18:
+      mPC += (SBYTE)ReadMem(mPC) - 1;
       return 8;
     case 0x20:
-      mPC++;
-      if (!IS_BIT_SET(REG_F, F_Z))
-	mPC = ReadMem(mPC) - 1;
+      mPC += !IS_BIT_SET(REG_F, F_Z) ? (SBYTE)ReadMem(mPC) - 1 : 1;
       return 8;
     case 0x28:
-      mPC++;
-      if (IS_BIT_SET(REG_F, F_Z))
-	mPC = ReadMem(mPC) - 1;
+      mPC += IS_BIT_SET(REG_F, F_Z) ? (SBYTE)ReadMem(mPC) - 1 : 1;
       return 8;
     case 0x30:
-      mPC++;
-      if (!IS_BIT_SET(REG_F, F_C))
-	mPC = ReadMem(mPC) - 1;
+      mPC += !IS_BIT_SET(REG_F, F_C) ? (SBYTE)ReadMem(mPC) - 1 : 1;
       return 8;
     case 0x38:
-      mPC++;
-      if (IS_BIT_SET(REG_F, F_C))
-	mPC += ReadMem(mPC) - 1;
+      mPC += IS_BIT_SET(REG_F, F_C) ? (SBYTE)ReadMem(mPC) - 1 : 1;
       return 8;
 
       // CALL
@@ -378,7 +371,6 @@ int	Emulator::DoOpcode()
       Push(mPC);
       mPC = tmp.a;
       return 12;
-
     case 0xC4:
       tmp.lo = ReadMem(mPC++); tmp.hi = ReadMem(mPC++);
       if (IS_BIT_SET(REG_F, F_Z))

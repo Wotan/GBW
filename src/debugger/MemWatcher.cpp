@@ -106,12 +106,14 @@ void	MemWatcher::paintEvent(QPaintEvent *event)
   	       mEmu->ReadMem(curMem + 5), mEmu->ReadMem(curMem + 6),
   	       mEmu->ReadMem(curMem + 7));
 
-  painter.fillRect(85 + 27 * (mEmu->mPC % 8), posLine - 3, 20, 16, QColor(255, 204, 51));
+  painter.fillRect(85 + 27 * (mEmu->mPC % 8),
+		   posLine - 3, 20, 16, QColor(255, 204, 51));
   painter.drawText(5, posLine + 10, line);
 
   painter.drawText(5, posLine + 30, Debugger::GetOpMnemonic(mEmu, mEmu->mPC));
-  painter.drawText(5, posLine + 50, Debugger::GetOpDesc(mEmu, mEmu->mPC));
-
+  painter.drawText(QRect(5, posLine + 35, 300, 290),
+		   Qt::AlignLeft | Qt::TextWordWrap,
+		   Debugger::GetOpDesc(mEmu, mEmu->mPC));
 }
 
 HexSpinBox::HexSpinBox(QWidget *parent) :
