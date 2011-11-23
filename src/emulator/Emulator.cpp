@@ -157,7 +157,12 @@ void	Emulator::WriteMem(WORD addr, BYTE value)
     mWRAM[addr - 0xE000] = value;
   else if (addr <= 0xFEFF); // Not used
   else if (addr <= 0xFF7F) // I/O ports
-    mIOPorts[addr - 0xFF00] = value;
+    {
+      if (addr == 0xFF04)
+	mIOPorts[0x04] = 0;
+      else
+	mIOPorts[addr - 0xFF00] = value;
+    }
   else if (addr != 0xFFFF) // HRAM
     mHRAM[addr - 0xFF80] = value;
   else // Interrupt
