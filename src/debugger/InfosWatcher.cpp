@@ -23,11 +23,35 @@ void	InfosWatcher::paintEvent(QPaintEvent *event)
   painter.setFont(QFont("Monospace"));
   if (mEmu == 0)
     return ;
+  DrawRegister(painter);
+  DrawLCDInfos(painter);
+}
+
+void	InfosWatcher::DrawLCDInfos(QPainter &painter)
+{
+  QString line;
+  int posX = 150;
+  int posLine = 45;
+
+  painter.drawText(posX + 20, 20, "LCD Infos");
+
+  line.sprintf("LCD Display : %s",
+	       IS_BIT_SET(mEmu->ReadMem(0xFF40), 7) ?  "On" : "Off");
+  painter.drawText(posX, posLine, line);
+  posLine += 20;
+
+
+  line.sprintf("LY : %i", mEmu->ReadMem(0xFF44));
+  painter.drawText(posX, posLine, line);
+  posLine += 20;
+}
+
+void	InfosWatcher::DrawRegister(QPainter &painter)
+{
   QString line;
   painter.drawText(40, 20, "Registers");
 
   int posLine = 45;
-
   line.sprintf("AF 0x%04X", mEmu->mAF.a);
   painter.drawText(5, posLine, line);
   posLine += 20;

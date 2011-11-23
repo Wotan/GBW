@@ -40,8 +40,7 @@ void	Emulator::DoFrame()
 
 void	Emulator::UpdateLCD(int nbCycles)
 {
-
-  if (!IS_BIT_SET(mIOPorts[0xFF40], 7)) // return if LCD not enabled
+  if (!IS_BIT_SET(mIOPorts[0x40], 7)) // return if LCD not enabled
     return ;
   mLYCounter -= nbCycles;
   if (mLYCounter <= 0)
@@ -54,7 +53,6 @@ void	Emulator::UpdateLCD(int nbCycles)
 	; // Interupt
       else if (curLine > 153) // Reset
 	mIOPorts[0x44] = 0;
-
       mIOPorts[0x44]++;
       mLYCounter = 456;
     }
