@@ -9,6 +9,8 @@ Emulator::Emulator(App *app) :
   mPause(true)
 {
   std::cout << "Emulator created" << std::endl;
+  mDIVCounter = DIV_NBCYCLE_TO_UPDATE;
+  mTIMACounter = 1024;
 }
 
 Emulator::~Emulator()
@@ -28,7 +30,40 @@ void	Emulator::DoFrame()
   while (nbCycles < CYCLE_BY_FRAME)
     {
       curCycles = DoOpcode();
+      // UpdateScreen()
+      UpdateTimer(nbCycles);
+      // HandleInterupt()
       nbCycles += curCycles;
+    }
+}
+
+
+void	Emulator::UpdateTimer(int nbCycles)
+{
+  mDIVCounter -= nbCycles;
+  if (mDIVCounter <= 0)
+    {
+      mIOPorts[DIV]++;
+      mDIVCounter = DIV_NBCYCLE_TO_UPDATE;
+    }
+
+  if (IS_BIT_SET(mIOPorts[TAC], 2)) // Clock on
+    {
+      mTIMACounter -= nbCycles;
+      if (mTIMACounter <= 0)
+	{
+	  if (mIOPorts[TIMA] == 0xFF) // Overflow
+	    mIOPorts[TIMA] = mIOPorts[TMA];
+	  else
+	    mIOPorts[TIMA]++;
+	  switch (mIOPorts[TAC] & 0x03) // 3 = 11
+	    {
+	    case 0: mTIMACounter = 1024; break; // 69905 / (4194Hz / 60)
+	    case 1: mTIMACounter = 16; break; // 69905 / (268400Hz / 60)
+	    case 2: mTIMACounter = 64; break; // 69905 / (65536Hz / 60)
+	    case 3: mTIMACounter = 256; break; // 69905 / (16384Hz / 60)
+	    }
+	}
     }
 }
 

@@ -21,13 +21,26 @@
 # define SET_BIT(x, n) (x |= (1 << n))
 # define RESET_BIT(x, n) (x &= ~(1 << n))
 
+# define RAM 1
+# define ROM 0
+
+/// Timers (IoPorts - FF00) ///
+# define DIV 0x04
+# define DIV_NBCYCLE_TO_UPDATE 256 // 69905 / (16384 / 60)
+
+# define TIMA 0x05
+# define TMA 0x06
+
+// Bit 2 : 0 = stop, 1 = start
+// Bit 0-1 : 00: 4096 Hz | 01: 262144 Hz | 10:  65536 Hz
+// 11:  16384 Hz
+# define TAC 0x07
+
+/// Register ///
 # define F_Z 7
 # define F_N 6
 # define F_H 5
 # define F_C 4
-
-# define RAM 1
-# define ROM 0
 
 # define REG_A mAF.hi
 # define REG_F mAF.lo
@@ -85,6 +98,8 @@ public:
   BYTE	ReadMem(WORD addr);
   void  WriteMem(WORD addr, BYTE value);
 
+  void	UpdateTimer(int nbCycles);
+
   int	DoOpcode();
   void	DoFrame();
   void	Play();
@@ -119,6 +134,10 @@ public:
 private:
   // Infos //
   CartridgeInfos mInfos;
+
+  // Timers //
+  int	mDIVCounter;
+  int	mTIMACounter;
 
   // Registers //
   UWORD	mAF; // A = lo F = hi
