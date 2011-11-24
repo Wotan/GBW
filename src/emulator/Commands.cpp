@@ -7,13 +7,14 @@
 
 void	Emulator::Halt()
 {
-
-
+  std::cout << "HALT" << std::endl;
+  exit(0);
 }
 
 void	Emulator::Stop()
 {
-
+  std::cout << "STOP" << std::endl;
+  exit(0);
 
 }
 
@@ -36,8 +37,7 @@ void	Emulator::Load16bitHL()
   N_F = 0;
   H_F = 0;
   C_F = 0;
-
-  if (((tmp & 0x000F) + (mSP & 0x000F)) > 0x000F)
+  if (((tmp & 0xF) + (mSP & 0xF)) > 0xF)
     H_F = 1;
   if (tmp + mSP > 0xFFF)
     C_F = 1;
@@ -71,18 +71,11 @@ void	Emulator::ADD_8Bit(BYTE &toAdd, BYTE add, bool addCarry)
   int	adding;
 
   N_F = 0;
-  H_F = 0;
-  C_F = 1;
-  Z_F = 0;
-
   adding = add;
   if (addCarry)
-    adding += (IS_BIT_SET(REG_F, F_C) ? 1 : 0);
-
-  if (((toAdd & 0xF) + (adding & 0xF)) > 0xF)
-    H_F = 1;
-  if (adding + toAdd > 0xFF)
-    C_F = 1;
+    adding += C_F ? 1 : 0;
+  H_F = (((toAdd & 0xF) + (adding & 0xF)) > 0xF);
+  C_F = (adding + toAdd > 0xFF);
   toAdd += adding;
   Z_F = (toAdd == 0);
 }
@@ -219,7 +212,7 @@ void	Emulator::RotateRight_8bit(BYTE &data, bool throughtCarry)
   bool	oldCarry;
 
   oldBit = IS_BIT_SET(data, 0);
-  oldCarry = IS_BIT_SET(REG_F, F_C);
+  oldCarry = C_F;
 
   C_F = 0;
   Z_F = 0;
@@ -247,7 +240,6 @@ void	Emulator::RotateLeft_8bit(BYTE &data, bool throughtCarry)
   bool	oldBit;
   bool	oldCarry;
 
-  Z_F = 0;
   oldBit = IS_BIT_SET(data, 7);
   oldCarry = IS_BIT_SET(REG_F, F_C);
 
@@ -265,8 +257,7 @@ void	Emulator::RotateLeft_8bit(BYTE &data, bool throughtCarry)
     }
   N_F = 0;
   H_F = 0;
-  if (data == 0)
-    Z_F = 1;
+  Z_F = (data == 0);
 }
 
 void	Emulator::ShiftLeft_8bit(BYTE &data)
@@ -288,9 +279,9 @@ void	Emulator::ShiftRight_8bit(BYTE &data, bool MSB)
   Z_F = 0;
 
   C_F = (IS_BIT_SET(data, 0));
+  data >>= 1;
   if (MSB && save)
     SET_BIT(data, 7);
-  data >>= 1;
   Z_F = (data == 0);
 }
 
