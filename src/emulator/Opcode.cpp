@@ -349,20 +349,22 @@ int	Emulator::DoOpcode()
 	mPC = tmp.a;
       return 12;
     case 0xE9: mPC = REG_HL; return 4;
+
     case 0x18:
-      mPC += (SBYTE)ReadMem(mPC) - 1;
+      mPC += (SBYTE)ReadMem(mPC) + 1;
       return 8;
+
     case 0x20:
-      mPC += !IS_BIT_SET(REG_F, F_Z) ? (SBYTE)ReadMem(mPC) - 1 : 1;
+      mPC += !IS_BIT_SET(REG_F, F_Z) ? (SBYTE)ReadMem(mPC) + 1 : 1;
       return 8;
     case 0x28:
-      mPC += IS_BIT_SET(REG_F, F_Z) ? (SBYTE)ReadMem(mPC) - 1 : 1;
+      mPC += IS_BIT_SET(REG_F, F_Z) ? (SBYTE)ReadMem(mPC) + 1 : 1;
       return 8;
     case 0x30:
-      mPC += !IS_BIT_SET(REG_F, F_C) ? (SBYTE)ReadMem(mPC) - 1 : 1;
+      mPC += !IS_BIT_SET(REG_F, F_C) ? (SBYTE)ReadMem(mPC) + 1 : 1;
       return 8;
     case 0x38:
-      mPC += IS_BIT_SET(REG_F, F_C) ? (SBYTE)ReadMem(mPC) - 1 : 1;
+      mPC += IS_BIT_SET(REG_F, F_C) ? (SBYTE)ReadMem(mPC) + 1 : 1;
       return 8;
 
       // CALL

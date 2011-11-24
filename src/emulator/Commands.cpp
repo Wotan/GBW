@@ -37,10 +37,9 @@ void	Emulator::Load16bitHL()
   H_F = 0;
   C_F = 0;
 
-  if (((tmp & 0xFF) + (mSP & 0xFF)) > 0xFF)
+  if (((tmp & 0x000F) + (mSP & 0x000F)) > 0x000F)
     H_F = 1;
-
-  if (tmp + mSP > 0xFFF) // TO SEE
+  if (tmp + mSP > 0xFFF)
     C_F = 1;
   res = tmp + mSP;
   mHL.a = res;
