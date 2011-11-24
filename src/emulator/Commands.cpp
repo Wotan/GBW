@@ -32,16 +32,16 @@ void	Emulator::Load16bitHL()
   BYTE tmp = ReadMem(mPC++);
   WORD res;
 
-  RESET_BIT(REG_F, F_Z);
-  RESET_BIT(REG_F, F_N);
-  RESET_BIT(REG_F, F_H);
-  RESET_BIT(REG_F, F_C);
+  Z_F = 0;
+  N_F = 0;
+  H_F = 0;
+  C_F = 0;
 
   if (((tmp & 0xFF) + (mSP & 0xFF)) > 0xFF)
-    SET_BIT(REG_F, F_H);
+    H_F = 1;
 
   if (tmp + mSP > 0xFFF) // TO SEE
-    SET_BIT(REG_F, F_C);
+    C_F = 1;
   res = tmp + mSP;
   mHL.a = res;
 }
@@ -71,39 +71,37 @@ void	Emulator::ADD_8Bit(BYTE &toAdd, BYTE add, bool addCarry)
 {
   int	adding;
 
-  RESET_BIT(REG_F, F_N);
-  RESET_BIT(REG_F, F_H);
-  RESET_BIT(REG_F, F_C);
-  RESET_BIT(REG_F, F_Z);
+  N_F = 0;
+  H_F = 0;
+  C_F = 1;
+  Z_F = 0;
 
   adding = add;
   if (addCarry)
     adding += (IS_BIT_SET(REG_F, F_C) ? 1 : 0);
 
   if (((toAdd & 0xF) + (adding & 0xF)) > 0xF)
-    SET_BIT(REG_F, F_H);
+    H_F = 1;
   if (adding + toAdd > 0xFF)
-    SET_BIT(REG_F, F_C);
-
+    C_F = 1;
   toAdd += adding;
-  if (toAdd == 0)
-    SET_BIT(REG_F, F_Z);
+  Z_F = (toAdd == 0);
 }
 
 void	Emulator::SUB_8Bit(BYTE &toSub, BYTE sub, bool addCarry)
 {
   int	nbSub;
 
-  RESET_BIT(REG_F, F_N);
-  RESET_BIT(REG_F, F_H);
-  RESET_BIT(REG_F, F_C);
+  N_F = 0;
+  H_F = 0;
+  C_F = 0;
 
   nbSub = sub;
   if (addCarry)
     nbSub += (IS_BIT_SET(REG_F, F_C) ? 1 : 0);
 
   if (((toSub & 0xFF) >= (nbSub & 0xFF))) // >= or > ???
-    SET_BIT(REG_F, F_H);
+    H_F = 1;
 
   if (toSub >= nbSub)
     SET_BIT(REG_F, F_C);
@@ -112,104 +110,74 @@ void	Emulator::SUB_8Bit(BYTE &toSub, BYTE sub, bool addCarry)
 
 void	Emulator::AND_8Bit(BYTE &toAnd, BYTE src)
 {
-  RESET_BIT(REG_F, F_N);
-  SET_BIT(REG_F, F_H);
-  RESET_BIT(REG_F, F_C);
-  RESET_BIT(REG_F, F_Z);
+  N_F = 0;
+  H_F = 1;
+  C_F = 0;
+  Z_F = 0;
 
   toAnd &= src;
-  if (toAnd == 0)
-    SET_BIT(REG_F, F_Z);
+  Z_F = (toAnd == 0);
 }
 
 void	Emulator::OR_8Bit(BYTE &toOr, BYTE src)
 {
-  RESET_BIT(REG_F, F_N);
-  RESET_BIT(REG_F, F_H);
-  RESET_BIT(REG_F, F_C);
-  RESET_BIT(REG_F, F_Z);
+  N_F = 0;
+  H_F = 0;
+  C_F = 0;
+  Z_F = 0;
 
   toOr |= src;
-  if (toOr == 0)
-    SET_BIT(REG_F, F_Z);
+  Z_F = (toOr == 0);
 }
 
 void	Emulator::XOR_8Bit(BYTE &toXor, BYTE src)
 {
-  RESET_BIT(REG_F, F_N);
-  RESET_BIT(REG_F, F_H);
-  RESET_BIT(REG_F, F_C);
-  RESET_BIT(REG_F, F_Z);
-
+  N_F = H_F = C_F = 0;
   toXor ^= src;
-  if (toXor == 0)
-    SET_BIT(REG_F, F_Z);
+  Z_F = !toXor;
 }
 
 void	Emulator::CP_8Bit(BYTE cp1, BYTE cp2)
 {
-  SET_BIT(REG_F, F_N);
-
-  RESET_BIT(REG_F, F_Z);
-  RESET_BIT(REG_F, F_H);
-  RESET_BIT(REG_F, F_C);
-  if (cp1 == cp2)
-    SET_BIT(REG_F, F_Z);
-  if ((cp1 & 0xFF) < (cp2 & 0xFF))
-    SET_BIT(REG_F, F_H);
-  if (cp1 < cp2)
-    SET_BIT(REG_F, F_C);
+  N_F = 1;
+  Z_F = (cp1 == cp2);
+  H_F = ((cp1 & 0xFF) < (cp2 & 0xFF));
+  C_F = (cp1 < cp2);
 }
 
 void	Emulator::INC_8Bit(BYTE &toInc)
 {
-  RESET_BIT(REG_F, F_N);
-  RESET_BIT(REG_F, F_Z);
-  RESET_BIT(REG_F, F_H);
-  if (!((toInc & 0xFF) + 1 > 0xF))
-    SET_BIT(REG_F, F_H);
+  N_F = 0;
   toInc++;
-  if (toInc == 0)
-    SET_BIT(REG_F, F_Z);
+  H_F = ((toInc & 0x0F) == 0x0);
+  Z_F = (toInc == 0);
 }
 
 void	Emulator::DEC_8Bit(BYTE &toDec)
 {
-  SET_BIT(REG_F, F_N);
-  RESET_BIT(REG_F, F_Z);
-  RESET_BIT(REG_F, F_H);
-  if (!((toDec & 0xFF) - 1 < 0x0))
-    SET_BIT(REG_F, F_H);
+  N_F = 1;
   toDec--;
-  if (toDec == 0)
-    SET_BIT(REG_F, F_Z);
+  H_F = ((toDec & 0x0F) == 0xF);
+  Z_F = (toDec == 0);
 }
 
 void	Emulator::ADD_16bit(WORD &toAdd, WORD add)
 {
-  RESET_BIT(REG_F, F_N);
-  RESET_BIT(REG_F, F_C);
-  RESET_BIT(REG_F, F_H);
-
-  if (toAdd + add > 0xFFFF)
-    SET_BIT(REG_F, F_C);
-  if ((((toAdd & 0xF000) >> 12) + ((add & 0xF000) >> 12)) > 0xF)
-    SET_BIT(REG_F, F_H);
+  N_F = 0;
+  C_F = (toAdd + add > 0xFFFF);
+  H_F = (((toAdd & 0x000F) + (add & 0x000F)) > 0x000F);
   toAdd += add;
 }
 
 void	Emulator::ADD_16bitSigned(WORD &toAdd, SBYTE add)
 {
-  RESET_BIT(REG_F, F_N);
-  RESET_BIT(REG_F, F_H);
-  RESET_BIT(REG_F, F_C);
-
-  if (toAdd + add > 0xFFFF)
-    SET_BIT(REG_F, F_C);
-    RESET_BIT(REG_F, F_C);
-  if ((((toAdd & 0xF000) >> 12) + ((add & 0xF000) >> 12)) > 0xF)
-    SET_BIT(REG_F, F_H);
-
+  N_F = 0;
+  Z_F = 0;
+  C_F = (toAdd + add > 0xFFFF);
+  if (add > 0)
+    H_F = (((toAdd & 0x000F) + (add & 0x000F)) > 0x000F);
+  else
+    H_F = (((toAdd & 0x000F) + (add & 0x000F)) < 0x0000);
   toAdd += add;
 }
 
@@ -217,17 +185,15 @@ void	Emulator::SWAP_8bit(BYTE &toSwap)
 {
   BYTE	save;
 
-  RESET_BIT(REG_F, F_N);
-  RESET_BIT(REG_F, F_H);
-  RESET_BIT(REG_F, F_C);
-  RESET_BIT(REG_F, F_Z);
+  N_F = 0;
+  H_F = 0;
+  N_F = 0;
   save = toSwap;
   save = save >> 4;
   save |= toSwap << 4;
   toSwap = save;
-  if (toSwap == 0)
-    SET_BIT(REG_F, F_Z);
 
+  Z_F = (toSwap == 0);
 }
 
 void	Emulator::DDA_8Bit(BYTE &nbr)
@@ -235,21 +201,17 @@ void	Emulator::DDA_8Bit(BYTE &nbr)
   int	first = nbr / 10;
   int	second = nbr % 10;
 
-  RESET_BIT(REG_F, F_Z);
-  RESET_BIT(REG_F, F_C);
-  RESET_BIT(REG_F, F_H);
+  C_F = 0;
+  H_F = 0;
   if (first >= 10)
     {
-      SET_BIT(REG_F, F_C);
+      C_F = 1;
       first /= 10;
     }
-
   nbr = 0;
   nbr = second;
   nbr |= first << 4;
-  if (nbr == 0)
-    SET_BIT(REG_F, F_Z);
-
+  Z_F = (nbr == 0);
 }
 
 void	Emulator::RotateRight_8bit(BYTE &data, bool throughtCarry)
@@ -260,10 +222,10 @@ void	Emulator::RotateRight_8bit(BYTE &data, bool throughtCarry)
   oldBit = IS_BIT_SET(data, 0);
   oldCarry = IS_BIT_SET(REG_F, F_C);
 
-  RESET_BIT(REG_F, F_C);
-  RESET_BIT(REG_F, F_Z);
+  C_F = 0;
+  Z_F = 0;
   if (oldBit)
-    SET_BIT(REG_F, F_C);
+    C_F = 1;
   data >>= 1;
   if (throughtCarry) // bit7 == Oldcarry
     {
@@ -275,10 +237,10 @@ void	Emulator::RotateRight_8bit(BYTE &data, bool throughtCarry)
       if (oldBit)
 	SET_BIT(data, 7);
     }
-  RESET_BIT(REG_F, F_N);
-  RESET_BIT(REG_F, F_H);
+  N_F = 0;
+  H_F = 0;
   if (data == 0)
-    SET_BIT(REG_F, F_Z);
+    Z_F = 1;
 }
 
 void	Emulator::RotateLeft_8bit(BYTE &data, bool throughtCarry)
@@ -286,14 +248,11 @@ void	Emulator::RotateLeft_8bit(BYTE &data, bool throughtCarry)
   bool	oldBit;
   bool	oldCarry;
 
-  RESET_BIT(REG_F, F_Z);
+  Z_F = 0;
   oldBit = IS_BIT_SET(data, 7);
   oldCarry = IS_BIT_SET(REG_F, F_C);
 
-  if (oldBit)
-    SET_BIT(REG_F, F_C);
-  else
-    RESET_BIT(REG_F, F_C);
+  C_F = oldBit;
   data <<= 1;
   if (throughtCarry) // bit0 == Oldcarry
     {
@@ -305,51 +264,40 @@ void	Emulator::RotateLeft_8bit(BYTE &data, bool throughtCarry)
       if (oldBit)
 	SET_BIT(data, 0);
     }
-  RESET_BIT(REG_F, F_N);
-  RESET_BIT(REG_F, F_H);
+  N_F = 0;
+  H_F = 0;
   if (data == 0)
-    SET_BIT(REG_F, F_Z);
+    Z_F = 1;
 }
 
 void	Emulator::ShiftLeft_8bit(BYTE &data)
 {
-  RESET_BIT(REG_F, F_N);
-  RESET_BIT(REG_F, F_H);
-  RESET_BIT(REG_F, F_Z);
-  if (IS_BIT_SET(data, 7))
-    SET_BIT(REG_F, F_C);
-  else
-    RESET_BIT(REG_F, F_C);
-
+  N_F = 0;
+  H_F = 0;
+  Z_F = 0;
+  C_F = IS_BIT_SET(data, 7);
   data <<= 1;
-  if (data == 0)
-    SET_BIT(REG_F, F_Z);
+  Z_F = (data == 0);
 }
 
 void	Emulator::ShiftRight_8bit(BYTE &data, bool MSB)
 {
   bool	save;
   save = IS_BIT_SET(data, 7);
-  RESET_BIT(REG_F, F_N);
-  RESET_BIT(REG_F, F_H);
-  RESET_BIT(REG_F, F_Z);
+  N_F = 0;
+  H_F = 0;
+  Z_F = 0;
 
-  if (IS_BIT_SET(data, 0))
-    SET_BIT(REG_F, F_C);
-  else
-    RESET_BIT(REG_F, F_C);
+  C_F = (IS_BIT_SET(data, 0));
   if (MSB && save)
     SET_BIT(data, 7);
   data >>= 1;
-  if (data == 0)
-    SET_BIT(REG_F, F_Z);
+  Z_F = (data == 0);
 }
 
 void	Emulator::TestBit(BYTE totest, BYTE n)
 {
-   RESET_BIT(REG_F, F_Z);
-   if (!IS_BIT_SET(totest, n)) // == 0
-     SET_BIT(REG_F, F_Z);
-  RESET_BIT(REG_F, F_N);
-  SET_BIT(REG_F, F_H);
+  Z_F = !IS_BIT_SET(totest, n);
+  N_F = 0;
+  H_F = 1;
 }

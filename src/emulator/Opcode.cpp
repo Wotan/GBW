@@ -30,21 +30,21 @@ int	Emulator::DoOpcode()
     case 0x7B: REG_A = REG_E; return 4;
     case 0x7C: REG_A = REG_H; return 4;
     case 0x7D: REG_A = REG_L; return 4;
-    case 0x7E: REG_A = ReadMem(mHL.a); return 8;
+    case 0x7E: REG_A = ReadMem(REG_HL); return 8;
     case 0x40: REG_B = REG_B; return 4;
     case 0x41: REG_B = REG_C; return 4;
     case 0x42: REG_B = REG_D; return 4;
     case 0x43: REG_B = REG_E; return 4;
     case 0x44: REG_B = REG_H; return 4;
     case 0x45: REG_B = REG_L; return 4;
-    case 0x46: REG_B = ReadMem(mHL.a); return 8;
+    case 0x46: REG_B = ReadMem(REG_HL); return 8;
     case 0x48: REG_C = REG_B; return 4;
     case 0x49: REG_C = REG_C; return 4;
     case 0x4A: REG_C = REG_D; return 4;
     case 0x4B: REG_C = REG_E; return 4;
     case 0x4C: REG_C = REG_H; return 4;
     case 0x4D: REG_C = REG_L; return 4;
-    case 0x4E: REG_C = ReadMem(mHL.a); return 8;
+    case 0x4E: REG_C = ReadMem(REG_HL); return 8;
     case 0x50: REG_D = REG_B; return 4;
 
     case 0x51: REG_D = REG_C; return 4;
@@ -52,35 +52,35 @@ int	Emulator::DoOpcode()
     case 0x53: REG_D = REG_E; return 4;
     case 0x54: REG_D = REG_H; return 4;
     case 0x55: REG_D = REG_L; return 4;
-    case 0x56: REG_D = ReadMem(mHL.a); return 8;
+    case 0x56: REG_D = ReadMem(REG_HL); return 8;
     case 0x58: REG_E = REG_B; return 4;
     case 0x59: REG_E = REG_C; return 4;
     case 0x5A: REG_E = REG_D; return 4;
     case 0x5B: REG_E = REG_E; return 4;
     case 0x5C: REG_E = REG_H; return 4;
     case 0x5D: REG_E = REG_L; return 4;
-    case 0x5E: REG_E = ReadMem(mHL.a); return 8;
+    case 0x5E: REG_E = ReadMem(REG_HL); return 8;
     case 0x60: REG_H = REG_B; return 4;
     case 0x61: REG_H = REG_C; return 4;
     case 0x62: REG_H = REG_D; return 4;
     case 0x63: REG_H = REG_E; return 4;
     case 0x64: REG_H = REG_H; return 4;
     case 0x65: REG_H = REG_L; return 4;
-    case 0x66: REG_H = ReadMem(mHL.a); return 8;
+    case 0x66: REG_H = ReadMem(REG_HL); return 8;
     case 0x68: REG_L = REG_B; return 4;
     case 0x69: REG_L = REG_C; return 4;
     case 0x6A: REG_L = REG_D; return 4;
     case 0x6B: REG_L = REG_E; return 4;
     case 0x6C: REG_L = REG_H; return 4;
     case 0x6D: REG_L = REG_L; return 4;
-    case 0x6E: REG_L = ReadMem(mHL.a); return 8;
-    case 0x70: WriteMem(mHL.a, REG_B); return 8;
-    case 0x71: WriteMem(mHL.a, REG_C); return 8;
-    case 0x72: WriteMem(mHL.a, REG_D); return 8;
-    case 0x73: WriteMem(mHL.a, REG_E); return 8;
-    case 0x74: WriteMem(mHL.a, REG_H); return 8;
-    case 0x75: WriteMem(mHL.a, REG_L); return 8;
-    case 0x36: WriteMem(mHL.a, ReadMem(mPC++)); return 12;
+    case 0x6E: REG_L = ReadMem(REG_HL); return 8;
+    case 0x70: WriteMem(REG_HL, REG_B); return 8;
+    case 0x71: WriteMem(REG_HL, REG_C); return 8;
+    case 0x72: WriteMem(REG_HL, REG_D); return 8;
+    case 0x73: WriteMem(REG_HL, REG_E); return 8;
+    case 0x74: WriteMem(REG_HL, REG_H); return 8;
+    case 0x75: WriteMem(REG_HL, REG_L); return 8;
+    case 0x36: WriteMem(REG_HL, ReadMem(mPC++)); return 12;
 
     case 0x0A: REG_A = ReadMem(mBC.a); return 8;
     case 0x1A: REG_A = ReadMem(mDE.a); return 8;
@@ -109,20 +109,20 @@ int	Emulator::DoOpcode()
     case 0xF2: REG_A = ReadMem(0xFF00 + REG_C); return 8;
     case 0xE2: WriteMem(0xFF00 + REG_C, REG_A); return 8;
     case 0x3A:
-      REG_A = ReadMem(mHL.a);
-      mHL.a--;
+      REG_A = ReadMem(REG_HL);
+      REG_HL--;
       return 8;
-    case 0x32:
-      WriteMem(mHL.a, REG_A);
-      mHL.a--;
+   case 0x32:
+      WriteMem(REG_HL, REG_A);
+      REG_HL--;
       return 8;
     case 0x2A:
-      REG_A = ReadMem(mHL.a);
-      mHL.a++;
+      REG_A = ReadMem(REG_HL);
+      REG_HL++;
       return 8;
     case 0x22:
-      WriteMem(mHL.a, REG_A);
-      mHL.a++;
+      WriteMem(REG_HL, REG_A);
+      REG_HL++;
       return 8;
     case 0xE0:
       WriteMem(0xFF00 + ReadMem(mPC++), REG_A);
@@ -143,7 +143,7 @@ int	Emulator::DoOpcode()
     case 0x21:
       tmp.lo = ReadMem(mPC++);
       tmp.hi = ReadMem(mPC++);
-      mHL.a = tmp.a;
+      REG_HL = tmp.a;
       return 12;
     case 0x31:
       tmp.lo = ReadMem(mPC++);
@@ -151,7 +151,7 @@ int	Emulator::DoOpcode()
       mSP = tmp.a;
       return 12;
     case 0xF9:
-      mSP = mHL.a;
+      mSP = REG_HL;
       return 8;
     case 0xF8:
       Load16bitHL();
@@ -165,11 +165,11 @@ int	Emulator::DoOpcode()
     case 0xF5: Push(mAF.a); return 16;
     case 0xC5: Push(mBC.a); return 16;
     case 0xD5: Push(mDE.a); return 16;
-    case 0xE5: Push(mHL.a); return 16;
+    case 0xE5: Push(REG_HL); return 16;
     case 0xF1: mAF.a = Pop(); return 12;
     case 0xC1: mBC.a = Pop(); return 12;
     case 0xD1: mDE.a = Pop(); return 12;
-    case 0xE1: mHL.a = Pop(); return 12;
+    case 0xE1: REG_HL = Pop(); return 12;
 
     case 0x87: ADD_8Bit(REG_A, REG_A, false); return 4;
     case 0x80: ADD_8Bit(REG_A, REG_B, false); return 4;
@@ -178,7 +178,7 @@ int	Emulator::DoOpcode()
     case 0x83: ADD_8Bit(REG_A, REG_E, false); return 4;
     case 0x84: ADD_8Bit(REG_A, REG_H, false); return 4;
     case 0x85: ADD_8Bit(REG_A, REG_L, false); return 4;
-    case 0x86: ADD_8Bit(REG_A, ReadMem(mHL.a), false); return 8;
+    case 0x86: ADD_8Bit(REG_A, ReadMem(REG_HL), false); return 8;
     case 0xC6: ADD_8Bit(REG_A, ReadMem(mPC++), false); return 8;
 
     case 0x8F: ADD_8Bit(REG_A, REG_A, true); return 4;
@@ -188,7 +188,7 @@ int	Emulator::DoOpcode()
     case 0x8B: ADD_8Bit(REG_A, REG_E, true); return 4;
     case 0x8C: ADD_8Bit(REG_A, REG_H, true); return 4;
     case 0x8D: ADD_8Bit(REG_A, REG_L, true); return 4;
-    case 0x8E: ADD_8Bit(REG_A, ReadMem(mHL.a), true); return 8;
+    case 0x8E: ADD_8Bit(REG_A, ReadMem(REG_HL), true); return 8;
     case 0xCE: ADD_8Bit(REG_A, ReadMem(mPC++), true); return 8;
 
     case 0x97: SUB_8Bit(REG_A, REG_A, false); return 4;
@@ -198,7 +198,7 @@ int	Emulator::DoOpcode()
     case 0x93: SUB_8Bit(REG_A, REG_E, false); return 4;
     case 0x94: SUB_8Bit(REG_A, REG_H, false); return 4;
     case 0x95: SUB_8Bit(REG_A, REG_L, false); return 4;
-    case 0x96: SUB_8Bit(REG_A, ReadMem(mHL.a), false); return 8;
+    case 0x96: SUB_8Bit(REG_A, ReadMem(REG_HL), false); return 8;
     case 0xD6: SUB_8Bit(REG_A, ReadMem(mPC++), false); return 8;
 
     case 0x9F: SUB_8Bit(REG_A, REG_A, true); return 4;
@@ -208,7 +208,7 @@ int	Emulator::DoOpcode()
     case 0x9B: SUB_8Bit(REG_A, REG_E, true); return 4;
     case 0x9C: SUB_8Bit(REG_A, REG_H, true); return 4;
     case 0x9D: SUB_8Bit(REG_A, REG_L, true); return 4;
-    case 0x9E: SUB_8Bit(REG_A, ReadMem(mHL.a), true); return 8;
+    case 0x9E: SUB_8Bit(REG_A, ReadMem(REG_HL), true); return 8;
     case 0xDE: SUB_8Bit(REG_A, ReadMem(mPC++), true); return 8;
 
     case 0xA7: AND_8Bit(REG_A, REG_A); return 4;
@@ -218,7 +218,7 @@ int	Emulator::DoOpcode()
     case 0xA3: AND_8Bit(REG_A, REG_E); return 4;
     case 0xA4: AND_8Bit(REG_A, REG_H); return 4;
     case 0xA5: AND_8Bit(REG_A, REG_L); return 4;
-    case 0xA6: AND_8Bit(REG_A, ReadMem(mHL.a)); return 8;
+    case 0xA6: AND_8Bit(REG_A, ReadMem(REG_HL)); return 8;
     case 0xE6: AND_8Bit(REG_A, ReadMem(mPC++)); return 8;
 
     case 0xB7: OR_8Bit(REG_A, REG_A); return 4;
@@ -228,7 +228,7 @@ int	Emulator::DoOpcode()
     case 0xB3: OR_8Bit(REG_A, REG_E); return 4;
     case 0xB4: OR_8Bit(REG_A, REG_H); return 4;
     case 0xB5: OR_8Bit(REG_A, REG_L); return 4;
-    case 0xB6: OR_8Bit(REG_A, ReadMem(mHL.a)); return 8;
+    case 0xB6: OR_8Bit(REG_A, ReadMem(REG_HL)); return 8;
     case 0xF6: OR_8Bit(REG_A, ReadMem(mPC++)); return 8;
 
     case 0xAF: XOR_8Bit(REG_A, REG_A); return 4;
@@ -238,7 +238,7 @@ int	Emulator::DoOpcode()
     case 0xAB: XOR_8Bit(REG_A, REG_E); return 4;
     case 0xAC: XOR_8Bit(REG_A, REG_H); return 4;
     case 0xAD: XOR_8Bit(REG_A, REG_L); return 4;
-    case 0xAE: XOR_8Bit(REG_A, ReadMem(mHL.a)); return 8;
+    case 0xAE: XOR_8Bit(REG_A, ReadMem(REG_HL)); return 8;
     case 0xEE: XOR_8Bit(REG_A, ReadMem(mPC++)); return 8;
 
     case 0xBF: CP_8Bit(REG_A, REG_A); return 4;
@@ -248,7 +248,7 @@ int	Emulator::DoOpcode()
     case 0xBB: CP_8Bit(REG_A, REG_E); return 4;
     case 0xBC: CP_8Bit(REG_A, REG_H); return 4;
     case 0xBD: CP_8Bit(REG_A, REG_L); return 4;
-    case 0xBE: CP_8Bit(REG_A, ReadMem(mHL.a)); return 8;
+    case 0xBE: CP_8Bit(REG_A, ReadMem(REG_HL)); return 8;
     case 0xFE: CP_8Bit(REG_A, ReadMem(mPC++)); return 8;
 
     case 0x3C: INC_8Bit(REG_A); return 4;
@@ -259,9 +259,9 @@ int	Emulator::DoOpcode()
     case 0x24: INC_8Bit(REG_H); return 4;
     case 0x2C: INC_8Bit(REG_L); return 4;
     case 0x34:
-      tmpB = ReadMem(mHL.a);
+      tmpB = ReadMem(REG_HL);
       INC_8Bit(tmpB);
-      WriteMem(mHL.a, tmpB);
+      WriteMem(REG_HL, tmpB);
       return 12;
 
     case 0x3D: DEC_8Bit(REG_A); return 4;
@@ -272,44 +272,44 @@ int	Emulator::DoOpcode()
     case 0x25: DEC_8Bit(REG_H); return 4;
     case 0x2D: DEC_8Bit(REG_L); return 4;
     case 0x35:
-      tmpB = ReadMem(mHL.a);
+      tmpB = ReadMem(REG_HL);
       DEC_8Bit(tmpB);
-      WriteMem(mHL.a, tmpB);
+      WriteMem(REG_HL, tmpB);
       return 12;
 
-    case 0x09: ADD_16bit(mHL.a, mBC.a); return 8;
-    case 0x19: ADD_16bit(mHL.a, mDE.a); return 8;
-    case 0x29: ADD_16bit(mHL.a, mHL.a); return 8;
-    case 0x39: ADD_16bit(mHL.a, mSP); return 8;
+    case 0x09: ADD_16bit(REG_HL, mBC.a); return 8;
+    case 0x19: ADD_16bit(REG_HL, mDE.a); return 8;
+    case 0x29: ADD_16bit(REG_HL, REG_HL); return 8;
+    case 0x39: ADD_16bit(REG_HL, mSP); return 8;
     case 0xE8: ADD_16bitSigned(mSP, ReadMem(mPC++)); return 16;
 
     case 0x03: mBC.a++; return 8;
     case 0x13: mDE.a++; return 8;
-    case 0x23: mHL.a++; return 8;
+    case 0x23: REG_HL++; return 8;
     case 0x33: mSP++; return 8;
     case 0x0B: mBC.a--; return 8;
     case 0x1B: mDE.a--; return 8;
-    case 0x2B: mHL.a--; return 8;
+    case 0x2B: REG_HL--; return 8;
     case 0x3B: mSP--; return 8;
     case 0x27: DDA_8Bit(REG_A); return 4;
 
     case 0x2F:
-      SET_BIT(REG_F, F_N);
-      SET_BIT(REG_F, F_H);
+      N_F = 1;
+      H_F = 1;
       REG_A |= 0xFF;
       return 4;
     case 0x3F:
-      RESET_BIT(REG_F, F_N);
-      RESET_BIT(REG_F, F_H);
+      N_F = 0;
+      H_F = 0;
       if (IS_BIT_SET(REG_F, F_C))
-	RESET_BIT(REG_F, F_C);
+	C_F = 0;
       else
-	SET_BIT(REG_F, F_C);
+	C_F = 1;
       return 4;
     case 0x37:
-      RESET_BIT(REG_F, F_N);
-      RESET_BIT(REG_F, F_H);
-      RESET_BIT(REG_F, F_C);
+      N_F = 0;
+      H_F = 0;
+      C_F = 0;
       return 4;
 
     case 0x00: return 4;
@@ -348,7 +348,7 @@ int	Emulator::DoOpcode()
       if (IS_BIT_SET(REG_F, F_C))
 	mPC = tmp.a;
       return 12;
-    case 0xE9: mPC = mHL.a; return 4;
+    case 0xE9: mPC = REG_HL; return 4;
     case 0x18:
       mPC += (SBYTE)ReadMem(mPC) - 1;
       return 8;
@@ -447,9 +447,9 @@ int	Emulator::DoOpcode()
 	  case 0x35: SWAP_8bit(REG_L); return 8;
 
 	  case 0x36:
-	    tmpB = ReadMem(mHL.a);
+	    tmpB = ReadMem(REG_HL);
 	    SWAP_8bit(tmpB);
-	    WriteMem(mHL.a, tmpB);
+	    WriteMem(REG_HL, tmpB);
 	    return 16;
 
 	  case 0x07: RotateLeft_8bit(REG_A, false); return 8;
@@ -460,9 +460,9 @@ int	Emulator::DoOpcode()
 	  case 0x04: RotateLeft_8bit(REG_H, false); return 8;
 	  case 0x05: RotateLeft_8bit(REG_L, false); return 8;
 	  case 0x06:
-	    tmpB = ReadMem(mHL.a);
+	    tmpB = ReadMem(REG_HL);
 	    RotateLeft_8bit(tmpB, false);
-	    WriteMem(mHL.a, tmpB);
+	    WriteMem(REG_HL, tmpB);
 	    return 16;
 
 	  case 0x17: RotateLeft_8bit(REG_A, true); return 8;
@@ -473,9 +473,9 @@ int	Emulator::DoOpcode()
 	  case 0x14: RotateLeft_8bit(REG_H, true); return 8;
 	  case 0x15: RotateLeft_8bit(REG_L, true); return 8;
 	  case 0x16:
-	    tmpB = ReadMem(mHL.a);
+	    tmpB = ReadMem(REG_HL);
 	    RotateLeft_8bit(tmpB, true);
-	    WriteMem(mHL.a, tmpB);
+	    WriteMem(REG_HL, tmpB);
 	    return 16;
 
 	  case 0x0F: RotateRight_8bit(REG_A, false); return 8;
@@ -486,9 +486,9 @@ int	Emulator::DoOpcode()
 	  case 0x0C: RotateRight_8bit(REG_H, false); return 8;
 	  case 0x0D: RotateRight_8bit(REG_L, false); return 8;
 	  case 0x0E:
-	    tmpB = ReadMem(mHL.a);
+	    tmpB = ReadMem(REG_HL);
 	    RotateRight_8bit(tmpB, false);
-	    WriteMem(mHL.a, tmpB);
+	    WriteMem(REG_HL, tmpB);
 	    return 16;
 
 	  case 0x1F: RotateRight_8bit(REG_A, true); return 8;
@@ -499,9 +499,9 @@ int	Emulator::DoOpcode()
 	  case 0x1C: RotateRight_8bit(REG_H, true); return 8;
 	  case 0x1D: RotateRight_8bit(REG_L, true); return 8;
 	  case 0x1E:
-	    tmpB = ReadMem(mHL.a);
+	    tmpB = ReadMem(REG_HL);
 	    RotateRight_8bit(tmpB, true);
-	    WriteMem(mHL.a, tmpB);
+	    WriteMem(REG_HL, tmpB);
 	    return 16;
 
 	  case 0x27: ShiftLeft_8bit(REG_A); return 8;
@@ -512,9 +512,9 @@ int	Emulator::DoOpcode()
 	  case 0x24: ShiftLeft_8bit(REG_H); return 8;
 	  case 0x25: ShiftLeft_8bit(REG_L); return 8;
 	  case 0x26:
-	    tmpB = ReadMem(mHL.a);
+	    tmpB = ReadMem(REG_HL);
 	    ShiftLeft_8bit(tmpB);
-	    WriteMem(mHL.a, tmpB);
+	    WriteMem(REG_HL, tmpB);
 	    return 16;
 
 	  case 0x2F: ShiftRight_8bit(REG_A, false); return 8;
@@ -525,9 +525,9 @@ int	Emulator::DoOpcode()
 	  case 0x2C: ShiftRight_8bit(REG_H, false); return 8;
 	  case 0x2D: ShiftRight_8bit(REG_L, false); return 8;
 	  case 0x2E:
-	    tmpB = ReadMem(mHL.a);
+	    tmpB = ReadMem(REG_HL);
 	    ShiftRight_8bit(tmpB, false);
-	    WriteMem(mHL.a, tmpB);
+	    WriteMem(REG_HL, tmpB);
 	    return 16;
 
 	  case 0x3F: ShiftRight_8bit(REG_A, true); return 8;
@@ -538,9 +538,9 @@ int	Emulator::DoOpcode()
 	  case 0x3C: ShiftRight_8bit(REG_H, true); return 8;
 	  case 0x3D: ShiftRight_8bit(REG_L, true); return 8;
 	  case 0x3E:
-	    tmpB = ReadMem(mHL.a);
+	    tmpB = ReadMem(REG_HL);
 	    ShiftRight_8bit(tmpB, true);
-	    WriteMem(mHL.a, tmpB);
+	    WriteMem(REG_HL, tmpB);
 	    return 16;
 
 	  case 0x47: TestBit(REG_A, 0); return 8;
@@ -550,7 +550,7 @@ int	Emulator::DoOpcode()
 	  case 0x43: TestBit(REG_E, 0); return 8;
 	  case 0x44: TestBit(REG_H, 0); return 8;
 	  case 0x45: TestBit(REG_L, 0); return 8;
-	  case 0x46: TestBit(ReadMem(mHL.a), 0); return 16;
+	  case 0x46: TestBit(ReadMem(REG_HL), 0); return 16;
 	  case 0x4F: TestBit(REG_A, 1); return 8;
 	  case 0x48: TestBit(REG_B, 1); return 8;
 	  case 0x49: TestBit(REG_C, 1); return 8;
@@ -558,7 +558,7 @@ int	Emulator::DoOpcode()
 	  case 0x4B: TestBit(REG_E, 1); return 8;
 	  case 0x4C: TestBit(REG_H, 1); return 8;
 	  case 0x4D: TestBit(REG_L, 1); return 8;
-	  case 0x4E: TestBit(ReadMem(mHL.a), 1); return 16;
+	  case 0x4E: TestBit(ReadMem(REG_HL), 1); return 16;
 	  case 0x57: TestBit(REG_A, 2); return 8;
 	  case 0x50: TestBit(REG_B, 2); return 8;
 	  case 0x51: TestBit(REG_C, 2); return 8;
@@ -566,7 +566,7 @@ int	Emulator::DoOpcode()
 	  case 0x53: TestBit(REG_E, 2); return 8;
 	  case 0x54: TestBit(REG_H, 2); return 8;
 	  case 0x55: TestBit(REG_L, 2); return 8;
-	  case 0x56: TestBit(ReadMem(mHL.a), 2); return 16;
+	  case 0x56: TestBit(ReadMem(REG_HL), 2); return 16;
 	  case 0x5F: TestBit(REG_A, 3); return 8;
 	  case 0x58: TestBit(REG_B, 3); return 8;
 	  case 0x59: TestBit(REG_C, 3); return 8;
@@ -574,7 +574,7 @@ int	Emulator::DoOpcode()
 	  case 0x5B: TestBit(REG_E, 3); return 8;
 	  case 0x5C: TestBit(REG_H, 3); return 8;
 	  case 0x5D: TestBit(REG_L, 3); return 8;
-	  case 0x5E: TestBit(ReadMem(mHL.a), 3); return 16;
+	  case 0x5E: TestBit(ReadMem(REG_HL), 3); return 16;
 	  case 0x67: TestBit(REG_A, 4); return 8;
 	  case 0x60: TestBit(REG_B, 4); return 8;
 	  case 0x61: TestBit(REG_C, 4); return 8;
@@ -582,7 +582,7 @@ int	Emulator::DoOpcode()
 	  case 0x63: TestBit(REG_E, 4); return 8;
 	  case 0x64: TestBit(REG_H, 4); return 8;
 	  case 0x65: TestBit(REG_L, 4); return 8;
-	  case 0x66: TestBit(ReadMem(mHL.a), 4); return 16;
+	  case 0x66: TestBit(ReadMem(REG_HL), 4); return 16;
 	  case 0x6F: TestBit(REG_A, 5); return 8;
 	  case 0x68: TestBit(REG_B, 5); return 8;
 	  case 0x69: TestBit(REG_C, 5); return 8;
@@ -590,7 +590,7 @@ int	Emulator::DoOpcode()
 	  case 0x6B: TestBit(REG_E, 5); return 8;
 	  case 0x6C: TestBit(REG_H, 5); return 8;
 	  case 0x6D: TestBit(REG_L, 5); return 8;
-	  case 0x6E: TestBit(ReadMem(mHL.a), 5); return 16;
+	  case 0x6E: TestBit(ReadMem(REG_HL), 5); return 16;
 	  case 0x77: TestBit(REG_A, 6); return 8;
 	  case 0x70: TestBit(REG_B, 6); return 8;
 	  case 0x71: TestBit(REG_C, 6); return 8;
@@ -598,7 +598,7 @@ int	Emulator::DoOpcode()
 	  case 0x73: TestBit(REG_E, 6); return 8;
 	  case 0x74: TestBit(REG_H, 6); return 8;
 	  case 0x75: TestBit(REG_L, 6); return 8;
-	  case 0x76: TestBit(ReadMem(mHL.a), 6); return 16;
+	  case 0x76: TestBit(ReadMem(REG_HL), 6); return 16;
 	  case 0x7F: TestBit(REG_A, 7); return 8;
 	  case 0x78: TestBit(REG_B, 7); return 8;
 	  case 0x79: TestBit(REG_C, 7); return 8;
@@ -606,7 +606,7 @@ int	Emulator::DoOpcode()
 	  case 0x7B: TestBit(REG_E, 7); return 8;
 	  case 0x7C: TestBit(REG_H, 7); return 8;
 	  case 0x7D: TestBit(REG_L, 7); return 8;
-	  case 0x7E: TestBit(ReadMem(mHL.a), 7); return 16;
+	  case 0x7E: TestBit(ReadMem(REG_HL), 7); return 16;
 
 
 	  case 0xC7: SET_BIT(REG_A, 0); return 8;
@@ -617,9 +617,9 @@ int	Emulator::DoOpcode()
 	  case 0xC4: SET_BIT(REG_H, 0); return 8;
 	  case 0xC5: SET_BIT(REG_L, 0); return 8;
 	  case 0xC6:
-	    tmpB = ReadMem(mHL.a);
+	    tmpB = ReadMem(REG_HL);
 	    SET_BIT(tmpB, 0);
-	    WriteMem(mHL.a, tmpB);
+	    WriteMem(REG_HL, tmpB);
 	    return 16;
 	  case 0xCF: SET_BIT(REG_A, 1); return 8;
 	  case 0xC8: SET_BIT(REG_B, 1); return 8;
@@ -629,9 +629,9 @@ int	Emulator::DoOpcode()
 	  case 0xCC: SET_BIT(REG_H, 1); return 8;
 	  case 0xCD: SET_BIT(REG_L, 1); return 8;
 	  case 0xCE:
-	    tmpB = ReadMem(mHL.a);
+	    tmpB = ReadMem(REG_HL);
 	    SET_BIT(tmpB, 1);
-	    WriteMem(mHL.a, tmpB);
+	    WriteMem(REG_HL, tmpB);
 	    return 16;
 	  case 0xD7: SET_BIT(REG_A, 2); return 8;
 	  case 0xD0: SET_BIT(REG_B, 2); return 8;
@@ -641,9 +641,9 @@ int	Emulator::DoOpcode()
 	  case 0xD4: SET_BIT(REG_H, 2); return 8;
 	  case 0xD5: SET_BIT(REG_L, 2); return 8;
 	  case 0xD6:
-	    tmpB = ReadMem(mHL.a);
+	    tmpB = ReadMem(REG_HL);
 	    SET_BIT(tmpB, 2);
-	    WriteMem(mHL.a, tmpB);
+	    WriteMem(REG_HL, tmpB);
 	    return 16;
 	  case 0xDF: SET_BIT(REG_A, 3); return 8;
 	  case 0xD8: SET_BIT(REG_B, 3); return 8;
@@ -653,9 +653,9 @@ int	Emulator::DoOpcode()
 	  case 0xDC: SET_BIT(REG_H, 3); return 8;
 	  case 0xDD: SET_BIT(REG_L, 3); return 8;
 	  case 0xDE:
-	    tmpB = ReadMem(mHL.a);
+	    tmpB = ReadMem(REG_HL);
 	    SET_BIT(tmpB, 3);
-	    WriteMem(mHL.a, tmpB);
+	    WriteMem(REG_HL, tmpB);
 	    return 16;
 	  case 0xE7: SET_BIT(REG_A, 4); return 8;
 	  case 0xE0: SET_BIT(REG_B, 4); return 8;
@@ -665,9 +665,9 @@ int	Emulator::DoOpcode()
 	  case 0xE4: SET_BIT(REG_H, 4); return 8;
 	  case 0xE5: SET_BIT(REG_L, 4); return 8;
 	  case 0xE6:
-	    tmpB = ReadMem(mHL.a);
+	    tmpB = ReadMem(REG_HL);
 	    SET_BIT(tmpB, 4);
-	    WriteMem(mHL.a, tmpB);
+	    WriteMem(REG_HL, tmpB);
 	    return 16;
 	  case 0xEF: SET_BIT(REG_A, 5); return 8;
 	  case 0xE8: SET_BIT(REG_B, 5); return 8;
@@ -677,9 +677,9 @@ int	Emulator::DoOpcode()
 	  case 0xEC: SET_BIT(REG_H, 5); return 8;
 	  case 0xED: SET_BIT(REG_L, 5); return 8;
 	  case 0xEE:
-	    tmpB = ReadMem(mHL.a);
+	    tmpB = ReadMem(REG_HL);
 	    SET_BIT(tmpB, 5);
-	    WriteMem(mHL.a, tmpB);
+	    WriteMem(REG_HL, tmpB);
 	    return 16;
 	  case 0xF7: SET_BIT(REG_A, 6); return 8;
 	  case 0xF0: SET_BIT(REG_B, 6); return 8;
@@ -689,9 +689,9 @@ int	Emulator::DoOpcode()
 	  case 0xF4: SET_BIT(REG_H, 6); return 8;
 	  case 0xF5: SET_BIT(REG_L, 6); return 8;
 	  case 0xF6:
-	    tmpB = ReadMem(mHL.a);
+	    tmpB = ReadMem(REG_HL);
 	    SET_BIT(tmpB, 6);
-	    WriteMem(mHL.a, tmpB);
+	    WriteMem(REG_HL, tmpB);
 	    return 16;
 	  case 0xFF: SET_BIT(REG_A, 7); return 8;
 	  case 0xF8: SET_BIT(REG_B, 7); return 8;
@@ -701,9 +701,9 @@ int	Emulator::DoOpcode()
 	  case 0xFC: SET_BIT(REG_H, 7); return 8;
 	  case 0xFD: SET_BIT(REG_L, 7); return 8;
 	  case 0xFE:
-	    tmpB = ReadMem(mHL.a);
+	    tmpB = ReadMem(REG_HL);
 	    SET_BIT(tmpB, 7);
-	    WriteMem(mHL.a, tmpB);
+	    WriteMem(REG_HL, tmpB);
 	    return 16;
 
 	  case 0x87: SET_BIT(REG_A, 0); return 8;
@@ -714,9 +714,9 @@ int	Emulator::DoOpcode()
 	  case 0x84: SET_BIT(REG_H, 0); return 8;
 	  case 0x85: SET_BIT(REG_L, 0); return 8;
 	  case 0x86:
-	    tmpB = ReadMem(mHL.a);
+	    tmpB = ReadMem(REG_HL);
 	    SET_BIT(tmpB, 0);
-	    WriteMem(mHL.a, tmpB);
+	    WriteMem(REG_HL, tmpB);
 	    return 16;
 	  case 0x8F: SET_BIT(REG_A, 1); return 8;
 	  case 0x88: SET_BIT(REG_B, 1); return 8;
@@ -726,9 +726,9 @@ int	Emulator::DoOpcode()
 	  case 0x8C: SET_BIT(REG_H, 1); return 8;
 	  case 0x8D: SET_BIT(REG_L, 1); return 8;
 	  case 0x8E:
-	    tmpB = ReadMem(mHL.a);
+	    tmpB = ReadMem(REG_HL);
 	    SET_BIT(tmpB, 1);
-	    WriteMem(mHL.a, tmpB);
+	    WriteMem(REG_HL, tmpB);
 	    return 16;
 	  case 0x97: SET_BIT(REG_A, 2); return 8;
 	  case 0x90: SET_BIT(REG_B, 2); return 8;
@@ -738,9 +738,9 @@ int	Emulator::DoOpcode()
 	  case 0x94: SET_BIT(REG_H, 2); return 8;
 	  case 0x95: SET_BIT(REG_L, 2); return 8;
 	  case 0x96:
-	    tmpB = ReadMem(mHL.a);
+	    tmpB = ReadMem(REG_HL);
 	    SET_BIT(tmpB, 2);
-	    WriteMem(mHL.a, tmpB);
+	    WriteMem(REG_HL, tmpB);
 	    return 16;
 	  case 0x9F: SET_BIT(REG_A, 3); return 8;
 	  case 0x98: SET_BIT(REG_B, 3); return 8;
@@ -750,9 +750,9 @@ int	Emulator::DoOpcode()
 	  case 0x9C: SET_BIT(REG_H, 3); return 8;
 	  case 0x9D: SET_BIT(REG_L, 3); return 8;
 	  case 0x9E:
-	    tmpB = ReadMem(mHL.a);
+	    tmpB = ReadMem(REG_HL);
 	    SET_BIT(tmpB, 3);
-	    WriteMem(mHL.a, tmpB);
+	    WriteMem(REG_HL, tmpB);
 	    return 16;
 	  case 0xA7: SET_BIT(REG_A, 4); return 8;
 	  case 0xA0: SET_BIT(REG_B, 4); return 8;
@@ -762,9 +762,9 @@ int	Emulator::DoOpcode()
 	  case 0xA4: SET_BIT(REG_H, 4); return 8;
 	  case 0xA5: SET_BIT(REG_L, 4); return 8;
 	  case 0xA6:
-	    tmpB = ReadMem(mHL.a);
+	    tmpB = ReadMem(REG_HL);
 	    SET_BIT(tmpB, 4);
-	    WriteMem(mHL.a, tmpB);
+	    WriteMem(REG_HL, tmpB);
 	    return 16;
 	  case 0xAF: SET_BIT(REG_A, 5); return 8;
 	  case 0xA8: SET_BIT(REG_B, 5); return 8;
@@ -774,9 +774,9 @@ int	Emulator::DoOpcode()
 	  case 0xAC: SET_BIT(REG_H, 5); return 8;
 	  case 0xAD: SET_BIT(REG_L, 5); return 8;
 	  case 0xAE:
-	    tmpB = ReadMem(mHL.a);
+	    tmpB = ReadMem(REG_HL);
 	    SET_BIT(tmpB, 5);
-	    WriteMem(mHL.a, tmpB);
+	    WriteMem(REG_HL, tmpB);
 	    return 16;
 	  case 0xB7: SET_BIT(REG_A, 6); return 8;
 	  case 0xB0: SET_BIT(REG_B, 6); return 8;
@@ -786,9 +786,9 @@ int	Emulator::DoOpcode()
 	  case 0xB4: SET_BIT(REG_H, 6); return 8;
 	  case 0xB5: SET_BIT(REG_L, 6); return 8;
 	  case 0xB6:
-	    tmpB = ReadMem(mHL.a);
+	    tmpB = ReadMem(REG_HL);
 	    SET_BIT(tmpB, 6);
-	    WriteMem(mHL.a, tmpB);
+	    WriteMem(REG_HL, tmpB);
 	    return 16;
 	  case 0xBF: SET_BIT(REG_A, 7); return 8;
 	  case 0xB8: SET_BIT(REG_B, 7); return 8;
@@ -798,9 +798,9 @@ int	Emulator::DoOpcode()
 	  case 0xBC: SET_BIT(REG_H, 7); return 8;
 	  case 0xBD: SET_BIT(REG_L, 7); return 8;
 	  case 0xBE:
-	    tmpB = ReadMem(mHL.a);
+	    tmpB = ReadMem(REG_HL);
 	    SET_BIT(tmpB, 7);
-	    WriteMem(mHL.a, tmpB);
+	    WriteMem(REG_HL, tmpB);
 	    return 16;
 
 	  default:

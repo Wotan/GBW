@@ -106,9 +106,9 @@ BYTE	Emulator::ReadMem(WORD addr)
   else if (addr <= 0x9FFF) // VRAM
     return mVRAM[addr - 0x8000];
   else if (addr <= 0xBFFF) // ExtRAM
-    return mExtRAM[SIZE_BANK * mCurRAMBank + (addr - 0x8000)];
+    return mExtRAM[SIZE_BANK * mCurRAMBank + (addr - 0xA000)];
   else if (addr <= 0xDFFF) // RAM BANK 0 and 1
-    return mWRAM[addr - 0xD000];
+    return mWRAM[addr - 0xC000];
   else if (addr <= 0xFDFF) // ECHO
     return mWRAM[addr - 0xE000];
   else if (addr <= 0xFEFF) // Not used
@@ -170,9 +170,9 @@ void	Emulator::WriteMem(WORD addr, BYTE value)
   else if (addr <= 0x9FFF) // VRAM
     mVRAM[addr - 0x8000] = value;
   else if (addr <= 0xBFFF) // ExtRAM
-    mExtRAM[SIZE_BANK * mCurRAMBank + (addr - 0x8000)] = value;
+    mExtRAM[SIZE_BANK * mCurRAMBank + (addr - 0xA000)] = value;
   else if (addr <= 0xDFFF) // RAM BANK 0 and 1
-    mWRAM[addr - 0xD000] = value;
+    mWRAM[addr - 0xC000] = value;
   else if (addr <= 0xFDFF) // ECHO
     mWRAM[addr - 0xE000] = value;
   else if (addr <= 0xFEFF); // Not used

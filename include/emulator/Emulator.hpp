@@ -50,6 +50,14 @@
 # define REG_E mDE.lo
 # define REG_H mHL.hi
 # define REG_L mHL.lo
+# define REG_AF mAF.a
+# define REG_BC mBC.a
+# define REG_DE mDE.a
+# define REG_HL mHL.a
+# define Z_F (mAF.z)
+# define N_F (mAF.n)
+# define H_F (mAF.h)
+# define C_F (mAF.c)
 
 class App;
 
@@ -70,6 +78,27 @@ typedef union
   };
   WORD	a; // All
 } UWORD;
+
+typedef union
+{
+  struct
+  {
+    union
+    {
+      BYTE lo;
+      struct
+      {
+	bool none : 4; // bit 0 - 3
+	bool c : 1;
+	bool h: 1;
+	bool n : 1;
+	bool z : 1;
+      };
+    };
+    BYTE hi;
+  };
+  WORD	a; // All
+} UFWORD;
 
 typedef struct
 {
@@ -141,7 +170,7 @@ private:
   int	mTIMACounter;
 
   // Registers //
-  UWORD	mAF; // A = lo F = hi
+  UFWORD	mAF; // A = lo F = hi
   UWORD	mBC;
   UWORD	mDE;
   UWORD	mHL;
