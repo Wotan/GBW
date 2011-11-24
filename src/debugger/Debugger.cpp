@@ -69,6 +69,7 @@ void	Debugger::NextOpcode()
   int nbCycles = mEmu->DoOpcode();
   mEmu->UpdateTimer(nbCycles);
   mEmu->UpdateLCD(nbCycles);
+  mEmu->HandleInterupt();
   mMemWatcher->repaint();
   mInfosWatcher->repaint();
 }
@@ -88,6 +89,7 @@ void	Debugger::NextXOpcode()
       int nbCurCycles = mEmu->DoOpcode();
       mEmu->UpdateTimer(nbCurCycles);
       mEmu->UpdateLCD(nbCurCycles);
+      mEmu->HandleInterupt();
       i++;
     }
   mMemWatcher->repaint();

@@ -15,17 +15,16 @@ void	Emulator::Stop()
 {
   std::cout << "STOP" << std::endl;
   exit(0);
-
 }
 
 void	Emulator::ToggleInt(bool on)
 {
-
+  mMasterIntFlag = on;
 }
 
 void	Emulator::ToggleIntAfter(bool on)
 {
-  on = on;
+
 }
 
 void	Emulator::Load16bitHL()
@@ -50,19 +49,18 @@ void	Emulator::Push(WORD value)
   UWORD tmp;
 
   tmp.a = value;
-
-  WriteMem(mSP, tmp.lo);
-  WriteMem(mSP - 1, tmp.hi);
-  mSP -= 2;
+  WriteMem(mSP--, tmp.lo);
+  WriteMem(mSP--, tmp.hi);
 }
 
 WORD	Emulator::Pop()
 {
   UWORD tmp;
 
-  tmp.hi = ReadMem(mSP + 1);
-  tmp.lo = ReadMem(mSP + 2);
-  mSP += 2;
+  mSP++;
+  tmp.hi = ReadMem(mSP);
+  mSP++;
+  tmp.lo = ReadMem(mSP);
   return tmp.a;
 }
 

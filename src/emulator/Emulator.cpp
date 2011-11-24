@@ -12,6 +12,7 @@ Emulator::Emulator(App *app) :
   mDIVCounter = DIV_NBCYCLE_TO_UPDATE;
   mTIMACounter = 1024;
   mLYCounter = 456;
+  mMasterIntFlag = true;
 }
 
 Emulator::~Emulator()
@@ -33,7 +34,7 @@ void	Emulator::DoFrame()
       curCycles = DoOpcode();
       UpdateLCD(nbCycles);
       UpdateTimer(nbCycles);
-      // HandleInterupt()
+      HandleInterupt();
       nbCycles += curCycles;
     }
 }
@@ -50,7 +51,7 @@ void	Emulator::UpdateLCD(int nbCycles)
       if (curLine < 144)
 	; //Draw line
       else if (curLine == 144)
-	; // Interupt
+	REQ_INT(VBLANK);
       else if (curLine > 153) // Reset
 	mIOPorts[0x44] = 0;
       mIOPorts[0x44]++;
@@ -73,7 +74,10 @@ void	Emulator::UpdateTimer(int nbCycles)
       if (mTIMACounter <= 0)
 	{
 	  if (mIOPorts[TIMA] == 0xFF) // Overflow
-	    mIOPorts[TIMA] = mIOPorts[TMA];
+	    {
+	      mIOPorts[TIMA] = mIOPorts[TMA];
+	      REQ_INT(TIMER);
+	    }
 	  else
 	    mIOPorts[TIMA]++;
 	  switch (mIOPorts[TAC] & 0x03) // 3 = 11
@@ -86,6 +90,36 @@ void	Emulator::UpdateTimer(int nbCycles)
 	}
     }
 }
+
+void	Emulator::HandleInterupt()
+{
+  std::cout << mMasterIntFlag << std::endl;
+  if (!mMasterIntFlag)
+    return ;
+
+  BYTE regIntEnable = mInterrupEnable;
+  BYTE regIntReq = mIOPorts[0x0F];
+
+  for (int i = 0; i < 5; i++)
+    {
+      if (IS_BIT_SET(regIntReq, i) && IS_BIT_SET(regIntEnable, i))
+	{
+	  std::cout << "Interrupt handle " << i << std::endl;
+	  Push(mPC);
+	  switch (i)
+	    {
+	    case 0: mPC = 0x40; break;
+	    case 1: mPC = 0x48; break;
+	    case 2: mPC = 0x50; break;
+	    case 3: mPC = 0x58; break;
+	    case 4: mPC = 0x60; break;
+	    }
+	  RESET_BIT(regIntReq, i);
+	  mMasterIntFlag = false;
+	}
+    }
+}
+
 
 void	Emulator::Play()
 {

@@ -314,8 +314,8 @@ int	Emulator::DoOpcode()
 
     case 0x00: return 4;
     case 0x76: Halt(); return 4;
-    case 0xF3: ToggleIntAfter(false); return 4;
-    case 0xFB: ToggleIntAfter(true); return 4;
+    case 0xF3: ToggleInt(false); return 4;
+    case 0xFB: ToggleInt(true); return 4;
 
     case 0x07: RotateLeft_8bit(REG_A, false); return 4;
     case 0x17: RotateLeft_8bit(REG_A, true); return 4;

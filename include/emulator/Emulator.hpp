@@ -24,6 +24,14 @@
 # define RAM 1
 # define ROM 0
 
+// INT ///
+# define VBLANK 0
+# define LCDSTAT 1
+# define TIMER 2
+# define SERIAL 3
+# define JOYPAD 4
+# define REQ_INT(x) (SET_BIT(mIOPorts[0x0F], (x)))
+
 /// Timers (IoPorts - FF00) ///
 # define DIV 0x04
 # define DIV_NBCYCLE_TO_UPDATE 256 // 69905 / (16384 / 60)
@@ -129,6 +137,7 @@ public:
 
   void	UpdateTimer(int nbCycles);
   void	UpdateLCD(int nbCycles);
+  void	HandleInterupt();
 
   int	DoOpcode();
   void	DoFrame();
@@ -169,6 +178,7 @@ private:
   int	mDIVCounter;
   int	mTIMACounter;
 
+  bool	mMasterIntFlag;
   // Registers //
   UFWORD	mAF; // A = lo F = hi
   UWORD	mBC;
