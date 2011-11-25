@@ -70,6 +70,8 @@ void	Debugger::NextOpcode()
   mEmu->UpdateTimer(nbCycles);
   mEmu->UpdateLCD(nbCycles);
   mEmu->HandleInterupt();
+  mEmu->mOpCounter++;
+  mEmu->mCyclesCounter += nbCycles;
   mMemWatcher->repaint();
   mInfosWatcher->repaint();
 }
@@ -90,6 +92,8 @@ void	Debugger::NextXOpcode()
       mEmu->UpdateTimer(nbCurCycles);
       mEmu->UpdateLCD(nbCurCycles);
       mEmu->HandleInterupt();
+      mEmu->mOpCounter++;
+      mEmu->mCyclesCounter += nbCurCycles;
       i++;
     }
   mMemWatcher->repaint();

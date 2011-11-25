@@ -43,6 +43,14 @@ void	InfosWatcher::DrawLCDInfos(QPainter &painter)
 
   line.sprintf("LY : %i", mEmu->ReadMem(0xFF44));
   painter.drawText(posX, posLine, line);
+
+  posLine += 100;
+  line.sprintf("Opcodes : %i", mEmu->mOpCounter);
+  painter.drawText(posX - 20, posLine, line);
+  posLine += 20;
+
+  line.sprintf("Cycles : %i", mEmu->mCyclesCounter);
+  painter.drawText(posX - 20, posLine, line);
   posLine += 20;
 }
 

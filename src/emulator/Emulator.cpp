@@ -6,7 +6,9 @@
 Emulator::Emulator(App *app) :
   mCartridgeMem(0),
   mApp(app),
-  mPause(true)
+  mPause(true),
+  mCyclesCounter(0),
+  mOpCounter(0)
 {
   std::cout << "Emulator created" << std::endl;
   mDIVCounter = DIV_NBCYCLE_TO_UPDATE;
@@ -36,6 +38,10 @@ void	Emulator::DoFrame()
       UpdateTimer(nbCycles);
       HandleInterupt();
       nbCycles += curCycles;
+
+      // DEBUG //
+      mCyclesCounter += curCycles;
+      mOpCounter++;
     }
 }
 
@@ -145,8 +151,10 @@ BYTE	Emulator::ReadMem(WORD addr)
     return mWRAM[addr - 0xC000];
   else if (addr <= 0xFDFF) // ECHO
     return mWRAM[addr - 0xE000];
-  else if (addr <= 0xFEFF) // Not used
-    return 0x00;
+  else if (addr <= 0xFE9F) // OAM Sprite attribute table
+    return mOAM[addr - 0xFE00];
+  else if (addr <= 0xFEFF)
+    return 0x0;
   else if (addr <= 0xFF7F) // I/O ports
     return mIOPorts[addr - 0xFF00];
   else if (addr != 0xFFFF) // HRAM
@@ -209,7 +217,10 @@ void	Emulator::WriteMem(WORD addr, BYTE value)
     mWRAM[addr - 0xC000] = value;
   else if (addr <= 0xFDFF) // ECHO
     mWRAM[addr - 0xE000] = value;
-  else if (addr <= 0xFEFF); // Not used
+  else if (addr <= 0xFE9F) // OAM Sprite attribute table
+    mOAM[addr - 0xFE00] = value;
+  else if (addr <= 0xFEFF)
+    return ;
   else if (addr <= 0xFF7F) // I/O ports
     {
       if (addr == 0xFF04)

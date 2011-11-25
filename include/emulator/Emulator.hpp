@@ -124,6 +124,7 @@ class Emulator
 {
   friend class InfosWatcher;
   friend class MemWatcher;
+  friend class Debugger;
 public:
   Emulator(App *app);
   ~Emulator();
@@ -223,6 +224,10 @@ private:
 
   App		*mApp;
   bool		mPause;
+
+  // Misc //
+  unsigned int mCyclesCounter;
+  unsigned int mOpCounter;
 };
 
 
@@ -241,3 +246,4 @@ private:
 12  FFFF        Interrupt Enable Registers
 */
 #endif // !EMULATOR_HPP_
+
