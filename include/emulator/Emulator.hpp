@@ -149,27 +149,27 @@ public:
   void	Stop();
   void	ToggleInt(bool on);
   void	ToggleIntAfter(bool on);
-
   void	Load16bitHL();
-  void	ADD_8Bit(BYTE &toAdd, BYTE add, bool addCarry);
-  void	SUB_8Bit(BYTE &toSub, BYTE sub, bool addCarry);
-  void	OR_8Bit(BYTE &toXor, BYTE src);
-  void	XOR_8Bit(BYTE &toXor, BYTE src);
-  void	AND_8Bit(BYTE &toXor, BYTE src);
-  void	DEC_8Bit(BYTE &toDec);
-  void	INC_8Bit(BYTE &toDec);
-  void	CP_8Bit(BYTE cp1, BYTE cp2);
-  void	ADD_16bit(WORD &toAdd, WORD add);
-  void	ADD_16bitSigned(WORD &toAdd, SBYTE add);
-  void	SWAP_8bit(BYTE &toSwap);
-  void	DDA_8Bit(BYTE &nbr);
-  void	RotateLeft_8bit(BYTE &data, bool throughtCarry);
-  void	RotateRight_8bit(BYTE &data, bool throughtCarry);
-  void	ShiftRight_8bit(BYTE &data, bool MSB);
-  void	ShiftLeft_8bit(BYTE &data);
-  void	TestBit(BYTE totest, BYTE n);
   void	Push(WORD value);
   WORD	Pop();
+
+  inline void	ADD_8Bit(BYTE &toAdd, BYTE add, bool addCarry);
+  inline void	SUB_8Bit(BYTE &toSub, BYTE sub, bool addCarry);
+  inline void	OR_8Bit(BYTE &toXor, BYTE src);
+  inline void	XOR_8Bit(BYTE &toXor, BYTE src);
+  inline void	AND_8Bit(BYTE &toXor, BYTE src);
+  inline void	DEC_8Bit(BYTE &toDec);
+  inline void	INC_8Bit(BYTE &toDec);
+  inline void	CP_8Bit(BYTE cp1, BYTE cp2);
+  inline void	ADD_16bit(WORD &toAdd, WORD add);
+  inline void	ADD_16bitSigned(WORD &toAdd, SBYTE add);
+  inline void	SWAP_8bit(BYTE &toSwap);
+  inline void	DDA_8Bit(BYTE &nbr);
+  inline void	RotateLeft_8bit(BYTE &data, bool throughtCarry);
+  inline void	RotateRight_8bit(BYTE &data, bool throughtCarry);
+  inline void	ShiftRight_8bit(BYTE &data, bool MSB);
+  inline void	ShiftLeft_8bit(BYTE &data);
+  inline void	TestBit(BYTE totest, BYTE n);
 
 private:
   // Infos //

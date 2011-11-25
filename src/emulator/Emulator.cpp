@@ -60,9 +60,10 @@ void	Emulator::UpdateLCD(int nbCycles)
 	; //Draw line
       else if (curLine == 144)
 	REQ_INT(VBLANK);
-      else if (curLine > 153) // Reset
+      if (curLine > 153) // Reset
 	mIOPorts[0x44] = 0;
-      mIOPorts[0x44]++;
+      else
+	mIOPorts[0x44]++;
       mLYCounter = 456;
     }
 }
