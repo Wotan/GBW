@@ -49,8 +49,8 @@ void	Emulator::Push(WORD value)
   UWORD tmp;
 
   tmp.a = value;
-  WriteMem(mSP--, tmp.lo);
   WriteMem(mSP--, tmp.hi);
+  WriteMem(mSP--, tmp.lo);
 }
 
 WORD	Emulator::Pop()
@@ -58,9 +58,9 @@ WORD	Emulator::Pop()
   UWORD tmp;
 
   mSP++;
-  tmp.hi = ReadMem(mSP);
-  mSP++;
   tmp.lo = ReadMem(mSP);
+  mSP++;
+  tmp.hi = ReadMem(mSP);
   return tmp.a;
 }
 

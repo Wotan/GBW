@@ -42,6 +42,8 @@ void	Emulator::DoFrame()
       // DEBUG //
       mCyclesCounter += curCycles;
       mOpCounter++;
+      if (mPause)
+	break ;
     }
 }
 
@@ -111,6 +113,7 @@ void	Emulator::HandleInterupt()
       if (IS_BIT_SET(regIntReq, i) && IS_BIT_SET(regIntEnable, i))
 	{
 	  std::cout << "Interrupt handle " << i << std::endl;
+	  printf("PC : %X\n", mPC);
 	  Push(mPC);
 	  switch (i)
 	    {
