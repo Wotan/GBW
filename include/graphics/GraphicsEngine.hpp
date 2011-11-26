@@ -37,7 +37,7 @@ signals:
 private:
   sf::Texture	mScreen;
   sf::Sprite	mSpriteScreen;
-  char		mCurrentScanLine[GB_SCREEN_X * 4]; // bpp = 4
+  char		mCurrentScanLine[GB_SCREEN_X * 4]; // bpp = 4 r g b a
   App		*mApp;
   Emulator	*mEmu;
 };

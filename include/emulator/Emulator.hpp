@@ -17,9 +17,9 @@
 
 # define CYCLE_BY_FRAME 69905 // (4194304 / 60)
 
-# define IS_BIT_SET(x, n) ((x & (1 << n)))
-# define SET_BIT(x, n) (x |= (1 << n))
-# define RESET_BIT(x, n) (x &= ~(1 << n))
+# define IS_BIT_SET(x, n) (((x) & (1 << (n))))
+# define SET_BIT(x, n) ((x) |= (1 << (n)))
+# define RESET_BIT(x, n) ((x) &= ~(1 << (n)))
 
 # define RAM 1
 # define ROM 0
@@ -68,6 +68,7 @@
 # define C_F (mAF.c)
 
 class App;
+class GraphicsEngine;
 
 enum romType
   {
@@ -86,6 +87,14 @@ typedef union
   };
   WORD	a; // All
 } UWORD;
+
+typedef struct
+{
+  unsigned int colorNum0 : 2;
+  unsigned int colorNum1 : 2;
+  unsigned int colorNum2 : 2;
+  unsigned int colorNum3 : 2;
+}	Palette;
 
 typedef union
 {
@@ -126,7 +135,7 @@ class Emulator
   friend class MemWatcher;
   friend class Debugger;
 public:
-  Emulator(App *app);
+  Emulator(App *app, GraphicsEngine *graphics);
   ~Emulator();
   bool	Init(const char *fileName);
   void	InitMem();
@@ -135,6 +144,10 @@ public:
   void	ReadCartridgeInfos();
   BYTE	ReadMem(WORD addr);
   void  WriteMem(WORD addr, BYTE value);
+
+  void	DrawLine(int curLine);
+  void	DrawBG(int curLine);
+  void	SetColor(int *scanLine, bool bit0, bool bit1);
 
   void	UpdateTimer(int nbCycles);
   void	UpdateLCD(int nbCycles);
@@ -223,6 +236,7 @@ private:
   BYTE		mInterrupEnable;
 
   App		*mApp;
+  GraphicsEngine *mGraphics;
   bool		mPause;
 
   // Misc //

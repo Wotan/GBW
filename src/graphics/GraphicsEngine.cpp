@@ -57,7 +57,7 @@ bool	GraphicsEngine::NewEmulator(const char *fileName)
   if (mEmu)
     delete mEmu;
 
-  mEmu = new Emulator(mApp);
+  mEmu = new Emulator(mApp, this);
   if (!mEmu->Init(fileName))
     {
       CloseEmulator();
