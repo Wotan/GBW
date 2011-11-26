@@ -168,6 +168,14 @@ inline void ChangeROMBankHi(BYTE value, BYTE &curROMBank)
     curROMBank = 0x1;
 }
 
+void	Emulator::DMATransfert(BYTE value)
+{
+  value %= 0xF1;
+
+  for (int i = 0; i < 0xA0; i++)
+    WriteMem(0xFE + i, ReadMem(value + i));
+}
+
 void	Emulator::WriteMem(WORD addr, BYTE value)
 {
   if (addr <= 0x1FFF)
@@ -208,6 +216,8 @@ void	Emulator::WriteMem(WORD addr, BYTE value)
     {
       if (addr == 0xFF04)
 	mIOPorts[0x04] = 0;
+      else if (addr == 0xFF46)
+	DMATransfert(value);
       else
 	mIOPorts[addr - 0xFF00] = value;
     }

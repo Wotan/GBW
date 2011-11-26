@@ -144,6 +144,7 @@ public:
   void	ReadCartridgeInfos();
   BYTE	ReadMem(WORD addr);
   void  WriteMem(WORD addr, BYTE value);
+  void	DMATransfert(BYTE value);
 
   inline void	DrawLine(int curLine);
   inline void	DrawBG(int curLine);
