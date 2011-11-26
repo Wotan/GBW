@@ -45,6 +45,7 @@ SOURCES +=      src/main.cpp \
                 src/emulator/Init.cpp \
                 src/emulator/Opcode.cpp \
                 src/emulator/Commands.cpp \
+                src/emulator/Graphics.cpp \
                 src/debugger/Debugger.cpp \
                 src/debugger/MemWatcher.cpp \
                 src/debugger/InfosWatcher.cpp \

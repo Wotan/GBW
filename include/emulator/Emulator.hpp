@@ -17,7 +17,7 @@
 
 # define CYCLE_BY_FRAME 69905 // (4194304 / 60)
 
-# define IS_BIT_SET(x, n) (((x) & (1 << (n))))
+# define IS_BIT_SET(x, n) ((bool)((x) & (1 << (n))))
 # define SET_BIT(x, n) ((x) |= (1 << (n)))
 # define RESET_BIT(x, n) ((x) &= ~(1 << (n)))
 
@@ -147,7 +147,8 @@ public:
 
   void	DrawLine(int curLine);
   void	DrawBG(int curLine);
-  void	SetColor(int *scanLine, bool bit0, bool bit1);
+  void	DrawSprite(int curLine);
+  void	SetColor(int *scanLine, int spriteColor, bool blankTransp);
 
   void	UpdateTimer(int nbCycles);
   void	UpdateLCD(int nbCycles);
