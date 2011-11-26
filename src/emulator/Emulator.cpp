@@ -171,7 +171,7 @@ inline void ChangeROMBankHi(BYTE value, BYTE &curROMBank)
 void	Emulator::DMATransfert(BYTE value)
 {
   value %= 0xF1;
-
+  value <<= 8; // * 100
   for (int i = 0; i < 0xA0; i++)
     WriteMem(0xFE + i, ReadMem(value + i));
 }
