@@ -161,13 +161,13 @@ int	Emulator::DoOpcode()
       WriteMem(tmp.a, mSP);
       return 20;
 
-    case 0xF5: Push(mAF.a); return 16;
-    case 0xC5: Push(mBC.a); return 16;
-    case 0xD5: Push(mDE.a); return 16;
+    case 0xF5: Push(REG_AF); return 16;
+    case 0xC5: Push(REG_BC); return 16;
+    case 0xD5: Push(REG_DE); return 16;
     case 0xE5: Push(REG_HL); return 16;
-    case 0xF1: mAF.a = Pop(); return 12;
-    case 0xC1: mBC.a = Pop(); return 12;
-    case 0xD1: mDE.a = Pop(); return 12;
+    case 0xF1: REG_AF = Pop(); return 12;
+    case 0xC1: REG_BC = Pop(); return 12;
+    case 0xD1: REG_DE = Pop(); return 12;
     case 0xE1: REG_HL = Pop(); return 12;
 
     case 0x87: ADD_8Bit(REG_A, REG_A, false); return 4;
@@ -282,12 +282,12 @@ int	Emulator::DoOpcode()
     case 0x39: ADD_16bit(REG_HL, mSP); return 8;
     case 0xE8: ADD_16bitSigned(mSP, ReadMem(mPC++)); return 16;
 
-    case 0x03: mBC.a++; return 8;
-    case 0x13: mDE.a++; return 8;
+    case 0x03: REG_BC++; return 8;
+    case 0x13: REG_DE++; return 8;
     case 0x23: REG_HL++; return 8;
     case 0x33: mSP++; return 8;
-    case 0x0B: mBC.a--; return 8;
-    case 0x1B: mDE.a--; return 8;
+    case 0x0B: REG_BC--; return 8;
+    case 0x1B: REG_DE--; return 8;
     case 0x2B: REG_HL--; return 8;
     case 0x3B: mSP--; return 8;
     case 0x27: DDA_8Bit(REG_A); return 4;
@@ -295,7 +295,7 @@ int	Emulator::DoOpcode()
     case 0x2F:
       N_F = 1;
       H_F = 1;
-      REG_A |= 0xFF;
+      REG_A ^= 0xFF;
       return 4;
     case 0x3F:
       N_F = 0;
