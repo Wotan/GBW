@@ -3,6 +3,7 @@
 
 void	Emulator::UpdateLCD(int nbCycles)
 {
+
   if (!IS_BIT_SET(mIOPorts[0x40], 7)) // return if LCD not enabled
     return ;
   mLYCounter -= nbCycles;
@@ -28,42 +29,37 @@ void	Emulator::DrawLine(int curLine)
   DrawBG(curLine);
   if (IS_BIT_SET(mIOPorts[0x40], 1))
     DrawSprite(curLine);
-
 }
 
 void	Emulator::DrawSprite(int curLine)
 {
   bool	is8X16 = IS_BIT_SET(mIOPorts[0x40], 2);
-  char	*curScanLine = mGraphics->GetScanLinePtr();
+  char	*screen = mGraphics->GetScreenArrayPtr();
   BYTE	PX, PY;
-  int	RPX, RPY;
-  bool	bit0, bit1;
-  BYTE tileId;
-  BYTE B1, B2;
+  BYTE	tileId;
+  BYTE	B1, B2;
+  WORD tmp;
 
   for (int i = 0; i < 40 * 4; i += 4)
     {
-      PY = mOAM[i];
-      RPY = PY - 16;
-      if (!(curLine >= RPY && curLine < RPY + (is8X16 ? 16 : 8)))
+      PY = mOAM[i] - 16;
+      if (!(curLine >= PY && curLine < PY + (is8X16 ? 16 : 8)))
 	continue ;
-      PX = mOAM[i + 1];
-      RPX = PX - 8;
+      PX = mOAM[i + 1] - 8;
       if (PX == 0 || PX >= 168)
 	continue ;
       tileId = mOAM[i + 2];
 
+      B1 = mVRAM[tileId * 16 + ((curLine - PY) * 2 + 0)];
+      B2 = mVRAM[tileId * 16 + ((curLine - PY) * 2 + 1)];
       for (int j = 0; j < 8; j++)
 	{
-	  B1 = ReadMem(0x8000 + tileId * 16 + ((curLine - RPY) * 2 + 0));
-	  B2 = ReadMem(0x8000 + tileId * 16 + ((curLine - RPY) * 2 + 1));
-
-	  SetColor((int *)(curScanLine + RPX + j * 4), IS_BIT_SET(B1, 7 - j)
+	  SetColor((int *)(screen + curLine * GB_SCREEN_X * 4 + PX + j * 4)
+		   , IS_BIT_SET(B1, 7 - j)
 		   | (IS_BIT_SET(B2, 7 - j) << 1), true);
 	}
 
     }
-  mGraphics->DrawScanLine(curLine);
 }
 
 // FF40 bit 6 Pattern window = 0;9800-9BFFF / 1;9C00 - 9FFF
@@ -72,32 +68,31 @@ void	Emulator::DrawSprite(int curLine)
 void	Emulator::DrawBG(int curLine)
 {
   signed int tileId;
-  bool	bit0, bit1;
   int	posY = mIOPorts[0x42] + curLine;
   int	posX = mIOPorts[0x43];
-  BYTE	tmp;
-  char	*curScanLine = mGraphics->GetScanLinePtr();
-  int	addrTileData = IS_BIT_SET(mIOPorts[0x40], 4) ? 0x8000 : 0x9000;
-  int	addrBGPattern = IS_BIT_SET(mIOPorts[0x40], 3) ? 0x9C00 : 0x9800;
+  WORD	tmp;
+  char	*screen = mGraphics->GetScreenArrayPtr();
+  int	addrTileData = IS_BIT_SET(mIOPorts[0x40], 4) ? 0x0 : 0x1000;
+  int	addrBGPattern = IS_BIT_SET(mIOPorts[0x40], 3) ? 0x1C00 : 0x1800;
 
+  posY %= 256;
   for (int i = 0; i < 160; i++)
     {
-      tileId = ReadMem(addrBGPattern + (((posY % 256) / 8) * 32)
-		       + ((posX % 256) / 8));
+      posX %= 256;
 
-      tmp = ReadMem(addrTileData + tileId * 16 + ((posY % 8) * 2) + 0);
-      bit0 = IS_BIT_SET(tmp, 7 - (posX % 8));
+      tileId = mVRAM[addrBGPattern + ((posY * 4) + posX / 8)];
+      tmp = addrTileData + tileId * 16 + ((posY % 8) * 2);
 
-      tmp = ReadMem(addrTileData + tileId * 16 + ((posY % 8) * 2) + 1);
-      bit1 = IS_BIT_SET(tmp, 7 - (posX % 8));
-
-      SetColor((int *)(curScanLine + i * 4), bit0 | (bit1 << 1), false);
+      SetColor((int *)(screen + curLine * GB_SCREEN_X * 4 + i * 4),
+      	       IS_BIT_SET(mVRAM[tmp], 7 - (posX % 8)) |
+      	       (IS_BIT_SET(mVRAM[tmp + 1], 7 - (posX % 8)) << 1),
+      	       false);
       posX++;
     }
-  mGraphics->DrawScanLine(curLine);
 }
 
-void	Emulator::SetColor(int *scanLine, int spriteColor, bool blankTransp)
+inline void	Emulator::SetColor(int *scanLine, int spriteColor,
+				   bool blankTransp)
 {
   int	finalColor;
   Palette *palette = (Palette *)&mIOPorts[0x47];
@@ -107,7 +102,7 @@ void	Emulator::SetColor(int *scanLine, int spriteColor, bool blankTransp)
     case 0: finalColor = palette->colorNum0; break;
     case 1: finalColor = palette->colorNum1; break;
     case 2: finalColor = palette->colorNum2; break;
-    case 3: finalColor = palette->colorNum3; break;
+    case 3: finalColor = 0; break;
     }
   switch (finalColor)
     {

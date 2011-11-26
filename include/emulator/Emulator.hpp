@@ -145,10 +145,10 @@ public:
   BYTE	ReadMem(WORD addr);
   void  WriteMem(WORD addr, BYTE value);
 
-  void	DrawLine(int curLine);
-  void	DrawBG(int curLine);
-  void	DrawSprite(int curLine);
-  void	SetColor(int *scanLine, int spriteColor, bool blankTransp);
+  inline void	DrawLine(int curLine);
+  inline void	DrawBG(int curLine);
+  inline void	DrawSprite(int curLine);
+  inline void	SetColor(int *scanLine, int spriteColor, bool blankTransp);
 
   void	UpdateTimer(int nbCycles);
   void	UpdateLCD(int nbCycles);

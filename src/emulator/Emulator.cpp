@@ -82,7 +82,6 @@ void	Emulator::UpdateTimer(int nbCycles)
 
 void	Emulator::HandleInterupt()
 {
-  std::cout << mMasterIntFlag << std::endl;
   if (!mMasterIntFlag)
     return ;
 
@@ -93,8 +92,8 @@ void	Emulator::HandleInterupt()
     {
       if (IS_BIT_SET(regIntReq, i) && IS_BIT_SET(regIntEnable, i))
 	{
-	  std::cout << "Interrupt handle " << i << std::endl;
-	  printf("PC : %X\n", mPC);
+	  // std::cout << "Interrupt handle " << i << std::endl;
+	  // printf("PC : %X\n", mPC);
 	  Push(mPC);
 	  switch (i)
 	    {

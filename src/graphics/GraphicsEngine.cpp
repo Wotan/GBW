@@ -5,7 +5,7 @@
 
 GraphicsEngine::GraphicsEngine(QWidget *parent, const QPoint& position,
 			       const QSize& size, App *app) :
-  QSFMLCanvas(parent, position,  size, 16),
+  QSFMLCanvas(parent, position,  size, 32),
   mApp(app),
   mEmu(NULL)
 {
@@ -33,23 +33,34 @@ void	GraphicsEngine::OnInit()
 void	GraphicsEngine::OnUpdate()
 {
   Clear();
-  Draw(mSpriteScreen);
   if (mEmu)
-    mEmu->DoFrame();
+    {
+      mEmu->DoFrame();
+      Draw(mSpriteScreen);
+      FillScreen();
+
+      mEmu->DoFrame();
+      FillScreen();
+      Draw(mSpriteScreen);
+    }
+
+
+  static sf::Clock clock;
+  std::cout << "Update " <<  clock.GetElapsedTime()
+	    << std::endl;
+  clock.Reset();
 }
 
-void	GraphicsEngine::DrawScanLine(int numScanLine)
+void	GraphicsEngine::FillScreen()
 {
-  mScreen.Update((sf::Uint8 *)mCurrentScanLine, GB_SCREEN_X,
-		 1, 0, numScanLine);
+  mScreen.Update((sf::Uint8 *)mScreenArray);
 }
 
 void	GraphicsEngine::ClearScreen()
 {
-  for (int i = 0; i < GB_SCREEN_X * 4; i ++)
-    mCurrentScanLine[i] = 0x00;
-  for (int i = 0; i < GB_SCREEN_Y; i++)
-    DrawScanLine(i);
+  for (int i = 0; i < GB_SCREEN_X * GB_SCREEN_Y * 4; i ++)
+    mScreenArray[i] = 0x00;
+  FillScreen();
 }
 
 bool	GraphicsEngine::NewEmulator(const char *fileName)

@@ -13,7 +13,6 @@ int	Emulator::DoOpcode()
 
   mPC++;
 
-  printf("Opcode : %X\n", opcode);
   switch (opcode)
     {
     case 0x06: REG_B = ReadMem(mPC++); return 8;

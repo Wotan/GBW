@@ -22,8 +22,9 @@ public:
   void	OnInit();
   void	OnUpdate();
   void	ClearScreen();
-  void	DrawScanLine(int numScanLine);
-  char	*GetScanLinePtr() {return mCurrentScanLine;};
+  void	FillScreen();
+  char	*GetScreenArrayPtr() {return mScreenArray;};
+
   bool	NewEmulator(const char *fileName);
   void	CloseEmulator();
 
@@ -37,7 +38,9 @@ signals:
 private:
   sf::Texture	mScreen;
   sf::Sprite	mSpriteScreen;
-  char		mCurrentScanLine[GB_SCREEN_X * 4]; // bpp = 4 r g b a
+
+  // bpp = 4 r g b a
+  char		mScreenArray[GB_SCREEN_X * GB_SCREEN_Y * 4];
   App		*mApp;
   Emulator	*mEmu;
 };
