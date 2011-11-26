@@ -97,9 +97,9 @@ int	Emulator::DoOpcode()
     case 0x5F: REG_E = REG_A; return 4;
     case 0x67: REG_H = REG_A; return 4;
     case 0x6F: REG_L = REG_A; return 4;
-    case 0x02: REG_BC = REG_A; return 8;
-    case 0x12: REG_DE = REG_A; return 8;
-    case 0x77: REG_HL = REG_A; return 8;
+    case 0x02: WriteMem(REG_BC, REG_A); return 8;
+    case 0x12: WriteMem(REG_DE, REG_A); return 8;
+    case 0x77: WriteMem(REG_HL, REG_A); return 8;
 
     case 0xEA:
       tmp.lo = ReadMem(mPC++);
