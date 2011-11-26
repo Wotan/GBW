@@ -163,6 +163,7 @@ public:
 
   void	Halt();
   void	Stop();
+  bool	IsPause() {return mPause;}
   void	ToggleInt(bool on);
   void	ToggleIntAfter(bool on);
   void	Load16bitHL();

@@ -5,12 +5,50 @@ void	Emulator::UpdateLCD(int nbCycles)
 {
 
   if (!IS_BIT_SET(mIOPorts[0x40], 7)) // return if LCD not enabled
-    return ;
+    {
+      // Set to mode 1
+      SET_BIT(mIOPorts[0x41], 0);
+      RESET_BIT(mIOPorts[0x41], 1);
+      mLYCounter = 456;
+      mIOPorts[0x44] = 0;
+      return ;
+    }
   mLYCounter -= nbCycles;
+  BYTE mode = mIOPorts[0x41] & ~0x3;
+  BYTE curLine = mIOPorts[0x44];
+  if (curLine >= 144) // Mode 1
+    {
+      // If mode change and int up
+      if (mode != 1 && IS_BIT_SET(mIOPorts[0x41], 4))
+	REQ_INT(LCDSTAT);
+      SET_BIT(mIOPorts[0x41], 0);
+      RESET_BIT(mIOPorts[0x41], 1);
+    }
+  else
+    {
+      if (mLYCounter < 77) // mode 2
+	{
+	  if (mode != 2 && IS_BIT_SET(mIOPorts[0x41], 5))
+	    REQ_INT(LCDSTAT);
+	  RESET_BIT(mIOPorts[0x41], 0);
+	  SET_BIT(mIOPorts[0x41], 1);
+	}
+      else if (mLYCounter < 169) // mode3
+	{
+	  SET_BIT(mIOPorts[0x41], 0);
+	  SET_BIT(mIOPorts[0x41], 1);
+	}
+      else // mode0 > 201
+	{
+	  if (mode != 0 && IS_BIT_SET(mIOPorts[0x41], 3))
+	    REQ_INT(LCDSTAT);
+	  RESET_BIT(mIOPorts[0x41], 0);
+	  RESET_BIT(mIOPorts[0x41], 1);
+	}
+    }
+
   if (mLYCounter <= 0)
     {
-      BYTE curLine = mIOPorts[0x44];
-
       if (curLine < 144)
 	DrawLine(curLine);
       else if (curLine == 144)
