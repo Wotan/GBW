@@ -54,12 +54,15 @@ void	Emulator::DrawSprite(int curLine)
       B2 = mVRAM[tileId * 16 + ((curLine - PY) * 2 + 1)];
       for (int j = 0; j < 8; j++)
 	{
-	  SetColor((int *)(screen + curLine * GB_SCREEN_X * 4 + PX + j * 4)
+	  SetColor((int *)(screen + curLine * GB_SCREEN_X * 4 + (PX  + j) * 4)
 		   , IS_BIT_SET(B1, 7 - j)
-		   | (IS_BIT_SET(B2, 7 - j) << 1), true);
+		   | (IS_BIT_SET(B2, 7 - j) << 1), true,
+		   IS_BIT_SET(mOAM[i + 3], 4) ?
+		   mIOPorts[0x49] : mIOPorts[0x48]);
 	}
 
     }
+
 }
 
 // FF40 bit 6 Pattern window = 0;9800-9BFFF / 1;9C00 - 9FFF
@@ -86,16 +89,16 @@ void	Emulator::DrawBG(int curLine)
       SetColor((int *)(screen + curLine * GB_SCREEN_X * 4 + i * 4),
       	       IS_BIT_SET(mVRAM[tmp], 7 - (posX % 8)) |
       	       (IS_BIT_SET(mVRAM[tmp + 1], 7 - (posX % 8)) << 1),
-      	       false);
+      	       false, mIOPorts[0x47]);
       posX++;
     }
 }
 
 inline void	Emulator::SetColor(int *scanLine, int spriteColor,
-				   bool blankTransp)
+				   bool blankTransp, BYTE bpalette)
 {
   int	finalColor;
-  Palette *palette = (Palette *)&mIOPorts[0x47];
+  Palette *palette = (Palette *)&bpalette;
 
   switch (spriteColor)
     {
@@ -107,8 +110,8 @@ inline void	Emulator::SetColor(int *scanLine, int spriteColor,
   switch (finalColor)
     {
     case 0: if (!blankTransp) *scanLine = 0xFFFFFFFF; break;
-    case 1: *scanLine = 0x90909090; break;
-    case 2: *scanLine = 0x50505050; break;
+    case 1: *scanLine = 0xAAAAAAAA; break;
+    case 2: *scanLine = 0x55555555; break;
     case 3: *scanLine = 0x00000000; break;
     }
 }

@@ -148,7 +148,8 @@ public:
   inline void	DrawLine(int curLine);
   inline void	DrawBG(int curLine);
   inline void	DrawSprite(int curLine);
-  inline void	SetColor(int *scanLine, int spriteColor, bool blankTransp);
+  inline void	SetColor(int *scanLine, int spriteColor,
+			 bool blankTransp, BYTE bpalette);
 
   void	UpdateTimer(int nbCycles);
   void	UpdateLCD(int nbCycles);
