@@ -5,11 +5,13 @@
 
 GraphicsEngine::GraphicsEngine(QWidget *parent, const QPoint& position,
 			       const QSize& size, App *app) :
-  QSFMLCanvas(parent, position,  size, 32),
+  RenderOpenGL(parent, 16),
   mApp(app),
   mEmu(NULL)
 {
   std::cout << "GraphicsEngine created" << std::endl;
+  move(position);
+  resize(size);
 }
 
 GraphicsEngine::~GraphicsEngine()
@@ -21,39 +23,23 @@ GraphicsEngine::~GraphicsEngine()
 
 void	GraphicsEngine::OnInit()
 {
-  mScreen.Create(GB_SCREEN_X, GB_SCREEN_Y);
-  mSpriteScreen.SetTexture(mScreen);
+  InitTexture(GB_SCREEN_X, GB_SCREEN_Y, (unsigned char *)mScreenArray);
   ClearScreen();
-  // mSpriteScreen.SetScale(size().width() / mSpriteScreen.GetSize().x,
-  // 			 size().height() / mSpriteScreen.GetSize().y);
-
 }
 
 // Call every 16ms
 void	GraphicsEngine::OnUpdate()
 {
-  Clear();
   if (mEmu)
     {
       mEmu->DoFrame();
-      Draw(mSpriteScreen);
       FillScreen();
-
-      mEmu->DoFrame();
-      FillScreen();
-      Draw(mSpriteScreen);
     }
-
-
-  static sf::Clock clock;
-  std::cout << "Update " <<  clock.GetElapsedTime()
-	    << std::endl;
-  clock.Reset();
 }
 
 void	GraphicsEngine::FillScreen()
 {
-  mScreen.Update((sf::Uint8 *)mScreenArray);
+  UpdateScreen((unsigned char *)mScreenArray);
 }
 
 void	GraphicsEngine::ClearScreen()
@@ -95,4 +81,10 @@ void	GraphicsEngine::PauseEmu()
 {
   if(mEmu)
     mEmu->Pause();
+}
+
+void GraphicsEngine::keyPressEvent(QKeyEvent *keyEvent)
+{
+
+
 }

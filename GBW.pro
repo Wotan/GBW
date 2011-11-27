@@ -3,7 +3,7 @@
 ######################################################################
 
 CONFIG += release
-
+QT += opengl
 TEMPLATE = app
 TARGET = bin/GBW
 DEPENDPATH +=   . \
@@ -22,15 +22,15 @@ INCLUDEPATH +=  . \
                 include/emulator \
                 include/debugger
 
-LIBS += -lsfml-system -lsfml-graphics -lsfml-window
+LIBS += 
 OBJECTS_DIR = ./obj
 MOC_DIR = ./obj
 
 # Input
 HEADERS +=      include/MainWindow.hpp \
                 include/App.hpp \
-                include/graphics/QSFMLCanvas.hpp \
                 include/graphics/GraphicsEngine.hpp \
+                include/graphics/RenderOpenGL.hpp \
                 include/emulator/Emulator.hpp \
                 include/debugger/Debugger.hpp \
                 include/debugger/MemWatcher.hpp \
@@ -39,8 +39,8 @@ HEADERS +=      include/MainWindow.hpp \
 SOURCES +=      src/main.cpp \
                 src/MainWindow.cpp \
                 src/App.cpp \
-                src/graphics/QSFMLCanvas.cpp \
                 src/graphics/GraphicsEngine.cpp \
+                src/graphics/RenderOpenGL.cpp \
                 src/emulator/Emulator.cpp \
                 src/emulator/Init.cpp \
                 src/emulator/Opcode.cpp \
