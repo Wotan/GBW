@@ -1,4 +1,5 @@
 #include <iostream>
+#include <QPalette>
 #include <QFileDialog>
 #include "GraphicsEngine.hpp"
 #include "MainWindow.hpp"
@@ -19,9 +20,6 @@ MainWindow::~MainWindow()
 void	MainWindow::Init()
 {
   /////////////////////////////////////////////
-  setMinimumSize(320, 240);
-
-  /////////////////////////////////////////////
   QMenu *menuFile = menuBar()->addMenu(tr("&File"));
   QMenu *menuRun = menuBar()->addMenu(tr("&Run"));
   QMenu *menuDebugger = menuBar()->addMenu(tr("&Debugger"));
@@ -31,6 +29,11 @@ void	MainWindow::Init()
   QAction *actionShowDebug = menuDebugger->addAction(tr("&Show debug panel"));
   QAction *actionPlay = menuRun->addAction(tr("&Play"));
   QAction *actionPause = menuRun->addAction(tr("&Pause"));
+
+  /////////////////////////////////////////////
+  QPalette newPalette;
+  newPalette.setColor(QPalette::Window, QColor(0, 0, 0));
+  setPalette(newPalette);
 
   /////////////////////////////////////////////
   actionExit->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Q));
@@ -49,6 +52,9 @@ void	MainWindow::Init()
 				       QSize(160, 144), mApp);
   mGraphicsEngine->show();
 
+  /////////////////////////////////////////////
+  setMinimumSize(GB_SCREEN_X, GB_SCREEN_Y + menuBarHeight);
+  resize(GB_SCREEN_X, GB_SCREEN_Y + menuBarHeight);
 
   //////////// Signals //////////////////////
   connect(actionExit, SIGNAL(triggered()), mApp, SLOT(quit()));
@@ -78,3 +84,26 @@ void	MainWindow::OpenRom()
     mGraphicsEngine->NewEmulator(fileName.toStdString().c_str());
 }
 
+void	MainWindow::resizeEvent(QResizeEvent *event)
+{
+  int menuBarHeight = menuBar()->sizeHint().height();
+  QSize size = event->size();
+  int width, height;
+
+
+  if (size.width() * GB_SCREEN_Y <= GB_SCREEN_X * size.height())
+    {
+      width = size.width();
+      height = (width * GB_SCREEN_Y) / GB_SCREEN_X;
+
+      int pos = ((size.height()  + menuBarHeight - height) / 2);
+      mGraphicsEngine->move(0, pos > menuBarHeight ? pos : menuBarHeight);
+    }
+  else
+    {
+      height = size.height() - menuBarHeight;
+      width = (height * GB_SCREEN_X) / GB_SCREEN_Y;
+      mGraphicsEngine->move((size.width() - width) / 2, menuBarHeight);
+    }
+  mGraphicsEngine->resize(width, height);
+}

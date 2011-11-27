@@ -3,6 +3,7 @@
 
 #include <QMenuBar>
 #include <QMainWindow>
+#include <QResizeEvent>
 #include "App.hpp"
 #include "GraphicsEngine.hpp"
 #include "Debugger.hpp"
@@ -19,12 +20,12 @@ public:
   MainWindow(App *app);
   ~MainWindow();
   void	Init();
+  virtual void	resizeEvent(QResizeEvent * event);
 
 public slots:
   void	OpenRom();
 
 private:
-
   GraphicsEngine *mGraphicsEngine;
   App		*mApp;
   Debugger	*mDebug;
