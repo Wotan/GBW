@@ -21,6 +21,8 @@ public:
   ~MainWindow();
   void	Init();
   virtual void	resizeEvent(QResizeEvent * event);
+  void keyPressEvent(QKeyEvent *keyEvent);
+  void keyReleaseEvent(QKeyEvent *keyEvent);
 
 public slots:
   void	OpenRom();

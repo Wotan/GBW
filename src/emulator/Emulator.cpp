@@ -216,6 +216,16 @@ void	Emulator::WriteMem(WORD addr, BYTE value)
     {
       if (addr == 0xFF04)
 	mIOPorts[0x04] = 0;
+      else if (addr == 0xFF41) // 0-2 read only
+	{
+	  BYTE save = mIOPorts[0x41] & 7; // 7 = 00000111
+	  mIOPorts[0x41] = value | save;
+	}
+      else if (addr == 0xFF00) // 0-3 read only
+	{
+	  BYTE save = mIOPorts[0xF0] & 15; // 15 = 00001111
+	  mIOPorts[0xF0] = value | save;
+	}
       else if (addr == 0xFF46)
 	DMATransfert(value);
       else
@@ -225,4 +235,37 @@ void	Emulator::WriteMem(WORD addr, BYTE value)
     mHRAM[addr - 0xFF80] = value;
   else // Interrupt
     mInterrupEnable = value;
+}
+
+void	Emulator::ToggleKey(int id, bool isPress)
+{
+   if (!IS_BIT_SET(mIOPorts[0x0], id) && isPress)
+    REQ_INT(JOYPAD);
+  if (isPress)
+    RESET_BIT(mIOPorts[0x0], id);
+  else
+    SET_BIT(mIOPorts[0x0], id);
+}
+
+void	Emulator::KeyChange(eKey key, bool isPress)
+{
+  if (!IS_BIT_SET(mIOPorts[0x0], 4))
+    switch (key)
+      {
+      case Up: ToggleKey(2, isPress); break;
+      case Down: ToggleKey(3, isPress); break;
+      case Left: ToggleKey(1, isPress); break;
+      case Right: ToggleKey(0, isPress); break;
+      default: break;
+      }
+
+  if (!IS_BIT_SET(mIOPorts[0x0], 5))
+    switch (key)
+      {
+      case Start: ToggleKey(3, isPress); break;
+      case Select: ToggleKey(2, isPress); break;
+      case BUTTON_B: ToggleKey(1, isPress); break;
+      case BUTTON_A: ToggleKey(0, isPress); break;
+      default: break;
+      }
 }

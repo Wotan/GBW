@@ -27,8 +27,10 @@ public:
 
   bool	NewEmulator(const char *fileName);
   void	CloseEmulator();
+  Emulator *GetEmulator() {return mEmu;};
 
   virtual void keyPressEvent(QKeyEvent *keyEvent);
+  virtual void keyReleaseEvent(QKeyEvent *keyEvent);
 
 public slots:
   void	PlayEmu();

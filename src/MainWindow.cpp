@@ -107,3 +107,37 @@ void	MainWindow::resizeEvent(QResizeEvent *event)
     }
   mGraphicsEngine->resize(width, height);
 }
+
+void MainWindow::keyPressEvent(QKeyEvent *keyEvent)
+{
+  Emulator *emu = mGraphicsEngine->GetEmulator();
+
+  switch (keyEvent->key())
+    {
+    case Qt::Key_Up: emu->KeyChange(Up, true); break;
+    case Qt::Key_Down: emu->KeyChange(Down, true); break;
+    case Qt::Key_Right: emu->KeyChange(Right, true); break;
+    case Qt::Key_Left: emu->KeyChange(Left, true); break;
+    case Qt::Key_Q: emu->KeyChange(BUTTON_A, true); break;
+    case Qt::Key_W: emu->KeyChange(BUTTON_B, true); break;
+    case Qt::Key_E: emu->KeyChange(Start, true); break;
+    case Qt::Key_R: emu->KeyChange(Select, true); break;
+    }
+}
+
+void MainWindow::keyReleaseEvent(QKeyEvent *keyEvent)
+{
+  Emulator *emu = mGraphicsEngine->GetEmulator();
+
+  switch (keyEvent->key())
+    {
+    case Qt::Key_Up: emu->KeyChange(Up, false); break;
+    case Qt::Key_Down: emu->KeyChange(Down, false); break;
+    case Qt::Key_Right: emu->KeyChange(Right, false); break;
+    case Qt::Key_Left: emu->KeyChange(Left, false); break;
+    case Qt::Key_Q: emu->KeyChange(BUTTON_A, false); break;
+    case Qt::Key_W: emu->KeyChange(BUTTON_B, false); break;
+    case Qt::Key_E: emu->KeyChange(Start, false); break;
+    case Qt::Key_R: emu->KeyChange(Select, false); break;
+    }
+}

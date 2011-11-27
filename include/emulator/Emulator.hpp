@@ -88,6 +88,18 @@ typedef union
   WORD	a; // All
 } UWORD;
 
+ enum eKey
+  {
+    Up,
+    Down,
+    Left,
+    Right,
+    BUTTON_A,
+    BUTTON_B,
+    Start,
+    Select
+  };
+
 typedef struct
 {
   unsigned int colorNum0 : 2;
@@ -155,7 +167,8 @@ public:
   void	UpdateTimer(int nbCycles);
   void	UpdateLCD(int nbCycles);
   void	HandleInterupt();
-
+  void	KeyChange(eKey key, bool isPress);
+  void	ToggleKey(int id, bool isPress);
   int	DoOpcode();
   void	DoFrame();
   void	Play();
