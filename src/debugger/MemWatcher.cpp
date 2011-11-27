@@ -87,31 +87,37 @@ void	MemWatcher::paintEvent(QPaintEvent *event)
   int	posLine = 40;
   for (int i = 0; i < 0xF; i++)
     {
-      line.sprintf("%04X: %02X %02X %02X %02X %02X %02X %02X %02X",
-		   curMem, mEmu->ReadMem(curMem),
-		   mEmu->ReadMem(curMem + 1), mEmu->ReadMem(curMem + 2),
-		   mEmu->ReadMem(curMem + 3), mEmu->ReadMem(curMem + 4),
-		   mEmu->ReadMem(curMem + 5), mEmu->ReadMem(curMem + 6),
-		   mEmu->ReadMem(curMem + 7));
+      line.sprintf("%04X: ", curMem);
+      for (int j = 0; j < 8; j++)
+	line.append(QString().sprintf("%02X ", mEmu->ReadMem(curMem + j)));
       painter.drawText(5, posLine, line);
       posLine += 20;
       curMem += 8;
     }
 
   curMem = mEmu->mPC - mEmu->mPC % 8;
-  line.sprintf("PC %04X: %02X %02X %02X %02X %02X %02X %02X %02X",
-  	       curMem, mEmu->ReadMem(curMem),
-  	       mEmu->ReadMem(curMem + 1), mEmu->ReadMem(curMem + 2),
-  	       mEmu->ReadMem(curMem + 3), mEmu->ReadMem(curMem + 4),
-  	       mEmu->ReadMem(curMem + 5), mEmu->ReadMem(curMem + 6),
-  	       mEmu->ReadMem(curMem + 7));
 
+  ///////////////////////////////////////////
+  line.sprintf("PC %04X: ", curMem);
+  for (int j = 0; j < 8; j++)
+    line.append(QString().sprintf("%02X ", mEmu->ReadMem(curMem + j)));
   painter.fillRect(85 + 27 * (mEmu->mPC % 8),
 		   posLine - 3, 20, 16, QColor(255, 204, 51));
   painter.drawText(5, posLine + 10, line);
 
-  painter.drawText(5, posLine + 30, Debugger::GetOpMnemonic(mEmu, mEmu->mPC));
-  painter.drawText(QRect(5, posLine + 35, 300, 290),
+  posLine += 20;
+  curMem += 8;
+
+  //////////////////////////////////////////
+  line.sprintf("PC %04X: ", curMem);
+  for (int j = 0; j < 8; j++)
+    line.append(QString().sprintf("%02X ", mEmu->ReadMem(curMem + j)));
+  painter.drawText(5, posLine + 10, line);
+  posLine += 20;
+
+  //////////////////////////////////////////
+  painter.drawText(5, posLine + 10, Debugger::GetOpMnemonic(mEmu, mEmu->mPC));
+  painter.drawText(QRect(5, posLine + 15, 300, 290),
 		   Qt::AlignLeft | Qt::TextWordWrap,
 		   Debugger::GetOpDesc(mEmu, mEmu->mPC));
 }
