@@ -83,7 +83,7 @@ void	Emulator::DrawSprite(int curLine)
       if (!(curLine >= PY && curLine < PY + (is8X16 ? 16 : 8)))
 	continue ;
       PX = mOAM[i + 1] - 8;
-      if (PX == 0 || PX >= 168)
+      if (PX >= 168)
 	continue ;
       tileId = mOAM[i + 2];
 
