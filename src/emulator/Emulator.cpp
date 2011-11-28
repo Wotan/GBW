@@ -223,8 +223,8 @@ void	Emulator::WriteMem(WORD addr, BYTE value)
 	}
       else if (addr == 0xFF00) // 0-3 read only
 	{
-	  BYTE save = mIOPorts[0xF0] & 15; // 15 = 00001111
-	  mIOPorts[0xF0] = value | save;
+	  BYTE save = mIOPorts[0x00] & 15; // 15 = 00001111
+	  mIOPorts[0x00] = value | save;
 	}
       else if (addr == 0xFF46)
 	DMATransfert(value);
