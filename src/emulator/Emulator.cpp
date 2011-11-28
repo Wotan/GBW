@@ -4,13 +4,13 @@
 #include "Emulator.hpp"
 
 Emulator::Emulator(App *app, GraphicsEngine *graphics) :
+  mJoypadMask(0),
   mCartridgeMem(0),
   mApp(app),
   mGraphics(graphics),
   mPause(true),
   mCyclesCounter(0),
-  mOpCounter(0),
-  mJoypadMask(0)
+  mOpCounter(0)
 {
   std::cout << "Emulator created" << std::endl;
   mDIVCounter = DIV_NBCYCLE_TO_UPDATE;
@@ -270,6 +270,7 @@ BYTE	Emulator::GetJoypadStatus()
       if (IS_BIT_SET(mJoypadMask, BUTTON_A))
 	SET_BIT(joystatus, 0);
     }
+  return joystatus;
 }
 
 void	Emulator::KeyChange(eKey key, bool isPress)
