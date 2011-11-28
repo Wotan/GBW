@@ -169,7 +169,7 @@ public:
   void	UpdateLCD(int nbCycles);
   void	HandleInterupt();
   void	KeyChange(eKey key, bool isPress);
-  void	ToggleKey(int id, bool isPress);
+  BYTE	GetJoypadStatus();
   int	DoOpcode();
   void	DoFrame();
   void	Play();
@@ -218,6 +218,9 @@ private:
   UWORD	mHL;
   WORD	mPC;
   WORD	mSP; // Stack pointer
+
+  // Joypad //
+  BYTE mJoypadMask;
 
   // Graphics //
   int	mLYCounter; // Start at 456

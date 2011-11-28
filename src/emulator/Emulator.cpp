@@ -9,7 +9,8 @@ Emulator::Emulator(App *app, GraphicsEngine *graphics) :
   mGraphics(graphics),
   mPause(true),
   mCyclesCounter(0),
-  mOpCounter(0)
+  mOpCounter(0),
+  mJoypadMask(0)
 {
   std::cout << "Emulator created" << std::endl;
   mDIVCounter = DIV_NBCYCLE_TO_UPDATE;
@@ -139,7 +140,11 @@ BYTE	Emulator::ReadMem(WORD addr)
   else if (addr <= 0xFEFF)
     return 0x0;
   else if (addr <= 0xFF7F) // I/O ports
-    return mIOPorts[addr - 0xFF00];
+    {
+      if (addr == 0xFF00)
+	return GetJoypadStatus();
+      return mIOPorts[addr - 0xFF00];
+    }
   else if (addr != 0xFFFF) // HRAM
     return mHRAM[addr - 0xFF80];
   else // Interrupt
@@ -237,35 +242,42 @@ void	Emulator::WriteMem(WORD addr, BYTE value)
     mInterrupEnable = value;
 }
 
-void	Emulator::ToggleKey(int id, bool isPress)
+BYTE	Emulator::GetJoypadStatus()
 {
-   if (!IS_BIT_SET(mIOPorts[0x0], id) && isPress)
-    REQ_INT(JOYPAD);
-  if (isPress)
-    RESET_BIT(mIOPorts[0x0], id);
-  else
-    SET_BIT(mIOPorts[0x0], id);
+  BYTE joystatus = 0;
+
+  joystatus = mIOPorts[0] & ~0xF;
+  if (!IS_BIT_SET(joystatus, 4))
+    {
+      if (IS_BIT_SET(mJoypadMask, Down))
+	SET_BIT(joystatus, 3);
+      if (IS_BIT_SET(mJoypadMask, Up))
+	SET_BIT(joystatus, 2);
+      if (IS_BIT_SET(mJoypadMask, Left))
+	SET_BIT(joystatus, 1);
+      if (IS_BIT_SET(mJoypadMask, Right))
+	SET_BIT(joystatus, 0);
+    }
+
+  if (!IS_BIT_SET(joystatus, 5))
+    {
+      if (IS_BIT_SET(mJoypadMask, Start))
+	SET_BIT(joystatus, 3);
+      if (IS_BIT_SET(mJoypadMask, Select))
+	SET_BIT(joystatus, 2);
+      if (IS_BIT_SET(mJoypadMask, BUTTON_B))
+	SET_BIT(joystatus, 1);
+      if (IS_BIT_SET(mJoypadMask, BUTTON_A))
+	SET_BIT(joystatus, 0);
+    }
 }
 
 void	Emulator::KeyChange(eKey key, bool isPress)
 {
-  if (!IS_BIT_SET(mIOPorts[0x0], 4))
-    switch (key)
-      {
-      case Up: ToggleKey(2, isPress); break;
-      case Down: ToggleKey(3, isPress); break;
-      case Left: ToggleKey(1, isPress); break;
-      case Right: ToggleKey(0, isPress); break;
-      default: break;
-      }
-
-  if (!IS_BIT_SET(mIOPorts[0x0], 5))
-    switch (key)
-      {
-      case Start: ToggleKey(3, isPress); break;
-      case Select: ToggleKey(2, isPress); break;
-      case BUTTON_B: ToggleKey(1, isPress); break;
-      case BUTTON_A: ToggleKey(0, isPress); break;
-      default: break;
-      }
+  if (isPress && !IS_BIT_SET(mJoypadMask, key))
+    REQ_INT(JOYPAD);
+  if (isPress)
+    SET_BIT(mJoypadMask, key);
+  else
+    RESET_BIT(mJoypadMask, key);
 }
