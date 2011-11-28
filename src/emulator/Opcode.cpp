@@ -87,7 +87,7 @@ int	Emulator::DoOpcode()
     case 0xFA:
       tmp.lo = ReadMem(mPC++);
       tmp.hi = ReadMem(mPC++);
-      WriteMem(REG_A, ReadMem(tmp.a));
+      REG_A = ReadMem(tmp.a);
       return 16;
     case 0x3E: REG_A = ReadMem(mPC++); return 8;
     case 0x47: REG_B = REG_A; return 4;

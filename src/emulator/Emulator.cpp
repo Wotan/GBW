@@ -249,25 +249,25 @@ BYTE	Emulator::GetJoypadStatus()
   joystatus = mIOPorts[0] & ~0xF;
   if (!IS_BIT_SET(joystatus, 4))
     {
-      if (IS_BIT_SET(mJoypadMask, Down))
+      if (!IS_BIT_SET(mJoypadMask, Down))
 	SET_BIT(joystatus, 3);
-      if (IS_BIT_SET(mJoypadMask, Up))
+      if (!IS_BIT_SET(mJoypadMask, Up))
 	SET_BIT(joystatus, 2);
-      if (IS_BIT_SET(mJoypadMask, Left))
+      if (!IS_BIT_SET(mJoypadMask, Left))
 	SET_BIT(joystatus, 1);
-      if (IS_BIT_SET(mJoypadMask, Right))
+      if (!IS_BIT_SET(mJoypadMask, Right))
 	SET_BIT(joystatus, 0);
     }
 
   if (!IS_BIT_SET(joystatus, 5))
     {
-      if (IS_BIT_SET(mJoypadMask, Start))
+      if (!IS_BIT_SET(mJoypadMask, Start))
 	SET_BIT(joystatus, 3);
-      if (IS_BIT_SET(mJoypadMask, Select))
+      if (!IS_BIT_SET(mJoypadMask, Select))
 	SET_BIT(joystatus, 2);
-      if (IS_BIT_SET(mJoypadMask, BUTTON_B))
+      if (!IS_BIT_SET(mJoypadMask, BUTTON_B))
 	SET_BIT(joystatus, 1);
-      if (IS_BIT_SET(mJoypadMask, BUTTON_A))
+      if (!IS_BIT_SET(mJoypadMask, BUTTON_A))
 	SET_BIT(joystatus, 0);
     }
   return joystatus;
