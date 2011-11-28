@@ -36,8 +36,9 @@ void	Emulator::DoFrame()
   while (nbCycles < CYCLE_BY_FRAME)
     {
       curCycles = DoOpcode();
-      UpdateLCD(nbCycles);
-      UpdateTimer(nbCycles);
+
+      UpdateLCD(curCycles);
+      UpdateTimer(curCycles);
       HandleInterupt();
       nbCycles += curCycles;
 
@@ -93,8 +94,6 @@ void	Emulator::HandleInterupt()
     {
       if (IS_BIT_SET(regIntReq, i) && IS_BIT_SET(regIntEnable, i))
 	{
-	  // std::cout << "Interrupt handle " << i << std::endl;
-	  // printf("PC : %X\n", mPC);
 	  Push(mPC);
 	  switch (i)
 	    {
@@ -104,7 +103,7 @@ void	Emulator::HandleInterupt()
 	    case 3: mPC = 0x58; break;
 	    case 4: mPC = 0x60; break;
 	    }
-	  RESET_BIT(regIntReq, i);
+	  RESET_BIT(mIOPorts[0x0F], i);
 	  mMasterIntFlag = false;
 	}
     }
@@ -128,7 +127,11 @@ BYTE	Emulator::ReadMem(WORD addr)
   else if (addr <= 0x7FFF) // ROM bank 01..NN
     return mCartridgeMem[SIZE_BANK * mCurROMBank + (addr - 0x4000)];
   else if (addr <= 0x9FFF) // VRAM
-    return mVRAM[addr - 0x8000];
+    {
+      if ((mIOPorts[0x41] & 0x3) == 3)
+	return 0;
+      return mVRAM[addr - 0x8000];
+    }
   else if (addr <= 0xBFFF) // ExtRAM
     return mExtRAM[SIZE_BANK * mCurRAMBank + (addr - 0xA000)];
   else if (addr <= 0xDFFF) // RAM BANK 0 and 1
@@ -136,7 +139,11 @@ BYTE	Emulator::ReadMem(WORD addr)
   else if (addr <= 0xFDFF) // ECHO
     return mWRAM[addr - 0xE000];
   else if (addr <= 0xFE9F) // OAM Sprite attribute table
-    return mOAM[addr - 0xFE00];
+    {
+      // if ((mIOPorts[0x41] & 0x3) == 2 || (mIOPorts[0x41] & 0x3) == 3)
+      // 	return 0;
+      return mOAM[addr - 0xFE00];
+    }
   else if (addr <= 0xFEFF)
     return 0x0;
   else if (addr <= 0xFF7F) // I/O ports
@@ -206,7 +213,11 @@ void	Emulator::WriteMem(WORD addr, BYTE value)
 	mCurRAMBank = 0;
     }
   else if (addr <= 0x9FFF) // VRAM
-    mVRAM[addr - 0x8000] = value;
+    {
+      // if ((mIOPorts[0x41] & 0x3) == 3)
+      // 	return ;
+      mVRAM[addr - 0x8000] = value;
+    }
   else if (addr <= 0xBFFF) // ExtRAM
     mExtRAM[SIZE_BANK * mCurRAMBank + (addr - 0xA000)] = value;
   else if (addr <= 0xDFFF) // RAM BANK 0 and 1
@@ -214,7 +225,11 @@ void	Emulator::WriteMem(WORD addr, BYTE value)
   else if (addr <= 0xFDFF) // ECHO
     mWRAM[addr - 0xE000] = value;
   else if (addr <= 0xFE9F) // OAM Sprite attribute table
-    mOAM[addr - 0xFE00] = value;
+    {
+      // if ((mIOPorts[0x41] & 0x3) == 2 || (mIOPorts[0x41] & 0x3) == 3)
+      // 	return ;
+      mOAM[addr - 0xFE00] = value;
+    }
   else if (addr <= 0xFEFF)
     return ;
   else if (addr <= 0xFF7F) // I/O ports
