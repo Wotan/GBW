@@ -29,6 +29,7 @@ public:
   static const char *GetOpMnemonic(Emulator *emu, int addr);
   static const char *GetOpDesc(Emulator *emu, int addr);
   static int GetOpSize(Emulator *emu, int addr);
+  static int GetOpNbArgs(Emulator *emu, int addr);
   void RepaintAll();
 
 public slots:
