@@ -34,7 +34,8 @@ HEADERS +=      include/MainWindow.hpp \
                 include/emulator/Emulator.hpp \
                 include/debugger/Debugger.hpp \
                 include/debugger/MemWatcher.hpp \
-                include/debugger/InfosWatcher.hpp
+                include/debugger/InfosWatcher.hpp \
+                include/debugger/AsmWatcher.hpp
 
 SOURCES +=      src/main.cpp \
                 src/MainWindow.cpp \
@@ -49,5 +50,6 @@ SOURCES +=      src/main.cpp \
                 src/debugger/Debugger.cpp \
                 src/debugger/MemWatcher.cpp \
                 src/debugger/InfosWatcher.cpp \
-                src/debugger/Mnemonic.cpp
+                src/debugger/Mnemonic.cpp \
+                src/debugger/AsmWatcher.cpp
 

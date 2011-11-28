@@ -95,31 +95,6 @@ void	MemWatcher::paintEvent(QPaintEvent *event)
       curMem += 8;
     }
 
-  curMem = mEmu->mPC - mEmu->mPC % 8;
-
-  ///////////////////////////////////////////
-  line.sprintf("PC %04X: ", curMem);
-  for (int j = 0; j < 8; j++)
-    line.append(QString().sprintf("%02X ", mEmu->ReadMem(curMem + j)));
-  painter.fillRect(85 + 27 * (mEmu->mPC % 8),
-		   posLine - 3, 20, 16, QColor(255, 204, 51));
-  painter.drawText(5, posLine + 10, line);
-
-  posLine += 20;
-  curMem += 8;
-
-  //////////////////////////////////////////
-  line.sprintf("PC %04X: ", curMem);
-  for (int j = 0; j < 8; j++)
-    line.append(QString().sprintf("%02X ", mEmu->ReadMem(curMem + j)));
-  painter.drawText(5, posLine + 10, line);
-  posLine += 20;
-
-  //////////////////////////////////////////
-  painter.drawText(5, posLine + 10, Debugger::GetOpMnemonic(mEmu, mEmu->mPC));
-  painter.drawText(QRect(5, posLine + 15, 300, 290),
-		   Qt::AlignLeft | Qt::TextWordWrap,
-		   Debugger::GetOpDesc(mEmu, mEmu->mPC));
 }
 
 HexSpinBox::HexSpinBox(QWidget *parent) :

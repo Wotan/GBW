@@ -2,6 +2,7 @@
 #include <QMessageBox>
 #include <QPushButton>
 #include "Debugger.hpp"
+#include "AsmWatcher.hpp"
 #include "Emulator.hpp"
 
 Debugger::Debugger(QWidget *parent, App *app) :
@@ -20,6 +21,7 @@ Debugger::~Debugger()
   delete mNextOp;
   delete mNbOpcode;
   delete mNextNbOp;
+  delete mAsmWatcher;
 }
 
 bool Debugger::Init()
@@ -30,10 +32,13 @@ bool Debugger::Init()
   mInfosWatcher->setGeometry(310, 5, 300, 200);
   mInfosWatcher->show();
 
-
   mMemWatcher = new MemWatcher(this);
-  mMemWatcher->setGeometry(5, 5, 300, 450);
+  mMemWatcher->setGeometry(5, 5, 300, 330);
   mMemWatcher->show();
+
+  mAsmWatcher = new AsmWatcher(this);
+  mAsmWatcher->setGeometry(310 + 300 + 5, 5, 300, 450);
+  mAsmWatcher->show();
 
   mNextOp = new QPushButton("Next Opcode", this);
   mNextOp->setGeometry(385, 250, 100, 25);
@@ -72,8 +77,7 @@ void	Debugger::NextOpcode()
   mEmu->HandleInterupt();
   mEmu->mOpCounter++;
   mEmu->mCyclesCounter += nbCycles;
-  mMemWatcher->repaint();
-  mInfosWatcher->repaint();
+  RepaintAll();
 }
 
 void	Debugger::NextXOpcode()
@@ -96,8 +100,7 @@ void	Debugger::NextXOpcode()
       mEmu->mCyclesCounter += nbCurCycles;
       i++;
     }
-  mMemWatcher->repaint();
-  mInfosWatcher->repaint();
+  RepaintAll();
 }
 
 void	Debugger::EmuInstanceChange(Emulator *emu)
@@ -105,10 +108,15 @@ void	Debugger::EmuInstanceChange(Emulator *emu)
   mEmu = emu;
   mMemWatcher->SetEmu(emu);
   mInfosWatcher->SetEmu(emu);
+  mAsmWatcher->SetEmu(emu);
   std::cout << "Change emulator instance (" << emu << ")" << std::endl;
   if (emu)
-    {
-      mMemWatcher->repaint();
-      mInfosWatcher->repaint();
-    }
+    RepaintAll();
+}
+
+void Debugger::RepaintAll()
+{
+  mMemWatcher->repaint();
+  mInfosWatcher->repaint();
+  mAsmWatcher->repaint();
 }

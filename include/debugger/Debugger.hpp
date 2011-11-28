@@ -9,11 +9,13 @@
 # include "Emulator.hpp"
 # include "InfosWatcher.hpp"
 # include "MemWatcher.hpp"
+# include "AsmWatcher.hpp"
 
 class App;
 class Emulator;
 class InfosWatcher;
 class MemWatcher;
+class AsmWatcher;
 
 class Debugger : public QDialog
 {
@@ -26,6 +28,8 @@ public:
 
   static const char *GetOpMnemonic(Emulator *emu, int addr);
   static const char *GetOpDesc(Emulator *emu, int addr);
+  static int GetOpSize(Emulator *emu, int addr);
+  void RepaintAll();
 
 public slots:
   void		EmuInstanceChange(Emulator *emu);
@@ -37,6 +41,8 @@ private:
   Emulator	*mEmu;
   InfosWatcher	*mInfosWatcher;
   MemWatcher	*mMemWatcher;
+  AsmWatcher	*mAsmWatcher;
+
   QPushButton	*mNextOp;
   QShortcut	*mExitShortcut;
   QShortcut	*mNextOpShortcut;
