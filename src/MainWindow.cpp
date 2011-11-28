@@ -112,6 +112,8 @@ void MainWindow::keyPressEvent(QKeyEvent *keyEvent)
 {
   Emulator *emu = mGraphicsEngine->GetEmulator();
 
+  if (!emu)
+    return ;
   switch (keyEvent->key())
     {
     case Qt::Key_Up: emu->KeyChange(Up, true); break;
@@ -129,6 +131,8 @@ void MainWindow::keyReleaseEvent(QKeyEvent *keyEvent)
 {
   Emulator *emu = mGraphicsEngine->GetEmulator();
 
+  if (!emu)
+    return ;
   switch (keyEvent->key())
     {
     case Qt::Key_Up: emu->KeyChange(Up, false); break;
