@@ -24,7 +24,7 @@ void	Emulator::ToggleInt(bool on)
 
 void	Emulator::ToggleIntAfter(bool on)
 {
-
+  on = on;
 }
 
 void	Emulator::Load16bitHL()

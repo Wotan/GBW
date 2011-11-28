@@ -76,7 +76,6 @@ void	Emulator::DrawSprite(int curLine)
   BYTE	PX, PY;
   BYTE	tileId;
   BYTE	B1, B2;
-  WORD tmp;
 
   for (int i = 0; i < 40 * 4; i += 4)
     {
