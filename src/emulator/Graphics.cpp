@@ -46,7 +46,14 @@ void	Emulator::UpdateLCD(int nbCycles)
 	  RESET_BIT(mIOPorts[0x41], 1);
 	}
     }
-
+  if (curLine == mIOPorts[0x45])
+    {
+      SET_BIT(mIOPorts[0x41], 2);
+      if (IS_BIT_SET(mIOPorts[0x41], 6))
+	REQ_INT(LCDSTAT);
+    }
+  else
+    RESET_BIT(mIOPorts[0x41], 2);
   if (mLYCounter <= 0)
     {
       if (curLine < 144)

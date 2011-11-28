@@ -11,7 +11,7 @@
 # define SBYTE int8_t
 # define SWORD int16_t
 
-# define SIZE_BANK 0x2000 // 16KB
+# define SIZE_BANK 0x4000 // 16KB
 # define MAX_BANK 128 // Maybe 256
 # define MAX_SIZE_CARTRIDGE SIZE_BANK * MAX_BANK
 
