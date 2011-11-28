@@ -402,14 +402,14 @@ int	Emulator::DoOpcode()
       return 12;
 
       // RST
-    case 0xC7: Push(mPC - 1); mPC = 0x00; return 32;
-    case 0xCF: Push(mPC - 1); mPC = 0x08; return 32;
-    case 0xD7: Push(mPC - 1); mPC = 0x10; return 32;
-    case 0xDF: Push(mPC - 1); mPC = 0x18; return 32;
-    case 0xE7: Push(mPC - 1); mPC = 0x20; return 32;
-    case 0xEF: Push(mPC - 1); mPC = 0x28; return 32;
-    case 0xF7: Push(mPC - 1); mPC = 0x30; return 32;
-    case 0xFF: Push(mPC - 1); mPC = 0x38; return 32;
+    case 0xC7: Push(mPC); mPC = 0x00; return 32;
+    case 0xCF: Push(mPC); mPC = 0x08; return 32;
+    case 0xD7: Push(mPC); mPC = 0x10; return 32;
+    case 0xDF: Push(mPC); mPC = 0x18; return 32;
+    case 0xE7: Push(mPC); mPC = 0x20; return 32;
+    case 0xEF: Push(mPC); mPC = 0x28; return 32;
+    case 0xF7: Push(mPC); mPC = 0x30; return 32;
+    case 0xFF: Push(mPC); mPC = 0x38; return 32;
 
       // RET
     case 0xC9: mPC = Pop(); return 8;
