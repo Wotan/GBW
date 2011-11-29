@@ -45,6 +45,11 @@
 // 11:  16384 Hz
 # define TAC 0x07
 
+# define LCD_CONTROL 0x40
+# define LCD_STATUS 0x41
+# define LY 0x44
+# define LYC 0x45
+
 /// Register ///
 
 # define REG_A mAF.hi

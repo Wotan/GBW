@@ -4,56 +4,56 @@
 void	Emulator::UpdateLCD(int nbCycles)
 {
 
-  if (!IS_BIT_SET(mIOPorts[0x40], 7)) // return if LCD not enabled
+  if (!IS_BIT_SET(mIOPorts[LCD_CONTROL], 7)) // return if LCD not enabled
     {
       // Set to mode 1
-      SET_BIT(mIOPorts[0x41], 0);
-      RESET_BIT(mIOPorts[0x41], 1);
+      SET_BIT(mIOPorts[LCD_STATUS], 0);
+      RESET_BIT(mIOPorts[LCD_STATUS], 1);
       mLYCounter = 456;
       mIOPorts[0x44] = 0;
       return ;
     }
   mLYCounter -= nbCycles;
-  BYTE mode = mIOPorts[0x41] & 0x3;
-  BYTE curLine = mIOPorts[0x44];
+  BYTE mode = mIOPorts[LCD_STATUS] & 0x3;
+  BYTE curLine = mIOPorts[LY];
   if (curLine >= 144) // Mode 1
     {
       // If mode change and int up
-      if (mode != 1 && IS_BIT_SET(mIOPorts[0x41], 4))
+      if (mode != 1 && IS_BIT_SET(mIOPorts[LCD_STATUS], 4))
 	REQ_INT(LCDSTAT);
-      SET_BIT(mIOPorts[0x41], 0);
-      RESET_BIT(mIOPorts[0x41], 1);
+      SET_BIT(mIOPorts[LCD_STATUS], 0);
+      RESET_BIT(mIOPorts[LCD_STATUS], 1);
     }
   else
     {
       if (mLYCounter > 456 - 77) // mode 2
 	{
-	  if (mode != 2 && IS_BIT_SET(mIOPorts[0x41], 5))
+	  if (mode != 2 && IS_BIT_SET(mIOPorts[LCD_STATUS], 5))
 	    REQ_INT(LCDSTAT);
-	  RESET_BIT(mIOPorts[0x41], 0);
-	  SET_BIT(mIOPorts[0x41], 1);
+	  RESET_BIT(mIOPorts[LCD_STATUS], 0);
+	  SET_BIT(mIOPorts[LCD_STATUS], 1);
 	}
       else if (mLYCounter > 456 - 169) // mode3
 	{
-	  SET_BIT(mIOPorts[0x41], 0);
-	  SET_BIT(mIOPorts[0x41], 1);
+	  SET_BIT(mIOPorts[LCD_STATUS], 0);
+	  SET_BIT(mIOPorts[LCD_STATUS], 1);
 	}
       else // mode0 > 2+01
 	{
-	  if (mode != 0 && IS_BIT_SET(mIOPorts[0x41], 3))
+	  if (mode != 0 && IS_BIT_SET(mIOPorts[LCD_STATUS], 3))
 	    REQ_INT(LCDSTAT);
-	  RESET_BIT(mIOPorts[0x41], 0);
-	  RESET_BIT(mIOPorts[0x41], 1);
+	  RESET_BIT(mIOPorts[LCD_STATUS], 0);
+	  RESET_BIT(mIOPorts[LCD_STATUS], 1);
 	}
     }
-  if (curLine == mIOPorts[0x45])
+  if (curLine == mIOPorts[LYC])
     {
-      SET_BIT(mIOPorts[0x41], 2);
-      if (IS_BIT_SET(mIOPorts[0x41], 6))
+      SET_BIT(mIOPorts[LCD_STATUS], 2);
+      if (IS_BIT_SET(mIOPorts[LCD_STATUS], 6))
 	REQ_INT(LCDSTAT);
     }
   else
-    RESET_BIT(mIOPorts[0x41], 2);
+    RESET_BIT(mIOPorts[LCD_STATUS], 2);
   if (mLYCounter <= 0)
     {
       if (curLine < 144)
@@ -61,9 +61,9 @@ void	Emulator::UpdateLCD(int nbCycles)
       else if (curLine == 144)
 	REQ_INT(VBLANK);
       if (curLine > 153) // Reset
-	mIOPorts[0x44] = 0;
+	mIOPorts[LY] = 0;
       else
-	mIOPorts[0x44]++;
+	mIOPorts[LY]++;
       mLYCounter = 456;
     }
 }
@@ -80,7 +80,7 @@ void	Emulator::DrawLine(int curLine)
 
 void	Emulator::DrawSprite(int curLine)
 {
-  bool	is8X16 = IS_BIT_SET(mIOPorts[0x40], 2);
+  bool	is8X16 = IS_BIT_SET(mIOPorts[LCD_CONTROL], 2);
   char	*screen = mGraphics->GetScreenArrayPtr();
   BYTE	PX, PY;
   BYTE	tileId;
@@ -121,8 +121,8 @@ void	Emulator::DrawBG(int curLine)
   int	posX = mIOPorts[0x43];
   WORD	tmp;
   char	*screen = mGraphics->GetScreenArrayPtr();
-  int	addrTileData = IS_BIT_SET(mIOPorts[0x40], 4) ? 0x0 : 0x1000;
-  int	addrBGPattern = IS_BIT_SET(mIOPorts[0x40], 3) ? 0x1C00 : 0x1800;
+  int	addrTileData = IS_BIT_SET(mIOPorts[LCD_CONTROL], 4) ? 0x0 : 0x1000;
+  int	addrBGPattern = IS_BIT_SET(mIOPorts[LCD_CONTROL], 3) ? 0x1C00 : 0x1800;
 
   posY %= 256;
   for (int i = 0; i < 160; i++)
@@ -147,8 +147,8 @@ void	Emulator::DrawWindow(int curLine)
   char	*screen = mGraphics->GetScreenArrayPtr();
   WORD	tmp;
   signed int tileId;
-  int	addrTileData = IS_BIT_SET(mIOPorts[0x40], 4) ? 0x0 : 0x1000;
-  int	addrBGPattern = IS_BIT_SET(mIOPorts[0x40], 6) ? 0x1C00 : 0x1800;
+  int	addrTileData = IS_BIT_SET(mIOPorts[LCD_CONTROL], 4) ? 0x0 : 0x1000;
+  int	addrBGPattern = IS_BIT_SET(mIOPorts[LCD_CONTROL], 6) ? 0x1C00 : 0x1800;
 
   if (posY > curLine)
     return ;
