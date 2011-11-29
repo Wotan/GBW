@@ -85,19 +85,19 @@ void	InfosWatcher::DrawRegister(QPainter &painter)
   painter.drawText(5, posLine, line);
 
   posLine = 45;
-  line.sprintf("Z %i", IS_BIT_SET(mEmu->REG_F, F_Z) ? 1 : 0);
+  line.sprintf("Z %i", mEmu->mAF.z);
   painter.drawText(110, posLine, line);
   posLine += 20;
 
-  line.sprintf("N %i", IS_BIT_SET(mEmu->REG_F, F_N) ? 1 : 0);
+  line.sprintf("N %i", mEmu->mAF.n);
   painter.drawText(110, posLine, line);
   posLine += 20;
 
-  line.sprintf("H %i", IS_BIT_SET(mEmu->REG_F, F_H) ? 1 : 0);
+  line.sprintf("H %i", mEmu->mAF.h);
   painter.drawText(110, posLine, line);
   posLine += 20;
 
-  line.sprintf("C %i", IS_BIT_SET(mEmu->REG_F, F_C) ? 1 : 0);
+  line.sprintf("C %i", mEmu->mAF.c);
   painter.drawText(110, posLine, line);
   posLine += 20;
 }

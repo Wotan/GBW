@@ -36,6 +36,7 @@
 # define DIV 0x04
 # define DIV_NBCYCLE_TO_UPDATE 256 // 69905 / (16384 / 60)
 
+/// I/O Ports ///
 # define TIMA 0x05
 # define TMA 0x06
 
@@ -45,10 +46,6 @@
 # define TAC 0x07
 
 /// Register ///
-# define F_Z 7
-# define F_N 6
-# define F_H 5
-# define F_C 4
 
 # define REG_A mAF.hi
 # define REG_F mAF.lo
