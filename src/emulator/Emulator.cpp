@@ -182,10 +182,9 @@ inline void ChangeROMBankHi(BYTE value, BYTE &curROMBank)
 
 void	Emulator::DMATransfert(BYTE value)
 {
-  value %= 0xF1;
-  value <<= 8; // * 100
+  value *= 100; // * 100
   for (int i = 0; i < 0xA0; i++)
-    WriteMem(0xFE + i, ReadMem(value + i));
+    WriteMem(0xFE00 + i, ReadMem(value + i));
 }
 
 void	Emulator::WriteMem(WORD addr, BYTE value)
