@@ -105,10 +105,13 @@ int	Emulator::DoOpcode()
       return 16;
     case 0xF2: REG_A = ReadMem(0xFF00 + REG_C); return 8;
     case 0xE2: WriteMem(0xFF00 + REG_C, REG_A); return 8;
+
     case 0x3A: REG_A = ReadMem(REG_HL--); return 8;
     case 0x32: WriteMem(REG_HL--, REG_A); return 8;
+
     case 0x2A: REG_A = ReadMem(REG_HL++); return 8;
     case 0x22: WriteMem(REG_HL++, REG_A); return 8;
+
     case 0xE0: WriteMem(0xFF00 + ReadMem(mPC++), REG_A); return 8;
     case 0xF0: REG_A = ReadMem(0xFF00 + ReadMem(mPC++)); return 8;
     case 0x01:
@@ -268,17 +271,17 @@ int	Emulator::DoOpcode()
     case 0x2F:
       N_F = 1;
       H_F = 1;
-      REG_A ^= 0xFF;
+      REG_A = ~REG_A;
       return 4;
     case 0x3F:
       N_F = 0;
       H_F = 0;
-      C_F = !IS_BIT_SET(REG_F, F_C);
+      C_F = !C_F;
       return 4;
     case 0x37:
       N_F = 0;
       H_F = 0;
-      C_F = 0;
+      C_F = 1;
       return 4;
 
     case 0x00: return 4;
@@ -937,10 +940,7 @@ inline void	Emulator::RotateRight_8bit(BYTE &data, bool throughtCarry)
   oldBit = IS_BIT_SET(data, 0);
   oldCarry = C_F;
 
-  C_F = 0;
-  Z_F = 0;
-  if (oldBit)
-    C_F = 1;
+  C_F = oldBit;
   data >>= 1;
   if (throughtCarry) // bit7 == Oldcarry
     {
@@ -954,8 +954,7 @@ inline void	Emulator::RotateRight_8bit(BYTE &data, bool throughtCarry)
     }
   N_F = 0;
   H_F = 0;
-  if (data == 0)
-    Z_F = 1;
+  Z_F = (data == 0);
 }
 
 inline void	Emulator::RotateLeft_8bit(BYTE &data, bool throughtCarry)
