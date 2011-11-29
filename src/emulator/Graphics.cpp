@@ -176,7 +176,7 @@ inline void	Emulator::SetColor(int *scanLine, int spriteColor,
     case 0: finalColor = palette->colorNum0; break;
     case 1: finalColor = palette->colorNum1; break;
     case 2: finalColor = palette->colorNum2; break;
-    case 3: finalColor = 0; break;
+    case 3: finalColor = palette->colorNum3; break;
     }
   switch (finalColor)
     {
