@@ -300,10 +300,7 @@ int	Emulator::DoOpcode()
     case 0x3F:
       N_F = 0;
       H_F = 0;
-      if (IS_BIT_SET(REG_F, F_C))
-	C_F = 0;
-      else
-	C_F = 1;
+      C_F = !IS_BIT_SET(REG_F, F_C);
       return 4;
     case 0x37:
       N_F = 0;
@@ -374,20 +371,20 @@ int	Emulator::DoOpcode()
       return 12;
     case 0xC4:
       tmp.lo = ReadMem(mPC++); tmp.hi = ReadMem(mPC++);
-      if (IS_BIT_SET(REG_F, F_Z))
+      if (!IS_BIT_SET(REG_F, F_Z))
 	return 12;
       Push(mPC);
       mPC = tmp.a;
       return 12;
     case 0xCC:
       tmp.lo = ReadMem(mPC++); tmp.hi = ReadMem(mPC++);
-      if (!IS_BIT_SET(REG_F, F_Z))
+      if (IS_BIT_SET(REG_F, F_Z))
 	return 12;
       Push(mPC);
       mPC = tmp.a;
       return 12;
     case 0xD4:
-      if (IS_BIT_SET(REG_F, F_C))
+      if (!IS_BIT_SET(REG_F, F_C))
 	return 12;
       tmp.lo = ReadMem(mPC++); tmp.hi = ReadMem(mPC++);
       Push(mPC);
@@ -395,7 +392,7 @@ int	Emulator::DoOpcode()
       return 12;
     case 0xDC:
       tmp.lo = ReadMem(mPC++); tmp.hi = ReadMem(mPC++);
-      if (!IS_BIT_SET(REG_F, F_C))
+      if (IS_BIT_SET(REG_F, F_C))
 	return 12;
       Push(mPC);
       mPC = tmp.a;
