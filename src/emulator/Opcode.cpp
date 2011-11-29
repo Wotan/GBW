@@ -85,9 +85,8 @@ int	Emulator::DoOpcode()
     case 0x1A: REG_A = ReadMem(REG_DE); return 8;
 
     case 0xFA:
-      tmp.lo = ReadMem(mPC++);
-      tmp.hi = ReadMem(mPC++);
-      REG_A = ReadMem(tmp.a);
+      REG_A = ReadMem(ReadMem(mPC) | ReadMem(mPC + 1) << 8);
+      mPC += 2;
       return 16;
     case 0x3E: REG_A = ReadMem(mPC++); return 8;
     case 0x47: REG_B = REG_A; return 4;
@@ -101,64 +100,38 @@ int	Emulator::DoOpcode()
     case 0x77: WriteMem(REG_HL, REG_A); return 8;
 
     case 0xEA:
-      tmp.lo = ReadMem(mPC++);
-      tmp.hi = ReadMem(mPC++);
-      WriteMem(tmp.a, REG_A);
+      WriteMem(ReadMem(mPC) | ReadMem(mPC + 1) << 8, REG_A);
+      mPC += 2;
       return 16;
     case 0xF2: REG_A = ReadMem(0xFF00 + REG_C); return 8;
     case 0xE2: WriteMem(0xFF00 + REG_C, REG_A); return 8;
-    case 0x3A:
-      REG_A = ReadMem(REG_HL);
-      REG_HL--;
-      return 8;
-   case 0x32:
-      WriteMem(REG_HL, REG_A);
-      REG_HL--;
-      return 8;
-    case 0x2A:
-      REG_A = ReadMem(REG_HL);
-      REG_HL++;
-      return 8;
-    case 0x22:
-      WriteMem(REG_HL, REG_A);
-      REG_HL++;
-      return 8;
-    case 0xE0:
-      WriteMem(0xFF00 + ReadMem(mPC++), REG_A);
-      return 8;
-    case 0xF0:
-      REG_A = ReadMem(0xFF00 + ReadMem(mPC++));
-      return 8;
+    case 0x3A: REG_A = ReadMem(REG_HL--); return 8;
+    case 0x32: WriteMem(REG_HL--, REG_A); return 8;
+    case 0x2A: REG_A = ReadMem(REG_HL++); return 8;
+    case 0x22: WriteMem(REG_HL++, REG_A); return 8;
+    case 0xE0: WriteMem(0xFF00 + ReadMem(mPC++), REG_A); return 8;
+    case 0xF0: REG_A = ReadMem(0xFF00 + ReadMem(mPC++)); return 8;
     case 0x01:
-      tmp.lo = ReadMem(mPC++);
-      tmp.hi = ReadMem(mPC++);
-      mBC.a = tmp.a;
+      REG_BC = ReadMem(mPC) | ReadMem(mPC + 1) << 8;
+      mPC += 2;
       return 12;
     case 0x11:
-      tmp.lo = ReadMem(mPC++);
-      tmp.hi = ReadMem(mPC++);
-      mDE.a = tmp.a;
+      REG_DE = ReadMem(mPC) | ReadMem(mPC + 1) << 8;
+      mPC += 2;
       return 12;
     case 0x21:
-      tmp.lo = ReadMem(mPC++);
-      tmp.hi = ReadMem(mPC++);
-      REG_HL = tmp.a;
+      REG_HL = ReadMem(mPC) | ReadMem(mPC + 1) << 8;
+      mPC += 2;
       return 12;
     case 0x31:
-      tmp.lo = ReadMem(mPC++);
-      tmp.hi = ReadMem(mPC++);
-      mSP = tmp.a;
+      mSP = ReadMem(mPC) | ReadMem(mPC + 1) << 8;
+      mPC += 2;
       return 12;
-    case 0xF9:
-      mSP = REG_HL;
-      return 8;
-    case 0xF8:
-      Load16bitHL();
-      return 12;
+    case 0xF9: mSP = REG_HL; return 8;
+    case 0xF8: Load16bitHL(); return 12;
     case 0x08:
-      tmp.lo = ReadMem(mPC++);
-      tmp.hi = ReadMem(mPC++);
-      WriteMem(tmp.a, mSP);
+      WriteMem(ReadMem(mPC) | ReadMem(mPC + 1) << 8, mSP);
+      mPC += 2;
       return 20;
 
     case 0xF5: Push(REG_AF); return 16;
@@ -321,28 +294,31 @@ int	Emulator::DoOpcode()
 
       // JUMP
     case 0xC3:
-      tmp.lo = ReadMem(mPC++); tmp.hi = ReadMem(mPC++);
-      mPC = tmp.a;
+      mPC = ReadMem(mPC) | ReadMem(mPC + 1) << 8;
       return 12;
     case 0xC2:
-      tmp.lo = ReadMem(mPC++); tmp.hi = ReadMem(mPC++);
       if (!IS_BIT_SET(REG_F, F_Z))
-	mPC = tmp.a;
+	mPC = ReadMem(mPC) | ReadMem(mPC + 1) << 8;
+      else
+	mPC += 2;
       return 12;
     case 0xCA:
-      tmp.lo = ReadMem(mPC++); tmp.hi = ReadMem(mPC++);
       if (IS_BIT_SET(REG_F, F_Z))
-	mPC = tmp.a;
+	mPC = ReadMem(mPC) | ReadMem(mPC + 1) << 8;
+      else
+	mPC += 2;
       return 12;
     case 0xD2:
-      tmp.lo = ReadMem(mPC++); tmp.hi = ReadMem(mPC++);
       if (!IS_BIT_SET(REG_F, F_C))
-	mPC = tmp.a;
+	mPC = ReadMem(mPC) | ReadMem(mPC + 1) << 8;
+      else
+	mPC += 2;
       return 12;
     case 0xDA:
-      tmp.lo = ReadMem(mPC++); tmp.hi = ReadMem(mPC++);
       if (IS_BIT_SET(REG_F, F_C))
-	mPC = tmp.a;
+	mPC = ReadMem(mPC) | ReadMem(mPC + 1) << 8;
+      else
+	mPC += 2;
       return 12;
     case 0xE9: mPC = REG_HL; return 4;
 
@@ -371,20 +347,20 @@ int	Emulator::DoOpcode()
       return 12;
     case 0xC4:
       tmp.lo = ReadMem(mPC++); tmp.hi = ReadMem(mPC++);
-      if (!IS_BIT_SET(REG_F, F_Z))
+      if (IS_BIT_SET(REG_F, F_Z))
 	return 12;
       Push(mPC);
       mPC = tmp.a;
       return 12;
     case 0xCC:
       tmp.lo = ReadMem(mPC++); tmp.hi = ReadMem(mPC++);
-      if (IS_BIT_SET(REG_F, F_Z))
+      if (!IS_BIT_SET(REG_F, F_Z))
 	return 12;
       Push(mPC);
       mPC = tmp.a;
       return 12;
     case 0xD4:
-      if (!IS_BIT_SET(REG_F, F_C))
+      if (IS_BIT_SET(REG_F, F_C))
 	return 12;
       tmp.lo = ReadMem(mPC++); tmp.hi = ReadMem(mPC++);
       Push(mPC);
@@ -392,7 +368,7 @@ int	Emulator::DoOpcode()
       return 12;
     case 0xDC:
       tmp.lo = ReadMem(mPC++); tmp.hi = ReadMem(mPC++);
-      if (IS_BIT_SET(REG_F, F_C))
+      if (!IS_BIT_SET(REG_F, F_C))
 	return 12;
       Push(mPC);
       mPC = tmp.a;
