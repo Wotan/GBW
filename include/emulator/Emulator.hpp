@@ -164,6 +164,7 @@ public:
   inline void	DrawSprite(int curLine);
   inline void	SetColor(int *scanLine, int spriteColor,
 			 bool blankTransp, BYTE bpalette);
+  void	DrawWindow(int curLine);
 
   void	UpdateTimer(int nbCycles);
   void	UpdateLCD(int nbCycles);

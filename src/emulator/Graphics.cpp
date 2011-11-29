@@ -72,7 +72,9 @@ void	Emulator::DrawLine(int curLine)
 {
 
   DrawBG(curLine);
-  if (IS_BIT_SET(mIOPorts[0x40], 1))
+  if (IS_BIT_SET(mIOPorts[0x40], 5))
+    DrawWindow(curLine);
+  if (IS_BIT_SET(mIOPorts[0x40], 1)) // Sprite
     DrawSprite(curLine);
 }
 
@@ -130,6 +132,31 @@ void	Emulator::DrawBG(int curLine)
       tileId = mVRAM[addrBGPattern + ((posY * 4) + posX / 8)];
       tmp = addrTileData + tileId * 16 + ((posY % 8) * 2);
 
+      SetColor((int *)(screen + curLine * GB_SCREEN_X * 4 + i * 4),
+      	       IS_BIT_SET(mVRAM[tmp], 7 - (posX % 8)) |
+      	       (IS_BIT_SET(mVRAM[tmp + 1], 7 - (posX % 8)) << 1),
+      	       false, mIOPorts[0x47]);
+      posX++;
+    }
+}
+
+void	Emulator::DrawWindow(int curLine)
+{
+  int	posY = mIOPorts[0x4A];
+  int	posX = mIOPorts[0x4B] - 7;
+  char	*screen = mGraphics->GetScreenArrayPtr();
+  WORD	tmp;
+  signed int tileId;
+  int	addrTileData = IS_BIT_SET(mIOPorts[0x40], 4) ? 0x0 : 0x1000;
+  int	addrBGPattern = IS_BIT_SET(mIOPorts[0x40], 6) ? 0x1C00 : 0x1800;
+
+  if (posY > curLine)
+    return ;
+  for (int i = posX; i < 160; i++)
+    {
+      posX %= 160;
+      tileId = mVRAM[addrBGPattern + ((curLine - posY)* 4) + posX];
+      tmp = addrTileData + tileId * 16 + ((posY % 8) * 2);
       SetColor((int *)(screen + curLine * GB_SCREEN_X * 4 + i * 4),
       	       IS_BIT_SET(mVRAM[tmp], 7 - (posX % 8)) |
       	       (IS_BIT_SET(mVRAM[tmp + 1], 7 - (posX % 8)) << 1),
