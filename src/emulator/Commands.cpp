@@ -7,14 +7,12 @@
 
 void	Emulator::Halt()
 {
-  std::cout << "HALT" << std::endl;
-  exit(0);
+  mIsHalted = true;
 }
 
 void	Emulator::Stop()
 {
-  std::cout << "STOP" << std::endl;
-  exit(0);
+  mIsStop = true;
 }
 
 void	Emulator::ToggleInt(bool on)

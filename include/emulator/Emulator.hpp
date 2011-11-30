@@ -262,6 +262,8 @@ private:
   App		*mApp;
   GraphicsEngine *mGraphics;
   bool		mPause;
+  bool		mIsHalted;
+  bool		mIsStop;
 
   // Misc //
   unsigned int mCyclesCounter;

@@ -9,6 +9,8 @@ Emulator::Emulator(App *app, GraphicsEngine *graphics) :
   mApp(app),
   mGraphics(graphics),
   mPause(true),
+  mIsHalted(false),
+  mIsStop(false),
   mCyclesCounter(0),
   mOpCounter(0)
 {
@@ -35,9 +37,13 @@ void	Emulator::DoFrame()
     return ;
   while (nbCycles < CYCLE_BY_FRAME)
     {
-      curCycles = DoOpcode();
+      if (!mIsHalted && !mIsStop)
+	curCycles = DoOpcode();
+      else
+	curCycles = 4;
+      if (!mIsStop)
+	UpdateLCD(curCycles);
 
-      UpdateLCD(curCycles);
       UpdateTimer(curCycles);
       HandleInterupt();
       nbCycles += curCycles;
@@ -104,6 +110,7 @@ void	Emulator::HandleInterupt()
 	    }
 	  RESET_BIT(mIOPorts[0x0F], i);
 	  mMasterIntFlag = false;
+	  mIsHalted = false;
 	}
     }
 }
@@ -317,7 +324,7 @@ void	Emulator::KeyChange(eKey key, bool isPress)
       idKey = 0;
       break;
     }
-
+  mIsStop = false;
   if (isPress && !IS_BIT_SET(mJoypadMask, idKey))
     REQ_INT(JOYPAD);
   if (isPress)
