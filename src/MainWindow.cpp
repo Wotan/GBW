@@ -122,8 +122,8 @@ void MainWindow::keyPressEvent(QKeyEvent *keyEvent)
     case Qt::Key_Left: emu->KeyChange(Left, true); break;
     case Qt::Key_Q: emu->KeyChange(BUTTON_A, true); break;
     case Qt::Key_W: emu->KeyChange(BUTTON_B, true); break;
-    case Qt::Key_E: emu->KeyChange(Start, true); break;
-    case Qt::Key_R: emu->KeyChange(Select, true); break;
+    case Qt::Key_Return: emu->KeyChange(Start, true); break;
+    case Qt::Key_Shift: emu->KeyChange(Select, true); break;
     }
 }
 
@@ -141,7 +141,7 @@ void MainWindow::keyReleaseEvent(QKeyEvent *keyEvent)
     case Qt::Key_Left: emu->KeyChange(Left, false); break;
     case Qt::Key_Q: emu->KeyChange(BUTTON_A, false); break;
     case Qt::Key_W: emu->KeyChange(BUTTON_B, false); break;
-    case Qt::Key_E: emu->KeyChange(Start, false); break;
-    case Qt::Key_R: emu->KeyChange(Select, false); break;
+    case Qt::Key_Return: emu->KeyChange(Start, false); break;
+    case Qt::Key_Shift: emu->KeyChange(Select, false); break;
     }
 }

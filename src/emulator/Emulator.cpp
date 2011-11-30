@@ -288,7 +288,37 @@ BYTE	Emulator::GetJoypadStatus()
 
 void	Emulator::KeyChange(eKey key, bool isPress)
 {
-  if (isPress && !IS_BIT_SET(mJoypadMask, key))
+  int  idKey;
+
+  switch (key)
+    {
+    case Start:
+      idKey = 3;
+      break;
+    case Select:
+      idKey = 2;
+      break;
+    case BUTTON_B:
+      idKey = 1;
+      break;
+    case BUTTON_A:
+      idKey = 0;
+      break;
+    case Down:
+      idKey = 3;
+      break;
+    case Up:
+      idKey = 2;
+      break;
+    case Left:
+      idKey = 1;
+      break;
+    case Right:
+      idKey = 0;
+      break;
+    }
+
+  if (isPress && !IS_BIT_SET(mJoypadMask, idKey))
     REQ_INT(JOYPAD);
   if (isPress)
     SET_BIT(mJoypadMask, key);
