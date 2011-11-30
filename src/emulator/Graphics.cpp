@@ -129,7 +129,7 @@ void	Emulator::DrawBG(int curLine)
     {
       posX %= 256;
 
-      tileId = mVRAM[addrBGPattern + ((posY * 4) + posX / 8)];
+      tileId = mVRAM[addrBGPattern + ((posY / 8) * 32 + posX / 8)];
       tmp = addrTileData + tileId * 16 + ((posY % 8) * 2);
 
       SetColor((int *)(screen + curLine * GB_SCREEN_X * 4 + i * 4),
