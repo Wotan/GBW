@@ -9,9 +9,7 @@ int	Emulator::DoOpcode()
   UWORD tmp;
   BYTE	tmpB;
   BYTE	extOpcode;
-  int	opcode = ReadMem(mPC);
-
-  mPC++;
+  int	opcode = ReadMem(mPC++);
 
   switch (opcode)
     {
@@ -494,29 +492,29 @@ int	Emulator::DoOpcode()
 	    WriteMem(REG_HL, tmpB);
 	    return 16;
 
-	  case 0x2F: ShiftRight_8bit(REG_A, false); return 8;
-	  case 0x28: ShiftRight_8bit(REG_B, false); return 8;
-	  case 0x29: ShiftRight_8bit(REG_C, false); return 8;
-	  case 0x2A: ShiftRight_8bit(REG_D, false); return 8;
-	  case 0x2B: ShiftRight_8bit(REG_E, false); return 8;
-	  case 0x2C: ShiftRight_8bit(REG_H, false); return 8;
-	  case 0x2D: ShiftRight_8bit(REG_L, false); return 8;
+	  case 0x2F: ShiftRight_8bit(REG_A, true); return 8;
+	  case 0x28: ShiftRight_8bit(REG_B, true); return 8;
+	  case 0x29: ShiftRight_8bit(REG_C, true); return 8;
+	  case 0x2A: ShiftRight_8bit(REG_D, true); return 8;
+	  case 0x2B: ShiftRight_8bit(REG_E, true); return 8;
+	  case 0x2C: ShiftRight_8bit(REG_H, true); return 8;
+	  case 0x2D: ShiftRight_8bit(REG_L, true); return 8;
 	  case 0x2E:
 	    tmpB = ReadMem(REG_HL);
-	    ShiftRight_8bit(tmpB, false);
+	    ShiftRight_8bit(tmpB, true);
 	    WriteMem(REG_HL, tmpB);
 	    return 16;
 
-	  case 0x3F: ShiftRight_8bit(REG_A, true); return 8;
-	  case 0x38: ShiftRight_8bit(REG_B, true); return 8;
-	  case 0x39: ShiftRight_8bit(REG_C, true); return 8;
-	  case 0x3A: ShiftRight_8bit(REG_D, true); return 8;
-	  case 0x3B: ShiftRight_8bit(REG_E, true); return 8;
-	  case 0x3C: ShiftRight_8bit(REG_H, true); return 8;
-	  case 0x3D: ShiftRight_8bit(REG_L, true); return 8;
+	  case 0x3F: ShiftRight_8bit(REG_A, false); return 8;
+	  case 0x38: ShiftRight_8bit(REG_B, false); return 8;
+	  case 0x39: ShiftRight_8bit(REG_C, false); return 8;
+	  case 0x3A: ShiftRight_8bit(REG_D, false); return 8;
+	  case 0x3B: ShiftRight_8bit(REG_E, false); return 8;
+	  case 0x3C: ShiftRight_8bit(REG_H, false); return 8;
+	  case 0x3D: ShiftRight_8bit(REG_L, false); return 8;
 	  case 0x3E:
 	    tmpB = ReadMem(REG_HL);
-	    ShiftRight_8bit(tmpB, true);
+	    ShiftRight_8bit(tmpB, false);
 	    WriteMem(REG_HL, tmpB);
 	    return 16;
 
@@ -586,6 +584,7 @@ int	Emulator::DoOpcode()
 	  case 0x7E: TestBit(ReadMem(REG_HL), 7); return 16;
 
 
+	    ////// TOOOO SEEEE ////////
 	  case 0xC7: SET_BIT(REG_A, 0); return 8;
 	  case 0xC0: SET_BIT(REG_B, 0); return 8;
 	  case 0xC1: SET_BIT(REG_C, 0); return 8;
@@ -683,100 +682,100 @@ int	Emulator::DoOpcode()
 	    WriteMem(REG_HL, tmpB);
 	    return 16;
 
-	  case 0x87: SET_BIT(REG_A, 0); return 8;
-	  case 0x80: SET_BIT(REG_B, 0); return 8;
-	  case 0x81: SET_BIT(REG_C, 0); return 8;
-	  case 0x82: SET_BIT(REG_D, 0); return 8;
-	  case 0x83: SET_BIT(REG_E, 0); return 8;
-	  case 0x84: SET_BIT(REG_H, 0); return 8;
-	  case 0x85: SET_BIT(REG_L, 0); return 8;
+	  case 0x87: RESET_BIT(REG_A, 0); return 8;
+	  case 0x80: RESET_BIT(REG_B, 0); return 8;
+	  case 0x81: RESET_BIT(REG_C, 0); return 8;
+	  case 0x82: RESET_BIT(REG_D, 0); return 8;
+	  case 0x83: RESET_BIT(REG_E, 0); return 8;
+	  case 0x84: RESET_BIT(REG_H, 0); return 8;
+	  case 0x85: RESET_BIT(REG_L, 0); return 8;
 	  case 0x86:
 	    tmpB = ReadMem(REG_HL);
-	    SET_BIT(tmpB, 0);
+	    RESET_BIT(tmpB, 0);
 	    WriteMem(REG_HL, tmpB);
 	    return 16;
-	  case 0x8F: SET_BIT(REG_A, 1); return 8;
-	  case 0x88: SET_BIT(REG_B, 1); return 8;
-	  case 0x89: SET_BIT(REG_C, 1); return 8;
-	  case 0x8A: SET_BIT(REG_D, 1); return 8;
-	  case 0x8B: SET_BIT(REG_E, 1); return 8;
-	  case 0x8C: SET_BIT(REG_H, 1); return 8;
-	  case 0x8D: SET_BIT(REG_L, 1); return 8;
+	  case 0x8F: RESET_BIT(REG_A, 1); return 8;
+	  case 0x88: RESET_BIT(REG_B, 1); return 8;
+	  case 0x89: RESET_BIT(REG_C, 1); return 8;
+	  case 0x8A: RESET_BIT(REG_D, 1); return 8;
+	  case 0x8B: RESET_BIT(REG_E, 1); return 8;
+	  case 0x8C: RESET_BIT(REG_H, 1); return 8;
+	  case 0x8D: RESET_BIT(REG_L, 1); return 8;
 	  case 0x8E:
 	    tmpB = ReadMem(REG_HL);
-	    SET_BIT(tmpB, 1);
+	    RESET_BIT(tmpB, 1);
 	    WriteMem(REG_HL, tmpB);
 	    return 16;
-	  case 0x97: SET_BIT(REG_A, 2); return 8;
-	  case 0x90: SET_BIT(REG_B, 2); return 8;
-	  case 0x91: SET_BIT(REG_C, 2); return 8;
-	  case 0x92: SET_BIT(REG_D, 2); return 8;
-	  case 0x93: SET_BIT(REG_E, 2); return 8;
-	  case 0x94: SET_BIT(REG_H, 2); return 8;
-	  case 0x95: SET_BIT(REG_L, 2); return 8;
+	  case 0x97: RESET_BIT(REG_A, 2); return 8;
+	  case 0x90: RESET_BIT(REG_B, 2); return 8;
+	  case 0x91: RESET_BIT(REG_C, 2); return 8;
+	  case 0x92: RESET_BIT(REG_D, 2); return 8;
+	  case 0x93: RESET_BIT(REG_E, 2); return 8;
+	  case 0x94: RESET_BIT(REG_H, 2); return 8;
+	  case 0x95: RESET_BIT(REG_L, 2); return 8;
 	  case 0x96:
 	    tmpB = ReadMem(REG_HL);
-	    SET_BIT(tmpB, 2);
+	    RESET_BIT(tmpB, 2);
 	    WriteMem(REG_HL, tmpB);
 	    return 16;
-	  case 0x9F: SET_BIT(REG_A, 3); return 8;
-	  case 0x98: SET_BIT(REG_B, 3); return 8;
-	  case 0x99: SET_BIT(REG_C, 3); return 8;
-	  case 0x9A: SET_BIT(REG_D, 3); return 8;
-	  case 0x9B: SET_BIT(REG_E, 3); return 8;
-	  case 0x9C: SET_BIT(REG_H, 3); return 8;
-	  case 0x9D: SET_BIT(REG_L, 3); return 8;
+	  case 0x9F: RESET_BIT(REG_A, 3); return 8;
+	  case 0x98: RESET_BIT(REG_B, 3); return 8;
+	  case 0x99: RESET_BIT(REG_C, 3); return 8;
+	  case 0x9A: RESET_BIT(REG_D, 3); return 8;
+	  case 0x9B: RESET_BIT(REG_E, 3); return 8;
+	  case 0x9C: RESET_BIT(REG_H, 3); return 8;
+	  case 0x9D: RESET_BIT(REG_L, 3); return 8;
 	  case 0x9E:
 	    tmpB = ReadMem(REG_HL);
-	    SET_BIT(tmpB, 3);
+	    RESET_BIT(tmpB, 3);
 	    WriteMem(REG_HL, tmpB);
 	    return 16;
-	  case 0xA7: SET_BIT(REG_A, 4); return 8;
-	  case 0xA0: SET_BIT(REG_B, 4); return 8;
-	  case 0xA1: SET_BIT(REG_C, 4); return 8;
-	  case 0xA2: SET_BIT(REG_D, 4); return 8;
-	  case 0xA3: SET_BIT(REG_E, 4); return 8;
-	  case 0xA4: SET_BIT(REG_H, 4); return 8;
-	  case 0xA5: SET_BIT(REG_L, 4); return 8;
+	  case 0xA7: RESET_BIT(REG_A, 4); return 8;
+	  case 0xA0: RESET_BIT(REG_B, 4); return 8;
+	  case 0xA1: RESET_BIT(REG_C, 4); return 8;
+	  case 0xA2: RESET_BIT(REG_D, 4); return 8;
+	  case 0xA3: RESET_BIT(REG_E, 4); return 8;
+	  case 0xA4: RESET_BIT(REG_H, 4); return 8;
+	  case 0xA5: RESET_BIT(REG_L, 4); return 8;
 	  case 0xA6:
 	    tmpB = ReadMem(REG_HL);
-	    SET_BIT(tmpB, 4);
+	    RESET_BIT(tmpB, 4);
 	    WriteMem(REG_HL, tmpB);
 	    return 16;
-	  case 0xAF: SET_BIT(REG_A, 5); return 8;
-	  case 0xA8: SET_BIT(REG_B, 5); return 8;
-	  case 0xA9: SET_BIT(REG_C, 5); return 8;
-	  case 0xAA: SET_BIT(REG_D, 5); return 8;
-	  case 0xAB: SET_BIT(REG_E, 5); return 8;
-	  case 0xAC: SET_BIT(REG_H, 5); return 8;
-	  case 0xAD: SET_BIT(REG_L, 5); return 8;
+	  case 0xAF: RESET_BIT(REG_A, 5); return 8;
+	  case 0xA8: RESET_BIT(REG_B, 5); return 8;
+	  case 0xA9: RESET_BIT(REG_C, 5); return 8;
+	  case 0xAA: RESET_BIT(REG_D, 5); return 8;
+	  case 0xAB: RESET_BIT(REG_E, 5); return 8;
+	  case 0xAC: RESET_BIT(REG_H, 5); return 8;
+	  case 0xAD: RESET_BIT(REG_L, 5); return 8;
 	  case 0xAE:
 	    tmpB = ReadMem(REG_HL);
-	    SET_BIT(tmpB, 5);
+	    RESET_BIT(tmpB, 5);
 	    WriteMem(REG_HL, tmpB);
 	    return 16;
-	  case 0xB7: SET_BIT(REG_A, 6); return 8;
-	  case 0xB0: SET_BIT(REG_B, 6); return 8;
-	  case 0xB1: SET_BIT(REG_C, 6); return 8;
-	  case 0xB2: SET_BIT(REG_D, 6); return 8;
-	  case 0xB3: SET_BIT(REG_E, 6); return 8;
-	  case 0xB4: SET_BIT(REG_H, 6); return 8;
-	  case 0xB5: SET_BIT(REG_L, 6); return 8;
+	  case 0xB7: RESET_BIT(REG_A, 6); return 8;
+	  case 0xB0: RESET_BIT(REG_B, 6); return 8;
+	  case 0xB1: RESET_BIT(REG_C, 6); return 8;
+	  case 0xB2: RESET_BIT(REG_D, 6); return 8;
+	  case 0xB3: RESET_BIT(REG_E, 6); return 8;
+	  case 0xB4: RESET_BIT(REG_H, 6); return 8;
+	  case 0xB5: RESET_BIT(REG_L, 6); return 8;
 	  case 0xB6:
 	    tmpB = ReadMem(REG_HL);
-	    SET_BIT(tmpB, 6);
+	    RESET_BIT(tmpB, 6);
 	    WriteMem(REG_HL, tmpB);
 	    return 16;
-	  case 0xBF: SET_BIT(REG_A, 7); return 8;
-	  case 0xB8: SET_BIT(REG_B, 7); return 8;
-	  case 0xB9: SET_BIT(REG_C, 7); return 8;
-	  case 0xBA: SET_BIT(REG_D, 7); return 8;
-	  case 0xBB: SET_BIT(REG_E, 7); return 8;
-	  case 0xBC: SET_BIT(REG_H, 7); return 8;
-	  case 0xBD: SET_BIT(REG_L, 7); return 8;
+	  case 0xBF: RESET_BIT(REG_A, 7); return 8;
+	  case 0xB8: RESET_BIT(REG_B, 7); return 8;
+	  case 0xB9: RESET_BIT(REG_C, 7); return 8;
+	  case 0xBA: RESET_BIT(REG_D, 7); return 8;
+	  case 0xBB: RESET_BIT(REG_E, 7); return 8;
+	  case 0xBC: RESET_BIT(REG_H, 7); return 8;
+	  case 0xBD: RESET_BIT(REG_L, 7); return 8;
 	  case 0xBE:
 	    tmpB = ReadMem(REG_HL);
-	    SET_BIT(tmpB, 7);
+	    RESET_BIT(tmpB, 7);
 	    WriteMem(REG_HL, tmpB);
 	    return 16;
 
@@ -810,7 +809,7 @@ inline void	Emulator::SUB_8Bit(BYTE &toSub, BYTE sub, bool addCarry)
 {
   int	nbSub;
 
-  N_F = 0;
+  N_F = 1;
   H_F = 0;
   C_F = 0;
 
@@ -820,10 +819,11 @@ inline void	Emulator::SUB_8Bit(BYTE &toSub, BYTE sub, bool addCarry)
 
   if (((toSub & 0xFF) >= (nbSub & 0xFF))) // >= or > ???
     H_F = 1;
-
   if (toSub >= nbSub)
     C_F = 1;
+
   toSub -= nbSub;
+  Z_F = (toSub == 0);
 }
 
 inline void	Emulator::AND_8Bit(BYTE &toAnd, BYTE src)
@@ -852,7 +852,7 @@ inline void	Emulator::XOR_8Bit(BYTE &toXor, BYTE src)
 {
   N_F = H_F = C_F = 0;
   toXor ^= src;
-  Z_F = !toXor;
+  Z_F = (toXor == 0);
 }
 
 inline void	Emulator::CP_8Bit(BYTE cp1, BYTE cp2)
@@ -905,7 +905,7 @@ inline void	Emulator::SWAP_8bit(BYTE &toSwap)
 
   N_F = 0;
   H_F = 0;
-  N_F = 0;
+  C_F = 0;
   save = toSwap;
   save = save >> 4;
   save |= toSwap << 4;
@@ -991,6 +991,7 @@ inline void	Emulator::ShiftLeft_8bit(BYTE &data)
   data <<= 1;
   Z_F = (data == 0);
 }
+
 
 inline void	Emulator::ShiftRight_8bit(BYTE &data, bool MSB)
 {

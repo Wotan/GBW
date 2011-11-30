@@ -247,7 +247,7 @@ private:
   // (6) D000 - DFFF
   BYTE		mWRAM[0x1000 * 2];
 
-  // (08) FE00 - FEFF
+  // (08) FE00 - FE9F
   BYTE		mOAM[0x100];
 
   // (10) FF00 - FF7F

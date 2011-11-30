@@ -86,7 +86,6 @@ void	Emulator::HandleInterupt()
 {
   if (!mMasterIntFlag)
     return ;
-
   BYTE regIntEnable = mInterrupEnable;
   BYTE regIntReq = mIOPorts[0x0F];
 
@@ -125,11 +124,11 @@ BYTE	Emulator::ReadMem(WORD addr)
   if (addr <= 0x3FFF) // ROM Bank 00
     return mCartridgeMem[addr];
   else if (addr <= 0x7FFF) // ROM bank 01..NN
-    return mCartridgeMem[SIZE_BANK * mCurROMBank + (addr - 0x4000)];
+    return mCartridgeMem[addr];
   else if (addr <= 0x9FFF) // VRAM
     {
-      if ((mIOPorts[0x41] & 0x3) == 3)
-	return 0;
+      // if ((mIOPorts[0x41] & 0x3) == 3)
+      // 	return 0;
       return mVRAM[addr - 0x8000];
     }
   else if (addr <= 0xBFFF) // ExtRAM
@@ -250,7 +249,7 @@ void	Emulator::WriteMem(WORD addr, BYTE value)
       else
 	mIOPorts[addr - 0xFF00] = value;
     }
-  else if (addr != 0xFFFF) // HRAM
+  else if (addr <= 0xFFFE) // HRAM
     mHRAM[addr - 0xFF80] = value;
   else // Interrupt
     mInterrupEnable = value;
