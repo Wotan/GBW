@@ -833,7 +833,6 @@ inline void	Emulator::AND_8Bit(BYTE &toAnd, BYTE src)
   N_F = 0;
   H_F = 1;
   C_F = 0;
-  Z_F = 0;
 
   toAnd &= src;
   Z_F = (toAnd == 0);
@@ -844,7 +843,6 @@ inline void	Emulator::OR_8Bit(BYTE &toOr, BYTE src)
   N_F = 0;
   H_F = 0;
   C_F = 0;
-  Z_F = 0;
 
   toOr |= src;
   Z_F = (toOr == 0);
@@ -893,7 +891,10 @@ inline void	Emulator::ADD_16bitSigned(WORD &toAdd, SBYTE add)
 {
   N_F = 0;
   Z_F = 0;
-  C_F = (toAdd + add > 0xFFFF);
+  if (add > 0)
+    C_F = (toAdd + add > 0xFFFF);
+  else
+    C_F = (toAdd + add < 0);
   if (add > 0)
     H_F = (((toAdd & 0x000F) + (add & 0x000F)) > 0x000F);
   else
