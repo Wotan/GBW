@@ -264,7 +264,7 @@ int	Emulator::DoOpcode()
     case 0x1B: REG_DE--; return 8;
     case 0x2B: REG_HL--; return 8;
     case 0x3B: mSP--; return 8;
-    case 0x27: DDA_8Bit(REG_A); return 4;
+    case 0x27: DAA_8Bit(REG_A); return 4;
 
     case 0x2F:
       N_F = 1;
@@ -917,21 +917,28 @@ inline void	Emulator::SWAP_8bit(BYTE &toSwap)
   Z_F = (toSwap == 0);
 }
 
-inline void	Emulator::DDA_8Bit(BYTE &nbr)
+inline void	Emulator::DAA_8Bit(BYTE &nbr)
 {
-  int	first = nbr / 10;
-  int	second = nbr % 10;
+  BYTE res = nbr;
 
-  C_F = 0;
-  H_F = 0;
-  if (first >= 10)
+  if (N_F) // Last op was addition
     {
-      C_F = 1;
-      first /= 10;
+      if (C_F)
+	res -= 0x60; // (0x60 = 0xF0 - 0x90)
+      if (H_F)
+	res -= 0x06; // (0x60 = 0x0F - 0x09)
+    } 
+  else // Last op was substraction
+    {
+      if (C_F || (nbr >= 0xA0))
+	res += 0x60;
+      if (H_F || ((nbr & 0x0F) >= 0xA))
+	res += 0x06;
     }
-  nbr = 0;
-  nbr = second;
-  nbr |= first << 4;
+  if (res & 0x100)
+    C_F = 1;
+  H_F = 0;
+  nbr = res;
   Z_F = (nbr == 0);
 }
 

@@ -198,7 +198,7 @@ public:
   inline void	ADD_16bit(WORD &toAdd, WORD add);
   inline void	ADD_16bitSigned(WORD &toAdd, SBYTE add);
   inline void	SWAP_8bit(BYTE &toSwap);
-  inline void	DDA_8Bit(BYTE &nbr);
+  inline void	DAA_8Bit(BYTE &nbr);
   inline void	RotateLeft_8bit(BYTE &data, bool throughtCarry);
   inline void	RotateRight_8bit(BYTE &data, bool throughtCarry);
   inline void	ShiftRight_8bit(BYTE &data, bool MSB);
