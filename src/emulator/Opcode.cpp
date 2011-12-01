@@ -798,10 +798,12 @@ inline void	Emulator::ADD_8Bit(BYTE &toAdd, BYTE add, bool addCarry)
   N_F = 0;
   adding = add;
   if (addCarry)
-    adding += C_F ? 1 : 0;
+    adding += C_F;
+
   H_F = (((toAdd & 0xF) + (adding & 0xF)) > 0xF);
   C_F = (adding + toAdd > 0xFF);
   toAdd += adding;
+
   Z_F = (toAdd == 0);
 }
 
@@ -817,9 +819,9 @@ inline void	Emulator::SUB_8Bit(BYTE &toSub, BYTE sub, bool addCarry)
   if (addCarry)
     nbSub += C_F;
 
-  if (((toSub & 0xFF) >= (nbSub & 0xFF))) // >= or > ???
+  if (((toSub & 0xFF) > (nbSub & 0xFF)))
     H_F = 1;
-  if (toSub >= nbSub)
+  if (toSub > nbSub)
     C_F = 1;
 
   toSub -= nbSub;
