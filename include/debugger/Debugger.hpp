@@ -16,6 +16,7 @@ class Emulator;
 class InfosWatcher;
 class MemWatcher;
 class AsmWatcher;
+class TileWatcher;
 
 class Debugger : public QDialog
 {
@@ -43,6 +44,7 @@ private:
   InfosWatcher	*mInfosWatcher;
   MemWatcher	*mMemWatcher;
   AsmWatcher	*mAsmWatcher;
+  TileWatcher	*mTileWatcher;
 
   QPushButton	*mNextOp;
   QShortcut	*mExitShortcut;

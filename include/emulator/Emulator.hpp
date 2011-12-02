@@ -149,6 +149,7 @@ class Emulator
   friend class MemWatcher;
   friend class Debugger;
   friend class AsmWatcher;
+  friend class TileWatcher;
 public:
   Emulator(App *app, GraphicsEngine *graphics);
   ~Emulator();

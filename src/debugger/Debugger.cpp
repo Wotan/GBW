@@ -3,6 +3,7 @@
 #include <QPushButton>
 #include "Debugger.hpp"
 #include "AsmWatcher.hpp"
+#include "TileWatcher.hpp"
 #include "Emulator.hpp"
 
 Debugger::Debugger(QWidget *parent, App *app) :
@@ -40,6 +41,10 @@ bool Debugger::Init()
   mAsmWatcher->setGeometry(310 + 300 + 5, 5, 300, 450);
   mAsmWatcher->show();
 
+  mTileWatcher = new TileWatcher(this);
+  //  connect(this, SIGNAL(show()), this, SLOT(show()));
+  mTileWatcher->resize(200, 200);
+  mTileWatcher->show();
   mNextOp = new QPushButton("Next Opcode", this);
   mNextOp->setGeometry(385, 250, 100, 25);
 
@@ -109,6 +114,7 @@ void	Debugger::EmuInstanceChange(Emulator *emu)
   mMemWatcher->SetEmu(emu);
   mInfosWatcher->SetEmu(emu);
   mAsmWatcher->SetEmu(emu);
+  mTileWatcher->SetEmu(emu);
   std::cout << "Change emulator instance (" << emu << ")" << std::endl;
   if (emu)
     RepaintAll();
@@ -119,4 +125,5 @@ void Debugger::RepaintAll()
   mMemWatcher->repaint();
   mInfosWatcher->repaint();
   mAsmWatcher->repaint();
+  mTileWatcher->repaint();
 }

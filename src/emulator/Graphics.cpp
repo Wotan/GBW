@@ -47,14 +47,6 @@ void	Emulator::UpdateLCD(int nbCycles)
 	  RESET_BIT(mIOPorts[LCD_STATUS], 1);
 	}
     }
-  if (curLine == mIOPorts[LYC])
-    {
-      SET_BIT(mIOPorts[LCD_STATUS], 2);
-      if (IS_BIT_SET(mIOPorts[LCD_STATUS], 6))
-	REQ_INT(LCDSTAT);
-    }
-  else
-    RESET_BIT(mIOPorts[LCD_STATUS], 2);
   if (mLYCounter <= 0)
     {
       if (curLine < 144)
@@ -67,6 +59,14 @@ void	Emulator::UpdateLCD(int nbCycles)
 	mIOPorts[LY]++;
       mLYCounter = 456;
     }
+  if (curLine == mIOPorts[LYC])
+    {
+      SET_BIT(mIOPorts[LCD_STATUS], 2);
+      if (IS_BIT_SET(mIOPorts[LCD_STATUS], 6))
+	REQ_INT(LCDSTAT);
+    }
+  else
+    RESET_BIT(mIOPorts[LCD_STATUS], 2);
 }
 
 inline void	Emulator::DrawLine(int curLine)
