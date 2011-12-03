@@ -4,11 +4,13 @@
 #include "TileWatcher.hpp"
 
 TileWatcher::TileWatcher(QWidget *parent) :
-  QWidget(parent, Qt::Dialog),
+  QDialog(parent),
   mEmu(0)
 {
+  setWindowFlags(Qt::Window);
+  setWindowTitle(QString("Tile Watcher"));
   mBoxAddr = new HexSpinBox(this);
-  mBoxAddr->setGeometry(5, 5, 80, 20);
+  mBoxAddr->setGeometry(22, 5, 80, 20);
   mBoxAddr->setSingleStep(16);
   mBoxAddr->setRange(0x8000, 0xA000 - 0xF);
   connect(mBoxAddr, SIGNAL(valueChanged(int)), this, SLOT(repaint()));
@@ -22,18 +24,18 @@ void	TileWatcher::paintEvent(QPaintEvent *event)
   painter.setFont(QFont("Monospace"));
   if (mEmu == 0)
     return ;
-  int posX = 30;
+  int posX = 20;
   int posY = 30;
   int curMem = mBoxAddr->value() - 0x8000;
   int tmp;
 
   for (int j = 0; j < 8; j++)
     {
-      posX = 30;
+      posX = 20;
       for (int i = 0; i < 8; i++)
 	{
-	  tmp = IS_BIT_SET(mEmu->mVRAM[curMem], 7 - i) | IS_BIT_SET(mEmu->mVRAM[curMem + 1], 7 - i) << 1;
-
+	  tmp = IS_BIT_SET(mEmu->mVRAM[curMem], 7 - i) |
+	    IS_BIT_SET(mEmu->mVRAM[curMem + 1], 7 - i) << 1;
 	  painter.fillRect(QRect(posX, posY, 10, 10),
 			   QColor(SetColor(tmp, mEmu->mIOPorts[0x47])));
 	  posX += 10;

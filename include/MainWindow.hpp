@@ -11,6 +11,7 @@
 class App;
 class GraphicsEngine;
 class Debugger;
+class TileWatcher;
 
 class MainWindow : public QMainWindow
 {
@@ -31,6 +32,7 @@ private:
   GraphicsEngine *mGraphicsEngine;
   App		*mApp;
   Debugger	*mDebug;
+  TileWatcher	*mTileWatcher;
 };
 
 #endif // MAINWINDOW_HPP_

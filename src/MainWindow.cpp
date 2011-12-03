@@ -3,6 +3,7 @@
 #include <QFileDialog>
 #include "GraphicsEngine.hpp"
 #include "MainWindow.hpp"
+#include "TileWatcher.hpp"
 
 MainWindow::MainWindow(App *app):
   mApp(app)
@@ -22,6 +23,7 @@ void	MainWindow::Init()
   /////////////////////////////////////////////
   QMenu *menuFile = menuBar()->addMenu(tr("&File"));
   QMenu *menuRun = menuBar()->addMenu(tr("&Run"));
+  QMenu *menuTools = menuBar()->addMenu(tr("&Tools"));
   QMenu *menuDebugger = menuBar()->addMenu(tr("&Debugger"));
 
   QAction *actionOpen = menuFile->addAction(tr("&Open"));
@@ -29,6 +31,7 @@ void	MainWindow::Init()
   QAction *actionShowDebug = menuDebugger->addAction(tr("&Show debug panel"));
   QAction *actionPlay = menuRun->addAction(tr("&Play"));
   QAction *actionPause = menuRun->addAction(tr("&Pause"));
+  QAction *actionTileWatcher = menuTools->addAction(tr("&Tile Watcher"));
 
   /////////////////////////////////////////////
   QPalette newPalette;
@@ -41,10 +44,14 @@ void	MainWindow::Init()
   actionShowDebug->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_D));
   actionPlay->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_R));
   actionPause->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_P));
+  actionTileWatcher->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_T));
 
   /////////////////////////////////////////////
   mDebug = new Debugger(this, mApp);
   mDebug->Init();
+
+  mTileWatcher = new TileWatcher(this);
+  mTileWatcher->resize(120, 120);
 
   ////////////////////////////////////////////
   int menuBarHeight = menuBar()->sizeHint().height();
@@ -60,9 +67,12 @@ void	MainWindow::Init()
   connect(actionExit, SIGNAL(triggered()), mApp, SLOT(quit()));
   connect(actionOpen, SIGNAL(triggered()), this, SLOT(OpenRom()));
   connect(actionShowDebug, SIGNAL(triggered()), mDebug, SLOT(show()));
+  connect(actionTileWatcher, SIGNAL(triggered()), mTileWatcher, SLOT(show()));
 
   connect(mGraphicsEngine, SIGNAL(ChangeEmuInstance(Emulator *)),
 	  mDebug, SLOT(EmuInstanceChange(Emulator *)));
+  connect(mGraphicsEngine, SIGNAL(ChangeEmuInstance(Emulator *)),
+   	  mTileWatcher, SLOT(SetEmu(Emulator *)));
   connect(actionPlay, SIGNAL(triggered()), mGraphicsEngine, SLOT(PlayEmu()));
   connect(actionPause, SIGNAL(triggered()), mGraphicsEngine, SLOT(PauseEmu()));
 

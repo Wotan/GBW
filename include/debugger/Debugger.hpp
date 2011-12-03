@@ -44,7 +44,6 @@ private:
   InfosWatcher	*mInfosWatcher;
   MemWatcher	*mMemWatcher;
   AsmWatcher	*mAsmWatcher;
-  TileWatcher	*mTileWatcher;
 
   QPushButton	*mNextOp;
   QShortcut	*mExitShortcut;
