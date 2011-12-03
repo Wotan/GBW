@@ -87,6 +87,7 @@ inline void	Emulator::DrawSprite(int curLine)
   BYTE	tileId;
   BYTE	B1, B2;
   BYTE  value, palette;
+  BYTE	attributes;
 
   for (int i = 0; i < 40 * 4; i += 4)
     {
@@ -97,14 +98,25 @@ inline void	Emulator::DrawSprite(int curLine)
       if (PX >= 168)
 	continue ;
       tileId = mOAM[i + 2];
-      B1 = mVRAM[tileId * 16 + ((curLine - PY) * 2 + 0)];
-      B2 = mVRAM[tileId * 16 + ((curLine - PY) * 2 + 1)];
+      attributes = mOAM[i + 3];
+      if (IS_BIT_SET(attributes, 6)) // Y flip
+	{
+	  B1 = mVRAM[tileId * 16 + ((7 - (curLine - PY)) * 2 + 0)];
+	  B2 = mVRAM[tileId * 16 + ((7 - (curLine - PY)) * 2 + 1)];
+	}
+      else
+	{
+	  B1 = mVRAM[tileId * 16 + ((curLine - PY) * 2 + 0)];
+	  B2 = mVRAM[tileId * 16 + ((curLine - PY) * 2 + 1)];
+	}
       palette = IS_BIT_SET(mOAM[i + 3], 4) ? mIOPorts[0x49] : mIOPorts[0x48];
-
       for (int j = 0; j < 8; j++)
 	{
-	  value = IS_BIT_SET(B1, 7 - j) | (IS_BIT_SET(B2, 7 - j) << 1);
-	  SetColor((int *)(screen + curLine * GB_SCREEN_X * 4 + (PX  + j) * 4), 
+	  if (IS_BIT_SET(attributes, 5)) // X flip
+	    value = IS_BIT_SET(B1, j) | (IS_BIT_SET(B2, j) << 1);
+	  else
+	    value = IS_BIT_SET(B1, 7 - j) | (IS_BIT_SET(B2, 7 - j) << 1);
+	  SetColor((int *)(screen + curLine * GB_SCREEN_X * 4 + (PX + j) * 4), 
 		   value, true, palette);
 	}
     }
@@ -128,8 +140,10 @@ inline void	Emulator::DrawBG(int curLine)
   for (int i = 0; i < 160; i++)
     {
       posX %= 256;
-
-      tileId = mVRAM[addrBGPattern + ((posY / 8) * 32 + posX / 8)];
+      if (addrTileData == 0x1000) // Tileid signed
+	tileId = (SBYTE)mVRAM[addrBGPattern + ((posY / 8) * 32 + posX / 8)];
+      else
+	tileId = mVRAM[addrBGPattern + ((posY / 8) * 32 + posX / 8)];
       tmp = addrTileData + tileId * 16 + ((posY % 8) * 2);
       value = IS_BIT_SET(mVRAM[tmp], 7 - (posX % 8)) | 
 	((IS_BIT_SET(mVRAM[tmp + 1], 7 - (posX % 8))) << 1);
@@ -155,8 +169,10 @@ inline void	Emulator::DrawWindow(int curLine)
   for (int i = posX; i < 160; i++)
     {
       posX %= 160;
-      tileId = mVRAM[addrBGPattern + (((curLine - posY) / 8) * 32) + posX / 8];
-
+      if (addrTileData == 0x1000) // Tileid signed
+	tileId = (SBYTE)mVRAM[addrBGPattern + (((curLine - posY) / 8) * 32) + posX / 8];
+      else
+	tileId = mVRAM[addrBGPattern + (((curLine - posY) / 8) * 32) + posX / 8];
       tmp = addrTileData + tileId * 16 + (((curLine - posY) % 8) * 2);
       value = IS_BIT_SET(mVRAM[tmp], 7 - (posX % 8)) |
 	(IS_BIT_SET(mVRAM[tmp + 1], 7 - (posX % 8)) << 1);
