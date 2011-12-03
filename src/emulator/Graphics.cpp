@@ -117,7 +117,7 @@ inline void	Emulator::DrawSprite(int curLine)
 	  else
 	    value = IS_BIT_SET(B1, 7 - j) | (IS_BIT_SET(B2, 7 - j) << 1);
 	  SetColor((int *)(screen + curLine * GB_SCREEN_X * 4 + (PX + j) * 4), 
-		   value, true, palette);
+		   value, IS_BIT_SET(attributes, 7) ? false : true, palette);
 	}
     }
 }
@@ -168,7 +168,6 @@ inline void	Emulator::DrawWindow(int curLine)
     return ;
   for (int i = posX; i < 160; i++)
     {
-      posX %= 160;
       if (addrTileData == 0x1000) // Tileid signed
 	tileId = (SBYTE)mVRAM[addrBGPattern + (((curLine - posY) / 8) * 32) + posX / 8];
       else
@@ -188,6 +187,8 @@ inline void	Emulator::SetColor(int *scanLine, int spriteColor,
   int	finalColor;
   Palette *palette = (Palette *)&bpalette;
 
+  if (blankTransp && spriteColor == 0)
+    return ;
   switch (spriteColor)
     {
     case 0: finalColor = palette->colorNum0; break;
@@ -197,7 +198,7 @@ inline void	Emulator::SetColor(int *scanLine, int spriteColor,
     }
   switch (finalColor)
     {
-    case 0: if (!blankTransp) *scanLine = 0xFFFFFFFF; break;
+    case 0: *scanLine = 0xFFFFFFFF; break;
     case 1: *scanLine = 0xAAAAAAAA; break;
     case 2: *scanLine = 0x55555555; break;
     case 3: *scanLine = 0x00000000; break;
