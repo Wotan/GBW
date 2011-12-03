@@ -5,6 +5,7 @@
 # include <QShortcut>
 # include <QWidget>
 # include <QDialog>
+# include <QGridLayout>
 # include "App.hpp"
 # include "Emulator.hpp"
 # include "InfosWatcher.hpp"
@@ -50,6 +51,8 @@ private:
   QShortcut	*mNextOpShortcut;
   QSpinBox	*mNbOpcode;
   QPushButton	*mNextNbOp;
+
+  QGridLayout	*mMainLayout;
 };
 
 #endif // DEBUGGER_HPP_

@@ -17,31 +17,24 @@ Debugger::Debugger(QWidget *parent, App *app) :
 Debugger::~Debugger()
 {
   std::cout << "Debugger deleted" << std::endl;
-  delete mInfosWatcher;
-  delete mMemWatcher;
-  delete mNextOp;
-  delete mNbOpcode;
-  delete mNextNbOp;
-  delete mAsmWatcher;
 }
 
 bool Debugger::Init()
 {
   setWindowFlags(Qt::Window);
 
+  mMainLayout = new QGridLayout(this);
+
   mInfosWatcher = new InfosWatcher(this);
-  mInfosWatcher->setGeometry(310, 5, 300, 200);
-  mInfosWatcher->show();
+  mInfosWatcher->setMinimumSize(300, 200);
 
   mMemWatcher = new MemWatcher(this);
-  mMemWatcher->setGeometry(5, 5, 300, 330);
-  mMemWatcher->show();
+  mMemWatcher->setMinimumSize(300, 330);
 
   mAsmWatcher = new AsmWatcher(this);
-  mAsmWatcher->setGeometry(310 + 300 + 5, 5, 300, 450);
-  mAsmWatcher->show();
+  mAsmWatcher->setMinimumSize(300, 450);
 
-  mNextOp = new QPushButton("Next Opcode", this);
+  mNextOp = new QPushButton("Next Opcode (Ctrl + Space)", this);
   mNextOp->setGeometry(385, 250, 100, 25);
 
   mNbOpcode = new QSpinBox(this);
@@ -50,6 +43,17 @@ bool Debugger::Init()
 
   mNextNbOp = new QPushButton("Jump opcodes", this);
   mNextNbOp->setGeometry(435, 300, 120, 25);
+
+  mMainLayout->addWidget(mInfosWatcher, 0, 0, 1, 2);
+  mMainLayout->addWidget(mMemWatcher, 1, 0, 3, 2);
+
+  mMainLayout->addWidget(mAsmWatcher, 0, 2, 2, 2);
+
+  mMainLayout->addWidget(mNbOpcode, 2, 2);
+  mMainLayout->addWidget(mNextNbOp, 2, 3);
+  mMainLayout->addWidget(mNextOp, 3, 2, 1, 2);
+  setLayout(mMainLayout);
+
 
   connect(mNextOp, SIGNAL(clicked()), this, SLOT(NextOpcode()));
   connect(mNextNbOp, SIGNAL(clicked()), this, SLOT(NextXOpcode()));
