@@ -29,8 +29,9 @@ void	MainWindow::Init()
   QAction *actionOpen = menuFile->addAction(tr("&Open"));
   QAction *actionExit = menuFile->addAction(tr("&Exit"));
   QAction *actionShowDebug = menuDebugger->addAction(tr("&Show debug panel"));
-  QAction *actionPlay = menuRun->addAction(tr("&Play"));
-  QAction *actionPause = menuRun->addAction(tr("&Pause"));
+  mActionPlay = menuRun->addAction(tr("&Play"));
+  mActionPause = menuRun->addAction(tr("&Pause"));
+  mActionReset = menuRun->addAction(tr("&Reset"));
   QAction *actionTileWatcher = menuTools->addAction(tr("&Tile Watcher"));
 
   /////////////////////////////////////////////
@@ -42,8 +43,9 @@ void	MainWindow::Init()
   actionExit->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Q));
   actionOpen->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_O));
   actionShowDebug->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_D));
-  actionPlay->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_R));
-  actionPause->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_P));
+  mActionPlay->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_R));
+  mActionPause->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_P));
+  mActionReset->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_E));
   actionTileWatcher->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_T));
 
   /////////////////////////////////////////////
@@ -57,7 +59,11 @@ void	MainWindow::Init()
   int menuBarHeight = menuBar()->sizeHint().height();
   mGraphicsEngine = new GraphicsEngine(this, QPoint(0, menuBarHeight),
 				       QSize(160, 144), mApp);
+  mGraphicsEngine->SetMainWindow(this);
   mGraphicsEngine->show();
+  togglePlay(false);
+  mActionPlay->setEnabled(false);
+  mActionReset->setEnabled(false);
 
   /////////////////////////////////////////////
   setMinimumSize(GB_SCREEN_X, GB_SCREEN_Y + menuBarHeight);
@@ -73,24 +79,27 @@ void	MainWindow::Init()
 	  mDebug, SLOT(EmuInstanceChange(Emulator *)));
   connect(mGraphicsEngine, SIGNAL(ChangeEmuInstance(Emulator *)),
    	  mTileWatcher, SLOT(SetEmu(Emulator *)));
-  connect(actionPlay, SIGNAL(triggered()), mGraphicsEngine, SLOT(PlayEmu()));
-  connect(actionPause, SIGNAL(triggered()), mGraphicsEngine, SLOT(PauseEmu()));
+  connect(mActionPlay, SIGNAL(triggered()), mGraphicsEngine, SLOT(PlayEmu()));
+  connect(mActionPause, SIGNAL(triggered()), mGraphicsEngine, SLOT(PauseEmu()));
+  connect(mActionReset, SIGNAL(triggered()), mGraphicsEngine, SLOT(ResetEmu()));
 
   if (mApp->arguments().size() > 1)
     {
-      QString romFile = mApp->arguments().at(1);
-      mGraphicsEngine->NewEmulator(romFile.toStdString().c_str());
+      QString romFileName = mApp->arguments().at(1);
+      if (mGraphicsEngine->NewEmulator(romFileName.toStdString().c_str()))
+	togglePlay(false);
     }
 
 }
 
 void	MainWindow::OpenRom()
 {
-  QString fileName;
+  QString romFileName;
 
-  fileName = QFileDialog::getOpenFileName(0, "Select a Game Boy ROM");
-  if (fileName != 0)
-    mGraphicsEngine->NewEmulator(fileName.toStdString().c_str());
+  romFileName = QFileDialog::getOpenFileName(0, "Select a Game Boy ROM");
+  if (romFileName != 0)
+    if (mGraphicsEngine->NewEmulator(romFileName.toStdString().c_str()))
+      togglePlay(false);
 }
 
 void	MainWindow::resizeEvent(QResizeEvent *event)
@@ -152,5 +161,22 @@ void MainWindow::keyReleaseEvent(QKeyEvent *keyEvent)
     case Qt::Key_W: emu->KeyChange(BUTTON_B, false); break;
     case Qt::Key_Return: emu->KeyChange(Start, false); break;
     case Qt::Key_Shift: emu->KeyChange(Select, false); break;
+    }
+}
+
+
+void MainWindow::togglePlay(bool play)
+{
+  if (play)
+    {
+      mActionPlay->setEnabled(false);
+      mActionPause->setEnabled(true);
+      mActionReset->setEnabled(true);
+    }
+  else
+    {
+      mActionPlay->setEnabled(true);
+      mActionPause->setEnabled(false);
+      mActionReset->setEnabled(true);
     }
 }

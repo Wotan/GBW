@@ -7,7 +7,8 @@ GraphicsEngine::GraphicsEngine(QWidget *parent, const QPoint& position,
 			       const QSize& size, App *app) :
   RenderOpenGL(parent, 16),
   mApp(app),
-  mEmu(NULL)
+  mEmu(NULL),
+  mMainWindow(0)
 {
   std::cout << "GraphicsEngine created" << std::endl;
   move(position);
@@ -60,6 +61,7 @@ bool	GraphicsEngine::NewEmulator(const char *fileName)
       CloseEmulator();
       return false;
     }
+  mRomPath = fileName;
   emit ChangeEmuInstance(mEmu);
   return true;
 }
@@ -74,12 +76,28 @@ void	GraphicsEngine::CloseEmulator()
 void	GraphicsEngine::PlayEmu()
 {
   if (mEmu)
+    {
     mEmu->Play();
+    if (mMainWindow)
+      mMainWindow->togglePlay(true);
+    }
 }
 
 void	GraphicsEngine::PauseEmu()
 {
   if(mEmu)
-    mEmu->Pause();
+    {
+      mEmu->Pause();
+      if (mMainWindow)
+	mMainWindow->togglePlay(false);
+    }
 }
 
+void GraphicsEngine::ResetEmu()
+{
+  if (mRomPath.size() != 0)
+    {
+      NewEmulator(mRomPath.c_str());
+      PlayEmu();
+    }
+}

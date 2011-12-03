@@ -24,6 +24,7 @@ public:
   virtual void	resizeEvent(QResizeEvent * event);
   void keyPressEvent(QKeyEvent *keyEvent);
   void keyReleaseEvent(QKeyEvent *keyEvent);
+  void togglePlay(bool play);
 
 public slots:
   void	OpenRom();
@@ -33,6 +34,9 @@ private:
   App		*mApp;
   Debugger	*mDebug;
   TileWatcher	*mTileWatcher;
+  QAction	*mActionPlay;
+  QAction	*mActionPause;
+  QAction	*mActionReset;
 };
 
 #endif // MAINWINDOW_HPP_

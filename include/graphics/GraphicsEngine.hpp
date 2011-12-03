@@ -10,6 +10,7 @@
 
 class App;
 class Emulator;
+class MainWindow;
 
 class GraphicsEngine : public RenderOpenGL
 {
@@ -24,14 +25,15 @@ public:
   void	ClearScreen();
   void	FillScreen();
   char	*GetScreenArrayPtr() {return mScreenArray;};
-
   bool	NewEmulator(const char *fileName);
   void	CloseEmulator();
   Emulator *GetEmulator() {return mEmu;};
+  void SetMainWindow(MainWindow *mainWindow) {mMainWindow = mainWindow;};
 
 public slots:
   void	PlayEmu();
   void	PauseEmu();
+  void	ResetEmu();
 
 signals:
   void	ChangeEmuInstance(Emulator *emu);
@@ -41,7 +43,8 @@ private:
   char		mScreenArray[GB_SCREEN_X * GB_SCREEN_Y * 4];
   App		*mApp;
   Emulator	*mEmu;
-
+  MainWindow	*mMainWindow;
+  std::string	mRomPath;
 };
 
 #endif // GRAPHICS_ENGINE_HPP_
