@@ -78,8 +78,7 @@ void	MainWindow::OpenRom()
 {
   QString fileName;
 
-  fileName = QFileDialog::getOpenFileName(0, "Select a Game Boy ROM",
-					  getcwd(NULL, 64));
+  fileName = QFileDialog::getOpenFileName(0, "Select a Game Boy ROM");
   if (fileName != 0)
     mGraphicsEngine->NewEmulator(fileName.toStdString().c_str());
 }
