@@ -22,6 +22,7 @@ Debugger::~Debugger()
 bool Debugger::Init()
 {
   setWindowFlags(Qt::Window);
+  setWindowTitle(QString("GBW Debugger"));
 
   mMainLayout = new QGridLayout(this);
 
