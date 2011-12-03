@@ -15,7 +15,6 @@ public:
   void	UpdateScreen(unsigned char *array);
   virtual void resizeGL(int width, int height);
   virtual void paintGL();
-  virtual void keyPressEvent(QKeyEvent *keyEvent) = 0;
   virtual void OnInit() = 0;
   virtual void OnUpdate() = 0;
 

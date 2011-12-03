@@ -83,11 +83,3 @@ void	GraphicsEngine::PauseEmu()
     mEmu->Pause();
 }
 
-void GraphicsEngine::keyPressEvent(QKeyEvent *keyEvent)
-{
-}
-
-void GraphicsEngine::keyReleaseEvent(QKeyEvent *keyEvent)
-{
-
-}
