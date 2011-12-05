@@ -819,7 +819,7 @@ inline void	Emulator::SUB_8Bit(BYTE &toSub, BYTE sub, bool addCarry)
   if (addCarry)
     nbSub += C_F;
 
-  if (((toSub & 0xFF) > (nbSub & 0xFF)))
+  if (((toSub & 0x0F) > (nbSub & 0x0F)))
     H_F = 1;
   if (toSub > nbSub)
     C_F = 1;
@@ -859,7 +859,7 @@ inline void	Emulator::CP_8Bit(BYTE cp1, BYTE cp2)
 {
   N_F = 1;
   Z_F = (cp1 == cp2);
-  H_F = ((cp1 & 0xFF) < (cp2 & 0xFF));
+  H_F = ((cp1 & 0x0F) < (cp2 & 0x0F));
   C_F = (cp1 < cp2);
 }
 
@@ -883,7 +883,7 @@ inline void	Emulator::ADD_16bit(WORD &toAdd, WORD add)
 {
   N_F = 0;
   C_F = (toAdd + add > 0xFFFF);
-  H_F = (((toAdd & 0x000F) + (add & 0x000F)) > 0x000F);
+  H_F = (((toAdd & 0x0FFF) + (add & 0x0FFF)) > 0x0FFF);
   toAdd += add;
 }
 
@@ -896,9 +896,9 @@ inline void	Emulator::ADD_16bitSigned(WORD &toAdd, SBYTE add)
   else
     C_F = (toAdd + add < 0);
   if (add > 0)
-    H_F = (((toAdd & 0x000F) + (add & 0x000F)) > 0x000F);
+    H_F = (((toAdd & 0x0FFF) + (add & 0x0FFF)) > 0x0FFF);
   else
-    H_F = (((toAdd & 0x000F) + (add & 0x000F)) < 0x0000);
+    H_F = (((toAdd & 0x0FFF) + (add & 0x0FFF)) < 0x0000);
   toAdd += add;
 }
 
