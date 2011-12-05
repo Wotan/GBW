@@ -813,17 +813,15 @@ inline void	Emulator::SUB_8Bit(BYTE &toSub, BYTE sub, bool addCarry)
 
   N_F = 1;
   H_F = 0;
-  C_F = 0;
 
   nbSub = sub;
   if (addCarry)
     nbSub += C_F;
 
-  if (((toSub & 0x0F) > (nbSub & 0x0F)))
+  if (((toSub & 0x0F) < (nbSub & 0x0F)))
     H_F = 1;
-  if (toSub > nbSub)
-    C_F = 1;
 
+  C_F = (toSub < nbSub);
   toSub -= nbSub;
   Z_F = (toSub == 0);
 }
