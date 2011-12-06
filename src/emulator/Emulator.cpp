@@ -131,7 +131,7 @@ BYTE	Emulator::ReadMem(WORD addr)
   if (addr <= 0x3FFF) // ROM Bank 00
     return mCartridgeMem[addr];
   else if (addr <= 0x7FFF) // ROM bank 01..NN
-    return mCartridgeMem[addr];
+    return mCartridgeMem[SIZE_BANK * mCurROMBank + (addr - 0x4000)];
   else if (addr <= 0x9FFF) // VRAM
     {
       // if ((mIOPorts[0x41] & 0x3) == 3)
