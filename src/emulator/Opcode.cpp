@@ -399,12 +399,12 @@ int	Emulator::DoOpcode()
     case 0x10:
       {
 	extOpcode = ReadMem(mPC++);
-	if (extOpcode == 0x0)
-	  {
+	// if (extOpcode == 0x0)
+	//   {
 	    Stop();
 	    return 4;
-	  }
-	std::cout << "Unknown opcode :" << opcode << "." << extOpcode<< std::endl;
+	//   }
+	// std::cout << "Unknown opcode 3 :" << (int)opcode << "." << (int)extOpcode<< std::endl;
 	return 1;
       }
 
@@ -780,13 +780,13 @@ int	Emulator::DoOpcode()
 	    return 16;
 
 	  default:
-	    std::cout << "Unknown opcode :" << opcode << "." << extOpcode << std::endl;
+	    std::cout << "Unknown opcode 2 :" << (int)opcode << "." << (int)extOpcode << std::endl;
 	    return 1;
 	  }
       }
 
     default:
-      std::cout << "Unknown opcode :" << opcode << std::endl;
+      std::cout << "Unknown opcode :" << (int)opcode << std::endl;
       return 1;
     }
 }
