@@ -39,6 +39,8 @@ private:
   QAction	*mActionPlay;
   QAction	*mActionPause;
   QAction	*mActionReset;
+  QAction	*mActionLoadState;
+  QAction	*mActionSaveState;
 };
 
 #endif // MAINWINDOW_HPP_

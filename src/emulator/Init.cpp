@@ -17,6 +17,7 @@ bool	Emulator::Init(const char *fileName)
   mCurRAMBank = 0;
   mRAMEnable = false;
   mMode = 0;
+  Play();
   return true;
 }
 

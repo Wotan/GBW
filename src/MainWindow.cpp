@@ -36,8 +36,8 @@ void	MainWindow::Init()
   QAction *actionTileWatcher = menuTools->addAction(tr("&Tile Watcher"));
 
   menuFile->addSeparator();
-  QAction *actionLoadState = menuFile->addAction(tr("&Load state..."));
-  QAction *actionSaveState = menuFile->addAction(tr("&Save state..."));
+  mActionLoadState = menuFile->addAction(tr("&Load state..."));
+  mActionSaveState = menuFile->addAction(tr("&Save state..."));
   menuFile->addSeparator();
   QAction *actionExit = menuFile->addAction(tr("&Exit"));
 
@@ -55,8 +55,8 @@ void	MainWindow::Init()
   mActionReset->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_E));
   actionTileWatcher->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_T));
 
-  actionLoadState->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_L));
-  actionSaveState->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_S));
+  mActionLoadState->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_L));
+  mActionSaveState->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_S));
 
   /////////////////////////////////////////////
   mDebug = new Debugger(this, mApp);
@@ -74,6 +74,8 @@ void	MainWindow::Init()
   togglePlay(false);
   mActionPlay->setEnabled(false);
   mActionReset->setEnabled(false);
+  mActionSaveState->setEnabled(false);
+  mActionLoadState->setEnabled(false);
 
   /////////////////////////////////////////////
   setMinimumSize(GB_SCREEN_X, GB_SCREEN_Y + menuBarHeight);
@@ -83,8 +85,8 @@ void	MainWindow::Init()
   connect(actionExit, SIGNAL(triggered()), mApp, SLOT(quit()));
   connect(actionOpen, SIGNAL(triggered()), this, SLOT(OpenRom()));
 
-  connect(actionLoadState, SIGNAL(triggered()), this, SLOT(LoadState()));
-  connect(actionSaveState, SIGNAL(triggered()), this, SLOT(SaveState()));
+  connect(mActionLoadState, SIGNAL(triggered()), this, SLOT(LoadState()));
+  connect(mActionSaveState, SIGNAL(triggered()), this, SLOT(SaveState()));
 
   connect(actionShowDebug, SIGNAL(triggered()), mDebug, SLOT(show()));
   connect(actionTileWatcher, SIGNAL(triggered()), mTileWatcher, SLOT(show()));
@@ -101,7 +103,7 @@ void	MainWindow::Init()
     {
       QString romFileName = mApp->arguments().at(1);
       if (mGraphicsEngine->NewEmulator(romFileName.toStdString().c_str()))
-	togglePlay(false);
+	togglePlay(true);
     }
 
 }
@@ -113,7 +115,7 @@ void	MainWindow::OpenRom()
   romFileName = QFileDialog::getOpenFileName(0, "Select a Game Boy ROM");
   if (romFileName != 0)
     if (mGraphicsEngine->NewEmulator(romFileName.toStdString().c_str()))
-      togglePlay(false);
+      togglePlay(true);
 }
 
 void	MainWindow::resizeEvent(QResizeEvent *event)
@@ -186,6 +188,8 @@ void MainWindow::togglePlay(bool play)
       mActionPlay->setEnabled(false);
       mActionPause->setEnabled(true);
       mActionReset->setEnabled(true);
+      mActionSaveState->setEnabled(true);
+      mActionLoadState->setEnabled(true);
     }
   else
     {
