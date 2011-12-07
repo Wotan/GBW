@@ -109,7 +109,7 @@ inline void	Emulator::DrawSprite(int curLine)
       B2 = mVRAM[posVRAM + 1];
       for (int j = 0; j < 8; j++)
 	{
-	  if (PX + j < 0)
+	  if (PX + j < 0 || PX + j > 160)
 	    continue ;
 	  if (IS_BIT_SET(attributes, 5)) // X flip
 	    value = IS_BIT_SET(B1, j) | (IS_BIT_SET(B2, j) << 1);
@@ -173,7 +173,7 @@ inline void	Emulator::DrawWindow(int curLine)
       value = IS_BIT_SET(mVRAM[tmp], 7 - (posX % 8)) |
 	(IS_BIT_SET(mVRAM[tmp + 1], 7 - (posX % 8)) << 1);
       SetColor((int *)(screen + curLine * GB_SCREEN_X * 4 + posX * 4), value,
-      	       false, mIOPorts[0x47]);
+	       false, mIOPorts[0x47]);
       posX++;
     }
 }
