@@ -162,6 +162,9 @@ public:
   void  WriteMem(WORD addr, BYTE value);
   void	DMATransfert(BYTE value);
 
+  void	SaveState(const char *filename);
+  bool	LoadState(const char *filename);
+
   inline void	DrawLine(int curLine);
   inline void	DrawBG(int curLine);
   inline void	DrawSprite(int curLine);
@@ -287,4 +290,3 @@ private:
 12  FFFF        Interrupt Enable Registers
 */
 #endif // !EMULATOR_HPP_
-

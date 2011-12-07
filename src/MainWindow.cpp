@@ -1,6 +1,7 @@
 #include <iostream>
 #include <QPalette>
 #include <QFileDialog>
+#include <QMessageBox>
 #include "GraphicsEngine.hpp"
 #include "MainWindow.hpp"
 #include "TileWatcher.hpp"
@@ -26,13 +27,19 @@ void	MainWindow::Init()
   QMenu *menuTools = menuBar()->addMenu(tr("&Tools"));
   QMenu *menuDebugger = menuBar()->addMenu(tr("&Debugger"));
 
-  QAction *actionOpen = menuFile->addAction(tr("&Open"));
-  QAction *actionExit = menuFile->addAction(tr("&Exit"));
+  QAction *actionOpen = menuFile->addAction(tr("&Open..."));
+
   QAction *actionShowDebug = menuDebugger->addAction(tr("&Show debug panel"));
   mActionPlay = menuRun->addAction(tr("&Play"));
   mActionPause = menuRun->addAction(tr("&Pause"));
   mActionReset = menuRun->addAction(tr("&Reset"));
   QAction *actionTileWatcher = menuTools->addAction(tr("&Tile Watcher"));
+
+  menuFile->addSeparator();
+  QAction *actionLoadState = menuFile->addAction(tr("&Load state..."));
+  QAction *actionSaveState = menuFile->addAction(tr("&Save state..."));
+  menuFile->addSeparator();
+  QAction *actionExit = menuFile->addAction(tr("&Exit"));
 
   /////////////////////////////////////////////
   QPalette newPalette;
@@ -47,6 +54,9 @@ void	MainWindow::Init()
   mActionPause->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_P));
   mActionReset->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_E));
   actionTileWatcher->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_T));
+
+  actionLoadState->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_L));
+  actionSaveState->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_S));
 
   /////////////////////////////////////////////
   mDebug = new Debugger(this, mApp);
@@ -72,6 +82,10 @@ void	MainWindow::Init()
   //////////// Signals //////////////////////
   connect(actionExit, SIGNAL(triggered()), mApp, SLOT(quit()));
   connect(actionOpen, SIGNAL(triggered()), this, SLOT(OpenRom()));
+
+  connect(actionLoadState, SIGNAL(triggered()), this, SLOT(LoadState()));
+  connect(actionSaveState, SIGNAL(triggered()), this, SLOT(SaveState()));
+
   connect(actionShowDebug, SIGNAL(triggered()), mDebug, SLOT(show()));
   connect(actionTileWatcher, SIGNAL(triggered()), mTileWatcher, SLOT(show()));
 
@@ -179,4 +193,30 @@ void MainWindow::togglePlay(bool play)
       mActionPause->setEnabled(false);
       mActionReset->setEnabled(true);
     }
+}
+
+void	MainWindow::LoadState()
+{
+  QString fileName;
+  Emulator *emu;
+
+  emu = mGraphicsEngine->GetEmulator();
+  fileName = QFileDialog::getOpenFileName(0, "Select a file to load state");
+  if (fileName != 0 && emu)
+    {
+      if (!emu->LoadState(fileName.toStdString().c_str()))
+	QMessageBox::critical(this, "Error", 
+			      "Save state is from a different game");
+    }
+}
+
+void	MainWindow::SaveState()
+{
+  QString fileName;
+  Emulator *emu;
+
+  emu = mGraphicsEngine->GetEmulator();
+  fileName = QFileDialog::getSaveFileName(0, "Select a file to save state");
+  if (fileName != 0 && emu)
+    emu->SaveState(fileName.toStdString().c_str());
 }

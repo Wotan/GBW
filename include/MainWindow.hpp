@@ -28,6 +28,8 @@ public:
 
 public slots:
   void	OpenRom();
+  void	LoadState();
+  void	SaveState();
 
 private:
   GraphicsEngine *mGraphicsEngine;
