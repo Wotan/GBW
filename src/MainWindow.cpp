@@ -103,9 +103,8 @@ void	MainWindow::Init()
     {
       QString romFileName = mApp->arguments().at(1);
       if (mGraphicsEngine->NewEmulator(romFileName.toStdString().c_str()))
-	togglePlay(true);
+	mGraphicsEngine->PauseEmu();
     }
-
 }
 
 void	MainWindow::OpenRom()
@@ -115,7 +114,7 @@ void	MainWindow::OpenRom()
   romFileName = QFileDialog::getOpenFileName(0, "Select a Game Boy ROM");
   if (romFileName != 0)
     if (mGraphicsEngine->NewEmulator(romFileName.toStdString().c_str()))
-      togglePlay(true);
+      mGraphicsEngine->PauseEmu();
 }
 
 void	MainWindow::resizeEvent(QResizeEvent *event)

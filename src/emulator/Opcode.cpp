@@ -404,7 +404,7 @@ int	Emulator::DoOpcode()
 	    Stop();
 	    return 4;
 	  }
-	std::cout << "Unknown opcode 3 :" << (int)opcode << "." << (int)extOpcode<< std::endl;
+	printf("Unknown opcode : %X.%X\n", opcode, extOpcode);
 	return 1;
       }
 
@@ -780,13 +780,12 @@ int	Emulator::DoOpcode()
 	    return 16;
 
 	  default:
-	    std::cout << "Unknown opcode 2 :" << (int)opcode << "." << (int)extOpcode << std::endl;
+	    printf("Unknown opcode : %X.%X\n", opcode, extOpcode);
 	    return 1;
 	  }
       }
-
     default:
-      std::cout << "Unknown opcode :" << (int)opcode << std::endl;
+      printf("Unknown opcode : %X\n", opcode);
       return 1;
     }
 }
@@ -880,6 +879,7 @@ inline void	Emulator::DEC_8Bit(BYTE &toDec)
 inline void	Emulator::ADD_16bit(WORD &toAdd, WORD add)
 {
   N_F = 0;
+
   C_F = (toAdd + add > 0xFFFF);
   H_F = (((toAdd & 0x0FFF) + (add & 0x0FFF)) > 0x0FFF);
   toAdd += add;
@@ -933,8 +933,7 @@ inline void	Emulator::DAA_8Bit(BYTE &nbr)
       if (H_F || ((nbr & 0x0F) >= 0xA))
 	res += 0x06;
     }
-  if (res & 0x100)
-    C_F = 1;
+  C_F = (res & 0x100);
   H_F = 0;
   nbr = res;
   Z_F = (nbr == 0);

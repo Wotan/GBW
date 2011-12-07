@@ -184,6 +184,12 @@ inline void ChangeROMBankHi(BYTE value, BYTE &curROMBank)
   curROMBank |= value;
   if (curROMBank == 0x0) // Wtf if 0x20 0x40 0x60 ?
     curROMBank = 0x1;
+  else if (curROMBank == 0x20)
+    curROMBank = 0x21;
+  else if (curROMBank == 0x40)
+    curROMBank = 0x41;
+  else if (curROMBank == 0x60)
+    curROMBank = 0x61;
 }
 
 void	Emulator::DMATransfert(BYTE value)
