@@ -1,3 +1,4 @@
+#include <QSettings>
 #include <iostream>
 #include <QPalette>
 #include <QFileDialog>
@@ -15,6 +16,8 @@ MainWindow::MainWindow(App *app):
 
 MainWindow::~MainWindow()
 {
+  mApp->GetSettings()->setValue("mainwindow/size", size());
+
   delete mGraphicsEngine;
   delete mDebug;
   std::cout << "MainWindow deleted" << std::endl;
@@ -84,6 +87,8 @@ void	MainWindow::Init()
   mGraphicsEngine->SetMainWindow(this);
   mGraphicsEngine->show();
   togglePlay(false);
+
+  ////////////////////////////////////////////
   mActionPlay->setEnabled(false);
   mActionReset->setEnabled(false);
   mActionSaveState->setEnabled(false);
@@ -91,7 +96,9 @@ void	MainWindow::Init()
 
   /////////////////////////////////////////////
   setMinimumSize(GB_SCREEN_X, GB_SCREEN_Y + menuBarHeight);
-  resize(GB_SCREEN_X, GB_SCREEN_Y + menuBarHeight);
+
+  resize(mApp->GetSettings()->value("mainwindow/size",
+ QSize(GB_SCREEN_X, GB_SCREEN_Y + menuBarHeight)).toSize());
 
   //////////// Signals //////////////////////
   connect(actionExit, SIGNAL(triggered()), mApp, SLOT(quit()));
