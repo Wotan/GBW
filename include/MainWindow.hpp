@@ -32,6 +32,7 @@ public slots:
   void	SaveState();
 
 private:
+  Qt::Key	mKeyTab[8];
   GraphicsEngine *mGraphicsEngine;
   App		*mApp;
   Debugger	*mDebug;

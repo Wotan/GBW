@@ -6,6 +6,7 @@
 #include "MainWindow.hpp"
 #include "TileWatcher.hpp"
 
+
 MainWindow::MainWindow(App *app):
   mApp(app)
 {
@@ -21,9 +22,20 @@ MainWindow::~MainWindow()
 
 void	MainWindow::Init()
 {
+  /////////////////// Key /////////////////////
+  mKeyTab[0] = Qt::Key_Up;
+  mKeyTab[1] = Qt::Key_Down;
+  mKeyTab[2] = Qt::Key_Right;
+  mKeyTab[3] = Qt::Key_Left;
+  mKeyTab[4] = Qt::Key_Q;
+  mKeyTab[5] = Qt::Key_W;
+  mKeyTab[6] = Qt::Key_Return;
+  mKeyTab[7] = Qt::Key_Shift;
+
   /////////////////////////////////////////////
   QMenu *menuFile = menuBar()->addMenu(tr("&File"));
   QMenu *menuRun = menuBar()->addMenu(tr("&Run"));
+  QMenu *menuSettings = menuBar()->addMenu(tr("&Settings"));
   QMenu *menuTools = menuBar()->addMenu(tr("&Tools"));
   QMenu *menuDebugger = menuBar()->addMenu(tr("&Debugger"));
 
@@ -123,7 +135,6 @@ void	MainWindow::resizeEvent(QResizeEvent *event)
   QSize size = event->size();
   int width, height;
 
-
   if (size.width() * GB_SCREEN_Y <= GB_SCREEN_X * size.height())
     {
       width = size.width();
@@ -144,39 +155,53 @@ void	MainWindow::resizeEvent(QResizeEvent *event)
 void MainWindow::keyPressEvent(QKeyEvent *keyEvent)
 {
   Emulator *emu = mGraphicsEngine->GetEmulator();
+  int	   curKey = keyEvent->key();
 
   if (!emu)
     return ;
-  switch (keyEvent->key())
-    {
-    case Qt::Key_Up: emu->KeyChange(Up, true); break;
-    case Qt::Key_Down: emu->KeyChange(Down, true); break;
-    case Qt::Key_Right: emu->KeyChange(Right, true); break;
-    case Qt::Key_Left: emu->KeyChange(Left, true); break;
-    case Qt::Key_Q: emu->KeyChange(BUTTON_A, true); break;
-    case Qt::Key_W: emu->KeyChange(BUTTON_B, true); break;
-    case Qt::Key_Return: emu->KeyChange(Start, true); break;
-    case Qt::Key_Shift: emu->KeyChange(Select, true); break;
-    }
+
+  if (mKeyTab[0] == curKey)
+    emu->KeyChange(Up, true);
+  else if (mKeyTab[1] == curKey)
+    emu->KeyChange(Down, true);
+  else if (mKeyTab[2] == curKey)
+    emu->KeyChange(Right, true);
+  else if (mKeyTab[3] == curKey)
+    emu->KeyChange(Left, true);
+  else if (mKeyTab[4] == curKey)
+    emu->KeyChange(BUTTON_A, true);
+  else if (mKeyTab[5] == curKey)
+    emu->KeyChange(BUTTON_B, true);
+  else if (mKeyTab[6] == curKey)
+    emu->KeyChange(Start, true);
+  else if (mKeyTab[7] == curKey)
+    emu->KeyChange(Select, true);
 }
 
 void MainWindow::keyReleaseEvent(QKeyEvent *keyEvent)
 {
   Emulator *emu = mGraphicsEngine->GetEmulator();
+  int curKey = keyEvent->key();
 
   if (!emu)
     return ;
-  switch (keyEvent->key())
-    {
-    case Qt::Key_Up: emu->KeyChange(Up, false); break;
-    case Qt::Key_Down: emu->KeyChange(Down, false); break;
-    case Qt::Key_Right: emu->KeyChange(Right, false); break;
-    case Qt::Key_Left: emu->KeyChange(Left, false); break;
-    case Qt::Key_Q: emu->KeyChange(BUTTON_A, false); break;
-    case Qt::Key_W: emu->KeyChange(BUTTON_B, false); break;
-    case Qt::Key_Return: emu->KeyChange(Start, false); break;
-    case Qt::Key_Shift: emu->KeyChange(Select, false); break;
-    }
+
+  if (mKeyTab[0] == curKey)
+    emu->KeyChange(Up, false);
+  else if (mKeyTab[1] == curKey)
+    emu->KeyChange(Down, false);
+  else if (mKeyTab[2] == curKey)
+    emu->KeyChange(Right, false);
+  else if (mKeyTab[3] == curKey)
+    emu->KeyChange(Left, false);
+  else if (mKeyTab[4] == curKey)
+    emu->KeyChange(BUTTON_A, false);
+  else if (mKeyTab[5] == curKey)
+    emu->KeyChange(BUTTON_B, false);
+  else if (mKeyTab[6] == curKey)
+    emu->KeyChange(Start, false);
+  else if (mKeyTab[7] == curKey)
+    emu->KeyChange(Select, false);
 }
 
 
