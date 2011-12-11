@@ -29,6 +29,7 @@ MOC_DIR = ./obj
 # Input
 HEADERS +=      include/MainWindow.hpp \
                 include/App.hpp \
+                include/Settings.hpp \
                 include/graphics/GraphicsEngine.hpp \
                 include/graphics/RenderOpenGL.hpp \
                 include/emulator/Emulator.hpp \
@@ -41,6 +42,7 @@ HEADERS +=      include/MainWindow.hpp \
 SOURCES +=      src/main.cpp \
                 src/MainWindow.cpp \
                 src/App.cpp \
+                src/Settings.cpp \
                 src/graphics/GraphicsEngine.cpp \
                 src/graphics/RenderOpenGL.cpp \
                 src/emulator/Emulator.cpp \

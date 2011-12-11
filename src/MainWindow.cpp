@@ -2,10 +2,14 @@
 #include <iostream>
 #include <QPalette>
 #include <QFileDialog>
+#include <QLineEdit>
 #include <QMessageBox>
+#include <QLabel>
+
 #include "GraphicsEngine.hpp"
 #include "MainWindow.hpp"
 #include "TileWatcher.hpp"
+#include "Settings.hpp"
 
 
 MainWindow::MainWindow(App *app):
@@ -45,6 +49,7 @@ void	MainWindow::Init()
   QAction *actionOpen = menuFile->addAction(tr("&Open..."));
 
   QAction *actionShowDebug = menuDebugger->addAction(tr("&Show debug panel"));
+  QAction *actionInput = menuSettings->addAction(tr("&Input"));
   mActionPlay = menuRun->addAction(tr("&Play"));
   mActionPause = menuRun->addAction(tr("&Pause"));
   mActionReset = menuRun->addAction(tr("&Reset"));
@@ -69,7 +74,7 @@ void	MainWindow::Init()
   mActionPause->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_P));
   mActionReset->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_E));
   actionTileWatcher->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_T));
-
+  actionInput->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_I));
   mActionLoadState->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_L));
   mActionSaveState->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_S));
 
@@ -95,6 +100,10 @@ void	MainWindow::Init()
   mActionLoadState->setEnabled(false);
 
   /////////////////////////////////////////////
+  mInputWindow = new InputWindow(mApp, this);
+  mInputWindow->InitWidget();
+
+  /////////////////////////////////////////////
   setMinimumSize(GB_SCREEN_X, GB_SCREEN_Y + menuBarHeight);
 
   resize(mApp->GetSettings()->value("mainwindow/size",
@@ -108,6 +117,7 @@ void	MainWindow::Init()
   connect(mActionSaveState, SIGNAL(triggered()), this, SLOT(SaveState()));
 
   connect(actionShowDebug, SIGNAL(triggered()), mDebug, SLOT(show()));
+  connect(actionInput, SIGNAL(triggered()), mInputWindow, SLOT(show()));
   connect(actionTileWatcher, SIGNAL(triggered()), mTileWatcher, SLOT(show()));
 
   connect(mGraphicsEngine, SIGNAL(ChangeEmuInstance(Emulator *)),

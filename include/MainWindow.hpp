@@ -12,6 +12,7 @@ class App;
 class GraphicsEngine;
 class Debugger;
 class TileWatcher;
+class InputWindow;
 
 class MainWindow : public QMainWindow
 {
@@ -25,6 +26,7 @@ public:
   void keyPressEvent(QKeyEvent *keyEvent);
   void keyReleaseEvent(QKeyEvent *keyEvent);
   void togglePlay(bool play);
+  Qt::Key *GetKeyTab() {return mKeyTab;}			    
 
 public slots:
   void	OpenRom();
@@ -35,6 +37,7 @@ private:
   Qt::Key	mKeyTab[8];
   GraphicsEngine *mGraphicsEngine;
   App		*mApp;
+  InputWindow	*mInputWindow;
   Debugger	*mDebug;
   TileWatcher	*mTileWatcher;
   QAction	*mActionPlay;

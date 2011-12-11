@@ -14,6 +14,7 @@ public:
   ~App();
   void	Init();
   QSettings	*GetSettings() {return mSettings;}
+  MainWindow	*GetMainWindow() {return mMainWindow;};
 
 private:
   MainWindow *mMainWindow;
