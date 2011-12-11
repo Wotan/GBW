@@ -31,6 +31,15 @@ void	MainWindow::SaveSettings()
   mApp->GetSettings()->setValue("mainwindow/size", size());
   mApp->GetSettings()->setValue("video/bilinear", 
 				mGraphicsEngine->IsBilinearActive());
+
+  mApp->GetSettings()->setValue("input/Up", mKeyTab[0]);
+  mApp->GetSettings()->setValue("input/Down", mKeyTab[1]);
+  mApp->GetSettings()->setValue("input/Right", mKeyTab[2]);
+  mApp->GetSettings()->setValue("input/Left", mKeyTab[3]);
+  mApp->GetSettings()->setValue("input/A", mKeyTab[4]);
+  mApp->GetSettings()->setValue("input/B", mKeyTab[5]);
+  mApp->GetSettings()->setValue("input/Start", mKeyTab[6]);
+  mApp->GetSettings()->setValue("input/Select", mKeyTab[7]);
 }
 
 void	MainWindow::Init()
@@ -45,14 +54,22 @@ void	MainWindow::Init()
   /////////////////////////////////////////////
   ////        Init defaults keys           ////
   /////////////////////////////////////////////
-  mKeyTab[0] = Qt::Key_Up;
-  mKeyTab[1] = Qt::Key_Down;
-  mKeyTab[2] = Qt::Key_Right;
-  mKeyTab[3] = Qt::Key_Left;
-  mKeyTab[4] = Qt::Key_Q;
-  mKeyTab[5] = Qt::Key_W;
-  mKeyTab[6] = Qt::Key_Return;
-  mKeyTab[7] = Qt::Key_Shift;
+  mKeyTab[0] = (Qt::Key)mApp->GetSettings()->value("input/Up",
+						   Qt::Key_Up).toInt();
+  mKeyTab[1] = (Qt::Key)mApp->GetSettings()->value("input/Down",
+						   Qt::Key_Down).toInt();
+  mKeyTab[2] = (Qt::Key)mApp->GetSettings()->value("input/Right",
+						   Qt::Key_Right).toInt();
+  mKeyTab[3] = (Qt::Key)mApp->GetSettings()->value("input/Left",
+						   Qt::Key_Left).toInt();
+  mKeyTab[4] = (Qt::Key)mApp->GetSettings()->value("input/A",
+						   Qt::Key_Q).toInt();
+  mKeyTab[5] = (Qt::Key)mApp->GetSettings()->value("input/B",
+						   Qt::Key_W).toInt();
+  mKeyTab[6] = (Qt::Key)mApp->GetSettings()->value("input/Start",
+						   Qt::Key_Return).toInt();
+  mKeyTab[7] = (Qt::Key)mApp->GetSettings()->value("input/Select",
+						   Qt::Key_Shift).toInt();
 
   /////////////////////////////////////////////
   ////          Create Menus               ////
