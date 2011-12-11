@@ -166,18 +166,20 @@ inline void	Emulator::DrawWindow(int curLine)
 
   if (posY > curLine)
     return ;
-  for (int i = posX; i < 160; i++)
+  for (int i = 0; i < 160; i++)
     {
+      if (i < posX)
+	continue ;
       if (addrTileData == 0x1000) // Tileid signed
-	tileId = (SBYTE)mVRAM[addrBGPattern + (((curLine - posY) / 8) * 32) + posX / 8];
+	tileId = (SBYTE)mVRAM[addrBGPattern + (((curLine - posY) / 8) * 32) + (i - posX) / 8];
       else
-	tileId = mVRAM[addrBGPattern + (((curLine - posY) / 8) * 32) + posX / 8];
+	tileId = mVRAM[addrBGPattern + (((curLine - posY) / 8) * 32) + (i - posX) / 8];
+
       tmp = addrTileData + tileId * 16 + (((curLine - posY) % 8) * 2);
-      value = IS_BIT_SET(mVRAM[tmp], 7 - (posX % 8)) |
-	(IS_BIT_SET(mVRAM[tmp + 1], 7 - (posX % 8)) << 1);
-      SetColor((int *)(screen + curLine * GB_SCREEN_X * 4 + posX * 4), value,
+      value = IS_BIT_SET(mVRAM[tmp], 7 - (i % 8)) |
+	(IS_BIT_SET(mVRAM[tmp + 1], 7 - (i % 8)) << 1);
+      SetColor((int *)(screen + curLine * GB_SCREEN_X * 4 + i * 4), value,
 	       false, mIOPorts[0x47]);
-      posX++;
     }
 }
 
