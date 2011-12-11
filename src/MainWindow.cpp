@@ -86,6 +86,14 @@ void	MainWindow::Init()
   QMenu *menuDebugger = menuBar()->addMenu(tr("&Debugger"));
   QAction *actionShowDebug = menuDebugger->addAction(tr("&Show debug panel"));
 
+  // Set icons
+  QStyle *style = QApplication::style();
+  actionOpen->setIcon(style->standardIcon(QStyle::SP_DialogOpenButton));
+  actionExit->setIcon(style->standardIcon(QStyle::SP_DialogCloseButton));
+
+  mActionPlay->setIcon(style->standardIcon(QStyle::SP_MediaPlay));
+  mActionPause->setIcon(style->standardIcon(QStyle::SP_MediaPause));
+  mActionReset->setIcon(style->standardIcon(QStyle::SP_BrowserReload));
   /////////////////////////////////////////////
   ////         Create Shorcuts             ////
   /////////////////////////////////////////////
