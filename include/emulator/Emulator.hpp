@@ -21,6 +21,9 @@
 # define SET_BIT(x, n) ((x) |= (1 << (n)))
 # define RESET_BIT(x, n) ((x) &= ~(1 << (n)))
 
+# define CUR_SPRITE_COLOR *(int *)(screen + curLine *\
+GB_SCREEN_X * 4 + (PX + j) * 4)
+
 # define RAM 1
 # define ROM 0
 

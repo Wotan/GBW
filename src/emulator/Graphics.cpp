@@ -111,6 +111,8 @@ inline void	Emulator::DrawSprite(int curLine)
 	{
 	  if (PX + j < 0 || PX + j > 160)
 	    continue ;
+	  if (IS_BIT_SET(attributes, 7) && CUR_SPRITE_COLOR != 0xFFFFFFFF)
+	    continue ;
 	  if (IS_BIT_SET(attributes, 5)) // X flip
 	    value = IS_BIT_SET(B1, j) | (IS_BIT_SET(B2, j) << 1);
 	  else
@@ -196,8 +198,8 @@ inline void	Emulator::SetColor(int *scanLine, int spriteColor,
   switch (finalColor)
     {
     case 0: *scanLine = 0xFFFFFFFF; break;
-    case 1: *scanLine = 0xAAAAAAAA; break;
-    case 2: *scanLine = 0x55555555; break;
-    case 3: *scanLine = 0x00000000; break;
+    case 1: *scanLine = 0xFFAAAAAA; break;
+    case 2: *scanLine = 0xFF555555; break;
+    case 3: *scanLine = 0xFF000000; break;
     }
 }

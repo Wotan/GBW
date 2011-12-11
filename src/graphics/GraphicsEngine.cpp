@@ -45,8 +45,13 @@ void	GraphicsEngine::FillScreen()
 
 void	GraphicsEngine::ClearScreen()
 {
-  for (int i = 0; i < GB_SCREEN_X * GB_SCREEN_Y * 4; i ++)
-    mScreenArray[i] = 0x00;
+  for (int i = 0; i < GB_SCREEN_X * GB_SCREEN_Y * 4; i += 4)
+    {
+      mScreenArray[i] = 0x0;
+      mScreenArray[i + 1] = 0x0;
+      mScreenArray[i + 2] = 0x0;
+      mScreenArray[i + 3] = 0xFF;
+    }
   FillScreen();
 }
 
