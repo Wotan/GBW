@@ -1,7 +1,8 @@
 #include "RenderOpenGL.hpp"
 
 RenderOpenGL::RenderOpenGL(QWidget *parent, int frameTime) :
-  QGLWidget(parent)
+  QGLWidget(parent),
+  mBilinear(true)
 {
   mTimer.setInterval(frameTime);
 }
@@ -22,19 +23,18 @@ void RenderOpenGL::initializeGL()
   OnInit();
 }
 
-void RenderOpenGL::InitTexture(int width, int height, unsigned char *array,
-			       bool linear)
+void RenderOpenGL::InitTexture(int width, int height, unsigned char *array)
 {
   glGenTextures(1,&mTextureName);
   glBindTexture(GL_TEXTURE_2D, mTextureName);
   glTexImage2D (GL_TEXTURE_2D, 0, 4, width, height, 0,
    		GL_RGBA, GL_UNSIGNED_BYTE, array);
-  UpdateLinear(linear);
+  UpdateBilinear(mBilinear);
   mScreenHeight = height;
   mScreenWidth = width;
 }
 
-void RenderOpenGL::UpdateLinear(bool on)
+void RenderOpenGL::UpdateBilinear(bool on)
 {
   glBindTexture(GL_TEXTURE_2D, mTextureName);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,

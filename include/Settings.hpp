@@ -24,4 +24,16 @@ private:
   App *mApp;
 };
 
+class	VideoSettings : public QDialog
+{
+public:
+  VideoSettings(App *app, QWidget *parent);
+  void	Init();
+
+private:
+  QGridLayout	*mMainLayout;
+  QCheckBox	*mBilinear;
+  App *mApp;
+};
+
 #endif // !SETTINGS_HPP_

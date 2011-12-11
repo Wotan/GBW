@@ -3,16 +3,38 @@
 #include <QDialog>
 #include <QLineEdit>
 #include <QGridLayout>
+#include <QCheckBox>
 #include "App.hpp"
 #include "Settings.hpp"
 
+
+
+VideoSettings::VideoSettings(App *app, QWidget *parent) :
+  QDialog(parent),
+  mApp(app)
+{
+  setWindowFlags(Qt::Window);
+  setWindowTitle(QString("Video Settings"));
+}
+
+void	VideoSettings::Init()
+{
+  mMainLayout = new QGridLayout(this);
+  mBilinear = new QCheckBox(QString("Bilinear filtering"), this);
+  mBilinear->setChecked(mApp->GetMainWindow()->
+			GetGraphicsEngine()->IsBilinearActive());
+  mMainLayout->addWidget(mBilinear);
+  setLayout(mMainLayout);
+  connect(mBilinear, SIGNAL(toggled(bool)),
+	  mApp->GetMainWindow()->GetGraphicsEngine(), SLOT(SetBilinear(bool)));
+}
 
 InputWindow::InputWindow(App *app, QWidget *parent) :
   QDialog(parent),
   mApp(app)
 {
   setWindowFlags(Qt::Window);
-  setWindowTitle(QString("Input"));
+  setWindowTitle(QString("Input Settings"));
 }
 
 void	InputWindow::InitWidget()

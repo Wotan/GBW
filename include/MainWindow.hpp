@@ -13,6 +13,7 @@ class GraphicsEngine;
 class Debugger;
 class TileWatcher;
 class InputWindow;
+class VideoSettings;
 
 class MainWindow : public QMainWindow
 {
@@ -22,11 +23,13 @@ public:
   MainWindow(App *app);
   ~MainWindow();
   void	Init();
+  void	SaveSettings();
   virtual void	resizeEvent(QResizeEvent * event);
   void keyPressEvent(QKeyEvent *keyEvent);
   void keyReleaseEvent(QKeyEvent *keyEvent);
   void togglePlay(bool play);
   Qt::Key *GetKeyTab() {return mKeyTab;}			    
+  GraphicsEngine *GetGraphicsEngine() {return mGraphicsEngine;}
 
 public slots:
   void	OpenRom();
@@ -39,6 +42,7 @@ private:
   GraphicsEngine *mGraphicsEngine;
   App		*mApp;
   InputWindow	*mInputWindow;
+  VideoSettings	*mVideoSettings;
   Debugger	*mDebug;
   TileWatcher	*mTileWatcher;
   QAction	*mActionPlay;

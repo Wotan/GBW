@@ -24,7 +24,7 @@ GraphicsEngine::~GraphicsEngine()
 
 void	GraphicsEngine::OnInit()
 {
-  InitTexture(GB_SCREEN_X, GB_SCREEN_Y, (unsigned char *)mScreenArray, true);
+  InitTexture(GB_SCREEN_X, GB_SCREEN_Y, (unsigned char *)mScreenArray);
   ClearScreen();
 }
 

@@ -20,16 +20,31 @@ MainWindow::MainWindow(App *app):
 
 MainWindow::~MainWindow()
 {
-  mApp->GetSettings()->setValue("mainwindow/size", size());
-
+  SaveSettings();
   delete mGraphicsEngine;
   delete mDebug;
   std::cout << "MainWindow deleted" << std::endl;
 }
 
+void	MainWindow::SaveSettings()
+{
+  mApp->GetSettings()->setValue("mainwindow/size", size());
+  mApp->GetSettings()->setValue("video/bilinear", 
+				mGraphicsEngine->IsBilinearActive());
+}
+
 void	MainWindow::Init()
 {
-  /////////////////// Key /////////////////////
+  /////////////////////////////////////////////
+  ////     Set Main Window settings        ////
+  /////////////////////////////////////////////
+  QPalette newPalette;
+  newPalette.setColor(QPalette::Window, QColor(0, 0, 0));
+  setPalette(newPalette);
+
+  /////////////////////////////////////////////
+  ////        Init defaults keys           ////
+  /////////////////////////////////////////////
   mKeyTab[0] = Qt::Key_Up;
   mKeyTab[1] = Qt::Key_Down;
   mKeyTab[2] = Qt::Key_Right;
@@ -40,32 +55,39 @@ void	MainWindow::Init()
   mKeyTab[7] = Qt::Key_Shift;
 
   /////////////////////////////////////////////
+  ////          Create Menus               ////
+  /////////////////////////////////////////////
+  
+  // Menu File
   QMenu *menuFile = menuBar()->addMenu(tr("&File"));
-  QMenu *menuRun = menuBar()->addMenu(tr("&Run"));
-  QMenu *menuSettings = menuBar()->addMenu(tr("&Settings"));
-  QMenu *menuTools = menuBar()->addMenu(tr("&Tools"));
-  QMenu *menuDebugger = menuBar()->addMenu(tr("&Debugger"));
-
   QAction *actionOpen = menuFile->addAction(tr("&Open..."));
-
-  QAction *actionShowDebug = menuDebugger->addAction(tr("&Show debug panel"));
-  QAction *actionInput = menuSettings->addAction(tr("&Input"));
-  mActionPlay = menuRun->addAction(tr("&Play"));
-  mActionPause = menuRun->addAction(tr("&Pause"));
-  mActionReset = menuRun->addAction(tr("&Reset"));
-  QAction *actionTileWatcher = menuTools->addAction(tr("&Tile Watcher"));
-
   menuFile->addSeparator();
   mActionLoadState = menuFile->addAction(tr("&Load state..."));
   mActionSaveState = menuFile->addAction(tr("&Save state..."));
-  menuFile->addSeparator();
   QAction *actionExit = menuFile->addAction(tr("&Exit"));
+  menuFile->addSeparator();
+
+  // Menu Run
+  QMenu *menuRun = menuBar()->addMenu(tr("&Run"));
+  mActionPlay = menuRun->addAction(tr("&Play"));
+  mActionPause = menuRun->addAction(tr("&Pause"));
+  mActionReset = menuRun->addAction(tr("&Reset"));
+
+  // Menu Settings
+  QMenu *menuSettings = menuBar()->addMenu(tr("&Settings"));
+  QAction *actionInput = menuSettings->addAction(tr("&Input"));
+  QAction *actionVideo = menuSettings->addAction(tr("&Video"));
+
+  // Menu Tools
+  QMenu *menuTools = menuBar()->addMenu(tr("&Tools"));
+  QAction *actionTileWatcher = menuTools->addAction(tr("&Tile Watcher"));
+
+  // Menu Debugger
+  QMenu *menuDebugger = menuBar()->addMenu(tr("&Debugger"));
+  QAction *actionShowDebug = menuDebugger->addAction(tr("&Show debug panel"));
 
   /////////////////////////////////////////////
-  QPalette newPalette;
-  newPalette.setColor(QPalette::Window, QColor(0, 0, 0));
-  setPalette(newPalette);
-
+  ////         Create Shorcuts             ////
   /////////////////////////////////////////////
   actionExit->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Q));
   actionOpen->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_O));
@@ -79,37 +101,44 @@ void	MainWindow::Init()
   mActionSaveState->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_S));
 
   /////////////////////////////////////////////
-  mDebug = new Debugger(this, mApp);
-  mDebug->Init();
-
-  mTileWatcher = new TileWatcher(this);
-  mTileWatcher->resize(120, 120);
-
-  ////////////////////////////////////////////
+  ////     Graphics Engine Init (first)    ////
+  /////////////////////////////////////////////
   int menuBarHeight = menuBar()->sizeHint().height();
   mGraphicsEngine = new GraphicsEngine(this, QPoint(0, menuBarHeight),
 				       QSize(160, 144), mApp);
+  mGraphicsEngine->SetBilinear(mApp->GetSettings()->
+			       value("video/bilinear", true).toBool());
   mGraphicsEngine->SetMainWindow(this);
   mGraphicsEngine->show();
   togglePlay(false);
-
-  ////////////////////////////////////////////
   mActionPlay->setEnabled(false);
   mActionReset->setEnabled(false);
   mActionSaveState->setEnabled(false);
   mActionLoadState->setEnabled(false);
 
+  /// Windows settings after Graphic engine init
+  setMinimumSize(GB_SCREEN_X, GB_SCREEN_Y + menuBarHeight);
+  resize(mApp->GetSettings()->value("mainwindow/size",
+ QSize(GB_SCREEN_X, GB_SCREEN_Y + menuBarHeight)).toSize());
+
+  /////////////////////////////////////////////
+  ////        Create all panels            ////
   /////////////////////////////////////////////
   mInputWindow = new InputWindow(mApp, this);
   mInputWindow->InitWidget();
 
+  mVideoSettings = new VideoSettings(mApp, this);
+  mVideoSettings->Init();
+
+  mDebug = new Debugger(this, mApp);
+  mDebug->Init();
+
+  mTileWatcher = new TileWatcher(this);
+  mTileWatcher->resize(120, 120);
+  
+  /////////////////////////////////////////////  
+  ////           Init signals(last)        ////
   /////////////////////////////////////////////
-  setMinimumSize(GB_SCREEN_X, GB_SCREEN_Y + menuBarHeight);
-
-  resize(mApp->GetSettings()->value("mainwindow/size",
- QSize(GB_SCREEN_X, GB_SCREEN_Y + menuBarHeight)).toSize());
-
-  //////////// Signals //////////////////////
   connect(actionExit, SIGNAL(triggered()), mApp, SLOT(quit()));
   connect(actionOpen, SIGNAL(triggered()), this, SLOT(OpenRom()));
 
@@ -118,6 +147,7 @@ void	MainWindow::Init()
 
   connect(actionShowDebug, SIGNAL(triggered()), mDebug, SLOT(show()));
   connect(actionInput, SIGNAL(triggered()), mInputWindow, SLOT(show()));
+  connect(actionVideo, SIGNAL(triggered()), mVideoSettings, SLOT(show()));
   connect(actionTileWatcher, SIGNAL(triggered()), mTileWatcher, SLOT(show()));
 
   connect(mGraphicsEngine, SIGNAL(ChangeEmuInstance(Emulator *)),
@@ -130,6 +160,9 @@ void	MainWindow::Init()
   connect(mActionPause, SIGNAL(triggered()), mGraphicsEngine, SLOT(PauseEmu()));
   connect(mActionReset, SIGNAL(triggered()), mGraphicsEngine, SLOT(ResetEmu()));
 
+  /////////////////////////////////////////////  
+  ////           Check arguments           ////
+  /////////////////////////////////////////////
   if (mApp->arguments().size() > 1)
     {
       QString romFileName = mApp->arguments().at(1);
