@@ -218,23 +218,28 @@ void	MainWindow::resizeEvent(QResizeEvent *event)
 {
   int menuBarHeight = menuBar()->sizeHint().height();
   QSize size = event->size();
-  int width, height;
+  int curWidth, curHeight;
+  int nextWidth, nextHeight;
+  int posX, posY;
 
-  if (size.width() * GB_SCREEN_Y <= GB_SCREEN_X * size.height())
+  curWidth = size.width();
+  curHeight = size.height() - menuBarHeight;
+
+  if (curWidth * GB_SCREEN_Y <= curHeight * GB_SCREEN_X)
     {
-      width = size.width();
-      height = (width * GB_SCREEN_Y) / GB_SCREEN_X;
-
-      int pos = ((size.height()  + menuBarHeight - height) / 2);
-      mGraphicsEngine->move(0, pos > menuBarHeight ? pos : menuBarHeight);
+      nextWidth = curWidth;
+      nextHeight = (curWidth * GB_SCREEN_Y) / GB_SCREEN_X;
     }
   else
     {
-      height = size.height() - menuBarHeight;
-      width = (height * GB_SCREEN_X) / GB_SCREEN_Y;
-      mGraphicsEngine->move((size.width() - width) / 2, menuBarHeight);
+      nextHeight = curHeight;
+      nextWidth = (curHeight * GB_SCREEN_X) / GB_SCREEN_Y;
     }
-  mGraphicsEngine->resize(width, height);
+  mGraphicsEngine->resize(nextWidth, nextHeight);
+  posX = (size.width() - nextWidth) / 2;
+  posY = (size.height() + menuBarHeight - nextHeight) / 2;
+  mGraphicsEngine->move(posX > 0 ? posX : 0,
+			posY > menuBarHeight ? posY : menuBarHeight);
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *keyEvent)
