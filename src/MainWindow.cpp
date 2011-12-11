@@ -124,6 +124,8 @@ void	MainWindow::Init()
 	  mDebug, SLOT(EmuInstanceChange(Emulator *)));
   connect(mGraphicsEngine, SIGNAL(ChangeEmuInstance(Emulator *)),
    	  mTileWatcher, SLOT(SetEmu(Emulator *)));
+  connect(mGraphicsEngine, SIGNAL(ChangeEmuInstance(Emulator *)),
+   	  this, SLOT(EmuChange(Emulator *)));
   connect(mActionPlay, SIGNAL(triggered()), mGraphicsEngine, SLOT(PlayEmu()));
   connect(mActionPause, SIGNAL(triggered()), mGraphicsEngine, SLOT(PauseEmu()));
   connect(mActionReset, SIGNAL(triggered()), mGraphicsEngine, SLOT(ResetEmu()));
@@ -134,6 +136,14 @@ void	MainWindow::Init()
       if (mGraphicsEngine->NewEmulator(romFileName.toStdString().c_str()))
 	mGraphicsEngine->PauseEmu();
     }
+}
+
+void	MainWindow::EmuChange(Emulator *emu)
+{
+  if (emu)
+    setWindowTitle(QString("GBW - ") + QString(emu->GetRomName()));
+  else
+    setWindowTitle("GBW");
 }
 
 void	MainWindow::OpenRom()

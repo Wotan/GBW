@@ -165,6 +165,8 @@ public:
   void  WriteMem(WORD addr, BYTE value);
   void	DMATransfert(BYTE value);
 
+  char	*GetRomName() {return mInfos.Title;}
+
   void	SaveState(const char *filename);
   bool	LoadState(const char *filename);
 

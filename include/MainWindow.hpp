@@ -32,6 +32,7 @@ public slots:
   void	OpenRom();
   void	LoadState();
   void	SaveState();
+  void	EmuChange(Emulator *);
 
 private:
   Qt::Key	mKeyTab[8];
