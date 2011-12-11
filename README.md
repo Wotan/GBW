@@ -8,4 +8,4 @@ GBW is an open source Game boy emulator written in C++.
 Project use Qt and Qt OpenGL module.
 
 # What it looks like
-![GBW](https://github.com/Wotan/GBW/wiki/screenshots/tetris.png)
+![GBW](https://github.com/Wotan/GBW/wiki/screenshots/supermario_start.png)
