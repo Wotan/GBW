@@ -11,8 +11,9 @@ class RenderOpenGL : public QGLWidget
 public:
   RenderOpenGL(QWidget *parent = 0, int frameTime = 0);
   virtual void initializeGL();
-  void	InitTexture(int width, int height, unsigned char *array);
+  void	InitTexture(int width, int height, unsigned char *array, bool linear);
   void	UpdateScreen(unsigned char *array);
+  void	UpdateLinear(bool on);
   virtual void resizeGL(int width, int height);
   virtual void paintGL();
   virtual void OnInit() = 0;

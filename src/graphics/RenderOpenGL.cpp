@@ -22,16 +22,25 @@ void RenderOpenGL::initializeGL()
   OnInit();
 }
 
-void RenderOpenGL::InitTexture(int width, int height, unsigned char *array)
+void RenderOpenGL::InitTexture(int width, int height, unsigned char *array,
+			       bool linear)
 {
   glGenTextures(1,&mTextureName);
   glBindTexture(GL_TEXTURE_2D, mTextureName);
   glTexImage2D (GL_TEXTURE_2D, 0, 4, width, height, 0,
    		GL_RGBA, GL_UNSIGNED_BYTE, array);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+  UpdateLinear(linear);
   mScreenHeight = height;
   mScreenWidth = width;
+}
+
+void RenderOpenGL::UpdateLinear(bool on)
+{
+  glBindTexture(GL_TEXTURE_2D, mTextureName);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+		  on ? GL_LINEAR : GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
+		  on ? GL_LINEAR : GL_NEAREST);
 }
 
 void RenderOpenGL::UpdateScreen(unsigned char *array)
