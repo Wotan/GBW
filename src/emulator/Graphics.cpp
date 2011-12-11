@@ -111,7 +111,8 @@ inline void	Emulator::DrawSprite(int curLine)
 	{
 	  if (PX + j < 0 || PX + j > 160)
 	    continue ;
-	  if (IS_BIT_SET(attributes, 7) && CUR_SPRITE_COLOR != 0xFFFFFFFF)
+	  // Sprite behind background ?
+	  if (IS_BIT_SET(attributes, 7) && !BackGroundIs0(CUR_SPRITE_COLOR))
 	    continue ;
 	  if (IS_BIT_SET(attributes, 5)) // X flip
 	    value = IS_BIT_SET(B1, j) | (IS_BIT_SET(B2, j) << 1);
@@ -202,4 +203,22 @@ inline void	Emulator::SetColor(int *scanLine, int spriteColor,
     case 2: *scanLine = 0xFF555555; break;
     case 3: *scanLine = 0xFF000000; break;
     }
+}
+
+inline bool Emulator::BackGroundIs0(int color)
+{
+  Palette *palette = (Palette *)&mIOPorts[0x47];
+  int	id;
+
+  switch (color)
+    {
+    case 0xFFFFFFFF: id = 0; break;
+    case 0xFFAAAAAA: id = 1; break;
+    case 0xFF555555: id = 2; break;
+    case 0xFF000000: id = 3; break;
+    }
+  if (id == palette->colorNum0)
+    return true;
+  else
+    return false;
 }

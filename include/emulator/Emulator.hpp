@@ -174,6 +174,7 @@ public:
   inline void	SetColor(int *scanLine, int spriteColor,
 			 bool blankTransp, BYTE bpalette);
   inline void	DrawWindow(int curLine);
+  inline bool	BackGroundIs0(int color);
 
   void	UpdateTimer(int nbCycles);
   void	UpdateLCD(int nbCycles);
