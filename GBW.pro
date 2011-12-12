@@ -47,8 +47,7 @@ SOURCES +=      src/main.cpp \
                 src/graphics/RenderOpenGL.cpp \
                 src/emulator/Emulator.cpp \
                 src/emulator/Init.cpp \
-                src/emulator/Opcode.cpp \
-                src/emulator/Commands.cpp \
+                src/emulator/Cpu.cpp \
                 src/emulator/Graphics.cpp \
                 src/emulator/State.cpp \
                 src/debugger/Debugger.cpp \

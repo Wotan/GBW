@@ -32,7 +32,7 @@ void	Emulator::DoFrame()
 {
   int	nbCycles = 0;
   int	curCycles;
-
+ 
   if (mPause)
     return ;
   while (nbCycles < CYCLE_BY_FRAME)

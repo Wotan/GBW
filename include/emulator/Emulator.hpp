@@ -188,32 +188,33 @@ public:
   void	Play();
   void	Pause();
 
-  void	Halt();
-  void	Stop();
-  bool	IsPause() {return mPause;}
-  void	ToggleInt(bool on);
-  void	ToggleIntAfter(bool on);
-  void	Load16bitHL();
+
+  bool		IsPause() {return mPause;}
   void	Push(WORD value);
   WORD	Pop();
 
-  inline void	ADD_8Bit(BYTE &toAdd, BYTE add, bool addCarry);
-  inline void	SUB_8Bit(BYTE &toSub, BYTE sub, bool addCarry);
-  inline void	OR_8Bit(BYTE &toXor, BYTE src);
-  inline void	XOR_8Bit(BYTE &toXor, BYTE src);
-  inline void	AND_8Bit(BYTE &toXor, BYTE src);
-  inline void	DEC_8Bit(BYTE &toDec);
-  inline void	INC_8Bit(BYTE &toDec);
-  inline void	CP_8Bit(BYTE cp1, BYTE cp2);
-  inline void	ADD_16bit(WORD &toAdd, WORD add);
-  inline void	ADD_16bitSigned(WORD &toAdd, SBYTE add);
-  inline void	SWAP_8bit(BYTE &toSwap);
-  inline void	DAA_8Bit(BYTE &nbr);
-  inline void	RotateLeft_8bit(BYTE &data, bool throughtCarry);
-  inline void	RotateRight_8bit(BYTE &data, bool throughtCarry);
-  inline void	ShiftRight_8bit(BYTE &data, bool MSB);
-  inline void	ShiftLeft_8bit(BYTE &data);
-  inline void	TestBit(BYTE totest, BYTE n);
+  inline void	Halt();
+  inline void	Stop();
+  inline void	ToggleInt(bool on);
+  inline void	ToggleIntAfter(bool on);
+  inline void	ADD_8Bit(BYTE &, BYTE , bool addCarry);
+  inline void	SUB_8Bit(BYTE &, BYTE , bool addCarry);
+  inline void	OR_8Bit(BYTE &, BYTE );
+  inline void	XOR_8Bit(BYTE &, BYTE );
+  inline void	AND_8Bit(BYTE &, BYTE );
+  inline void	DEC_8Bit(BYTE &);
+  inline void	INC_8Bit(BYTE &);
+  inline void	CP_8Bit(BYTE, BYTE);
+  inline void	ADD_16bit(WORD &, WORD);
+  inline void	ADD_16bitSigned(WORD &, SBYTE);
+  inline void	SWAP_8bit(BYTE &);
+  inline void	DAA_8Bit(BYTE &);
+  inline void	RotateLeft_8bit(BYTE &, bool throughtCarry);
+  inline void	RotateRight_8bit(BYTE &, bool throughtCarry);
+  inline void	ShiftRight_8bit(BYTE &, bool MSB);
+  inline void	ShiftLeft_8bit(BYTE &);
+  inline void	TestBit(BYTE, BYTE n);
+  inline void	Load16bitHL();
 
 private:
   // Infos //
@@ -244,29 +245,13 @@ private:
   int		mCurRAMBank;
   bool		mRAMEnable;
 
-  // All ROM (Cartridge)
   BYTE		*mCartridgeMem;
-
-  // (03) 8000 - 9FFF
   BYTE		mVRAM[0x2000];
-
-  // (04) A000 - BFFF (In cartdrige, may use for saving)
   BYTE		mExtRAM[0x2000 * 4]; // 4 bank * 8kB max (2kB or 8kB or 32kB)
-
-  // (5) C000 - CFFF
-  // (6) D000 - DFFF
   BYTE		mWRAM[0x1000 * 2];
-
-  // (08) FE00 - FE9F
   BYTE		mOAM[0x100];
-
-  // (10) FF00 - FF7F
   BYTE		mIOPorts[0x80];
-
-  // (11) FF80 - FFFE
   BYTE		mHRAM[0x7F];
-
-  // (12) FFFF
   BYTE		mInterrupEnable;
 
   App		*mApp;
@@ -276,8 +261,8 @@ private:
   bool		mIsStop;
 
   // Misc //
-  unsigned int mCyclesCounter;
-  unsigned int mOpCounter;
+  unsigned int	mCyclesCounter;
+  unsigned int	mOpCounter;
 };
 
 

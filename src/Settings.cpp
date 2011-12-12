@@ -74,8 +74,8 @@ KeyEdit::KeyEdit(int id, App *app, QWidget *parent) :
   mApp(app),
   mId(id)
 {
-}
 
+}
 void KeyEdit::keyPressEvent(QKeyEvent *keyEvent)
 {
   int key = keyEvent->key();
