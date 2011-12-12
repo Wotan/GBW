@@ -180,16 +180,11 @@ inline void ChangeROMBankLo(BYTE value, BYTE &curROMBank, BYTE cardType)
 inline void ChangeROMBankHi(BYTE value, BYTE &curROMBank)
 {
   curROMBank &= 0x1F; // 00011111
-  value &= 0xE0; // 11100000
+  value &= 0xE0;
   curROMBank |= value;
-  if (curROMBank == 0x0) // Wtf if 0x20 0x40 0x60 ?
-    curROMBank = 0x1;
-  else if (curROMBank == 0x20)
-    curROMBank = 0x21;
-  else if (curROMBank == 0x40)
-    curROMBank = 0x41;
-  else if (curROMBank == 0x60)
-    curROMBank = 0x61;
+  if (curROMBank == 0 || curROMBank == 0x20 ||
+      curROMBank == 0x40 || curROMBank == 0x60)
+    curROMBank++;
 }
 
 void	Emulator::DMATransfert(BYTE value)
@@ -206,7 +201,7 @@ void	Emulator::WriteMem(WORD addr, BYTE value)
       if (mInfos.CartridgeType == MCB1)
 	mRAMEnable = ((value & 0xF) == 0xA);
     }
-  else if (addr <= 0x7FFF)
+  else if (addr <= 0x3FFF)
     {
       ChangeROMBankLo(value, mCurROMBank, mInfos.CartridgeType);
     }
@@ -219,7 +214,7 @@ void	Emulator::WriteMem(WORD addr, BYTE value)
     }
   else if (addr <= 0x7FFF)
     {
-      mMode = (value & 0x1) ? ROM : RAM;
+      mMode = (value & 0x1) ? RAM : ROM;
       if (mMode == ROM)
 	mCurRAMBank = 0;
     }
