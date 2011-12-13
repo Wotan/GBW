@@ -798,7 +798,7 @@ inline void	Emulator::ADD_8Bit(BYTE &toAdd, BYTE add, bool addCarry)
   if (addCarry)
     adding += C_F;
 
-  H_F = (((toAdd & 0xF) + (adding & 0xF)) > 0xF);
+  H_F = (((toAdd & 0x0F) + (adding & 0x0F)) > 0xF);
   C_F = (adding + toAdd > 0xFF);
   toAdd += adding;
 
@@ -918,21 +918,22 @@ inline void	Emulator::DAA_8Bit(BYTE &nbr)
 {
   BYTE res = nbr;
 
-  if (N_F) // Last op was addition
+  if (N_F) // Last op was substraction
     {
       if (C_F)
-	res -= 0x60; // (0x60 = 0xF0 - 0x90)
+	res -= 0x60;
       if (H_F)
-	res -= 0x06; // (0x60 = 0x0F - 0x09)
+	res -= 0x06;
+      C_F = (nbr < res);
     } 
-  else // Last op was substraction
+  else // Last op was addition
     {
       if (C_F || (nbr >= 0xA0))
 	res += 0x60;
-      if (H_F || ((nbr & 0x0F) >= 0xA))
+      if (H_F || ((nbr & 0x0F) >= 0x0A))
 	res += 0x06;
+      C_F = (nbr > res);
     }
-  C_F = (res & 0x100);
   H_F = 0;
   nbr = res;
   Z_F = (nbr == 0);
