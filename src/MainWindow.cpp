@@ -81,6 +81,9 @@ void	MainWindow::Init()
   menuFile->addSeparator();
   mActionLoadState = menuFile->addAction(tr("&Load state..."));
   mActionSaveState = menuFile->addAction(tr("&Save state..."));
+
+  QAction *actionLoadQuickState = menuFile->addAction(tr("&Load quick state"));
+  QAction *actionSaveQuickState = menuFile->addAction(tr("&Save quick state"));
   QAction *actionExit = menuFile->addAction(tr("&Exit"));
   menuFile->addSeparator();
 
@@ -124,6 +127,8 @@ void	MainWindow::Init()
   actionInput->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_I));
   mActionLoadState->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_L));
   mActionSaveState->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_S));
+  actionLoadQuickState->setShortcut(QKeySequence(Qt::Key_F9));
+  actionSaveQuickState->setShortcut(QKeySequence(Qt::Key_F8));
 
   /////////////////////////////////////////////
   ////     Graphics Engine Init (first)    ////
@@ -169,6 +174,11 @@ void	MainWindow::Init()
 
   connect(mActionLoadState, SIGNAL(triggered()), this, SLOT(LoadState()));
   connect(mActionSaveState, SIGNAL(triggered()), this, SLOT(SaveState()));
+
+  connect(actionLoadQuickState, SIGNAL(triggered()),
+	  this, SLOT(LoadQuickState()));
+  connect(actionSaveQuickState, SIGNAL(triggered()),
+	  this, SLOT(SaveQuickState()));
 
   connect(actionShowDebug, SIGNAL(triggered()), mDebug, SLOT(show()));
   connect(actionInput, SIGNAL(triggered()), mInputWindow, SLOT(show()));
@@ -338,3 +348,22 @@ void	MainWindow::SaveState()
   if (fileName != 0 && emu)
     emu->SaveState(fileName.toStdString().c_str());
 }
+
+void	MainWindow::LoadQuickState()
+{
+  QString file = QDir::tempPath() + "/GBW_quick_state.save";
+  Emulator *emu = mGraphicsEngine->GetEmulator();
+
+  if (emu)
+    emu->LoadState(file.toStdString().c_str());
+}
+
+void	MainWindow::SaveQuickState()
+{
+  QString file = QDir::tempPath() + "/GBW_quick_state.save";
+  Emulator *emu = mGraphicsEngine->GetEmulator();
+
+  if (emu)
+    emu->SaveState(file.toStdString().c_str());
+}
+

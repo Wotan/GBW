@@ -41,6 +41,8 @@ bool	Emulator::LoadState(const char *fileName)
   char		Title[0xF];
 
   file.open(fileName);
+  if (!file.is_open())
+    return false;
   file.read(Title, 0xF);
   if (strncmp(Title, mInfos.Title, 0xF) != 0)
     {

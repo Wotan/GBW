@@ -35,6 +35,8 @@ public slots:
   void	OpenRom();
   void	LoadState();
   void	SaveState();
+  void	LoadQuickState();
+  void	SaveQuickState();
   void	EmuChange(Emulator *);
 
 private:
