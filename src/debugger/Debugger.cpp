@@ -1,4 +1,5 @@
 #include <iostream>
+#include <QTimer>
 #include <QMessageBox>
 #include <QPushButton>
 #include "Debugger.hpp"
@@ -24,6 +25,10 @@ bool Debugger::Init()
   setWindowFlags(Qt::Window);
   setWindowTitle(QString("GBW Debugger"));
 
+  mUpdateTimer = new QTimer(this);
+  mUpdateTimer->setInterval(500);
+  mUpdateTimer->start();
+
   mMainLayout = new QGridLayout(this);
 
   mInfosWatcher = new InfosWatcher(this);
@@ -47,9 +52,7 @@ bool Debugger::Init()
 
   mMainLayout->addWidget(mInfosWatcher, 0, 0, 1, 2);
   mMainLayout->addWidget(mMemWatcher, 1, 0, 3, 2);
-
   mMainLayout->addWidget(mAsmWatcher, 0, 2, 2, 2);
-
   mMainLayout->addWidget(mNbOpcode, 2, 2);
   mMainLayout->addWidget(mNextNbOp, 2, 3);
   mMainLayout->addWidget(mNextOp, 3, 2, 1, 2);
@@ -64,7 +67,7 @@ bool Debugger::Init()
 
   connect(mExitShortcut, SIGNAL(activated()), this, SLOT(close()));
   connect(mNextOpShortcut, SIGNAL(activated()), this, SLOT(NextOpcode()));
-
+  connect(mUpdateTimer, SIGNAL(timeout()), this, SLOT(repaint()));
 
   return true;
 }

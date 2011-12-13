@@ -46,6 +46,8 @@ private:
   MemWatcher	*mMemWatcher;
   AsmWatcher	*mAsmWatcher;
 
+  QTimer	*mUpdateTimer;
+
   QPushButton	*mNextOp;
   QShortcut	*mExitShortcut;
   QShortcut	*mNextOpShortcut;
