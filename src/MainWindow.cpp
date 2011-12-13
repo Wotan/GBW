@@ -203,6 +203,13 @@ void	MainWindow::Init()
       QString romFileName = mApp->arguments().at(1);
       if (mGraphicsEngine->NewEmulator(romFileName.toStdString().c_str()))
 	mGraphicsEngine->PauseEmu();
+      if (mApp->arguments().size() > 2)
+	{
+	  QString romSaveState = mApp->arguments().at(2);
+	  Emulator *emu = mGraphicsEngine->GetEmulator();
+	  if (!emu->LoadState(romSaveState.toStdString().c_str()))
+	    std::cerr << "Could not load save state" << std::endl;
+	}
     }
 }
 
