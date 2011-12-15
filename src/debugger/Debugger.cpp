@@ -41,14 +41,13 @@ bool Debugger::Init()
   mAsmWatcher->setMinimumSize(300, 450);
 
   mNextOp = new QPushButton("Next Opcode (Ctrl + Space)", this);
-  mNextOp->setGeometry(385, 250, 100, 25);
 
   mNbOpcode = new QSpinBox(this);
   mNbOpcode->setRange(1, 1000000000);
-  mNbOpcode->setGeometry(315, 305, 100, 20);
 
   mNextNbOp = new QPushButton("Jump opcodes", this);
-  mNextNbOp->setGeometry(435, 300, 120, 25);
+
+  mShowLastOps = new QPushButton("Show lasts ops", this);
 
   mMainLayout->addWidget(mInfosWatcher, 0, 0, 1, 2);
   mMainLayout->addWidget(mMemWatcher, 1, 0, 3, 2);
@@ -56,11 +55,13 @@ bool Debugger::Init()
   mMainLayout->addWidget(mNbOpcode, 2, 2);
   mMainLayout->addWidget(mNextNbOp, 2, 3);
   mMainLayout->addWidget(mNextOp, 3, 2, 1, 2);
+  mMainLayout->addWidget(mShowLastOps, 4, 0, 1, 1);
   setLayout(mMainLayout);
 
 
   connect(mNextOp, SIGNAL(clicked()), this, SLOT(NextOpcode()));
   connect(mNextNbOp, SIGNAL(clicked()), this, SLOT(NextXOpcode()));
+  connect(mShowLastOps, SIGNAL(clicked()), this, SLOT(ShowLastsOps()));
 
   mExitShortcut = new QShortcut(QKeySequence("Ctrl+D"), this);
   mNextOpShortcut = new QShortcut(QKeySequence("Ctrl+Space"), this);
@@ -69,7 +70,17 @@ bool Debugger::Init()
   connect(mNextOpShortcut, SIGNAL(activated()), this, SLOT(NextOpcode()));
   connect(mUpdateTimer, SIGNAL(timeout()), this, SLOT(repaint()));
 
+
   return true;
+}
+
+void		Debugger::ShowLastsOps()
+{
+  if (!mEmu)
+    return ;
+  std::list<char *>::reverse_iterator it;
+  for (it = mEmu->mListLastOps.rbegin() ; it != mEmu->mListLastOps.rend(); it++)
+    std::cout << *it << std::endl;
 }
 
 void	Debugger::NextOpcode()

@@ -1,6 +1,7 @@
 #ifndef EMULATOR_HPP_
 # define EMULATOR_HPP_
 
+# include <iostream>
 # include <inttypes.h>
 # include "App.hpp"
 # include "Debugger.hpp"
@@ -261,6 +262,7 @@ private:
   bool		mIsStop;
 
   // Misc //
+  std::list<char *> mListLastOps;
   unsigned int	mCyclesCounter;
   unsigned int	mOpCounter;
 };

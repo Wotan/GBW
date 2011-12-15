@@ -38,6 +38,7 @@ public slots:
   void		EmuInstanceChange(Emulator *emu);
   void		NextOpcode();
   void		NextXOpcode();
+  void		ShowLastsOps();
 
 private:
   App		*mApp;
@@ -49,6 +50,7 @@ private:
   QTimer	*mUpdateTimer;
 
   QPushButton	*mNextOp;
+  QPushButton	*mShowLastOps;
   QShortcut	*mExitShortcut;
   QShortcut	*mNextOpShortcut;
   QSpinBox	*mNbOpcode;

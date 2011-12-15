@@ -9,6 +9,15 @@ int	Emulator::DoOpcode()
   UWORD tmp;
   BYTE	tmpB;
   BYTE	extOpcode;
+
+  /*	Debug	*/
+
+
+  mListLastOps.push_front((char *)Debugger::GetOpMnemonic(this, mPC));
+  if (mListLastOps.size() > 20)
+    mListLastOps.pop_back();
+  /*		*/
+  
   int	opcode = ReadMem(mPC++);
 
   switch (opcode)
