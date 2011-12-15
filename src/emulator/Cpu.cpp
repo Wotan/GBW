@@ -360,9 +360,9 @@ int	Emulator::DoOpcode()
       mPC = tmp.a;
       return 12;
     case 0xD4:
+      tmp.lo = ReadMem(mPC++); tmp.hi = ReadMem(mPC++);
       if (C_F)
 	return 12;
-      tmp.lo = ReadMem(mPC++); tmp.hi = ReadMem(mPC++);
       Push(mPC);
       mPC = tmp.a;
       return 12;
@@ -404,6 +404,7 @@ int	Emulator::DoOpcode()
 	    return 4;
 	  }
 	printf("Unknown opcode : %X.%X\n", opcode, extOpcode);
+	Pause();
 	return 1;
       }
 
@@ -780,11 +781,13 @@ int	Emulator::DoOpcode()
 
 	  default:
 	    printf("Unknown opcode : %X.%X\n", opcode, extOpcode);
+	    Pause();
 	    return 1;
 	  }
       }
     default:
       printf("Unknown opcode : %X\n", opcode);
+      Pause();
       return 1;
     }
 }
