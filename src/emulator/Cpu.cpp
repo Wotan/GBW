@@ -147,7 +147,16 @@ int	Emulator::DoOpcode()
     case 0xC5: Push(REG_BC); return 16;
     case 0xD5: Push(REG_DE); return 16;
     case 0xE5: Push(REG_HL); return 16;
-    case 0xF1: REG_AF = Pop(); return 12;
+    case 0xF1: {
+      UFWORD f;
+      f.a = Pop();
+      mAF.c = f.c;
+      mAF.h = f.h;
+      mAF.z = f.z;
+      mAF.n = f.n;
+
+      mAF.hi = f.hi;
+    } return 12;
     case 0xC1: REG_BC = Pop(); return 12;
     case 0xD1: REG_DE = Pop(); return 12;
     case 0xE1: REG_HL = Pop(); return 12;

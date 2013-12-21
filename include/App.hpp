@@ -10,7 +10,7 @@ class QSettings;
 class App : public QApplication
 {
 public:
-  App(int ac, char **av);
+  App(int& ac, char **av);
   ~App();
   void	Init();
   QSettings	*GetSettings() {return mSettings;}

@@ -14,7 +14,6 @@ Emulator::Emulator(App *app, GraphicsEngine *graphics) :
   mCyclesCounter(0),
   mOpCounter(0)
 {
-  std::cout << "Emulator created" << std::endl;
   mDIVCounter = DIV_NBCYCLE_TO_UPDATE;
   mTIMACounter = 1024;
   mLYCounter = 456;
@@ -25,7 +24,6 @@ Emulator::~Emulator()
 {
   if (mCartridgeMem)
     delete[] mCartridgeMem;
-  std::cout << "Emulator deleted" << std::endl;
 }
 
 void	Emulator::DoFrame()

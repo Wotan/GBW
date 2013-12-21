@@ -2,7 +2,7 @@
 #include <QSettings>
 #include "App.hpp"
 
-App::App(int ac, char **av) :
+App::App(int& ac, char **av) :
   QApplication (ac, av),
   mMainWindow(0),
   mSettings(0)

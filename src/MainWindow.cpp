@@ -15,7 +15,6 @@
 MainWindow::MainWindow(App *app):
   mApp(app)
 {
-  std::cout << "MainWindow created" << std::endl;
 }
 
 MainWindow::~MainWindow()
@@ -23,7 +22,6 @@ MainWindow::~MainWindow()
   SaveSettings();
   delete mGraphicsEngine;
   delete mDebug;
-  std::cout << "MainWindow deleted" << std::endl;
 }
 
 void	MainWindow::SaveSettings()

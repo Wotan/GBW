@@ -10,7 +10,6 @@ GraphicsEngine::GraphicsEngine(QWidget *parent, const QPoint& position,
   mEmu(NULL),
   mMainWindow(0)
 {
-  std::cout << "GraphicsEngine created" << std::endl;
   move(position);
   resize(size);
 }
@@ -19,7 +18,6 @@ GraphicsEngine::~GraphicsEngine()
 {
   if (mEmu)
     delete mEmu;
-  std::cout << "GraphicsEngine deleted" << std::endl;
 }
 
 void	GraphicsEngine::OnInit()
